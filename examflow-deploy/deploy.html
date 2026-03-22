@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Web Hosting Guide — Deploy to AWS & More</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e1117;--s1:#141921;--s2:#1a2133;--s3:#1e2840;--s4:#243050;
+  --b1:#1f2d45;--b2:#2a3d5c;--b3:#3a5070;
+  --a1:#4d9eff;--a2:#2563eb;--a3:#60c2ff;
+  --g:#22c55e;--g2:#16a34a;
+  --y:#f59e0b;--y2:#d97706;
+  --r:#ef4444;--r2:#dc2626;
+  --o:#f97316;
+  --pu:#8b5cf6;--pu2:#7c3aed;
+  --cy:#06b6d4;
+  --t:#e2e8f8;--t2:#94a3b8;--t3:#64748b;
+  --code:#cdd9f5;
+  --fh:'Syne',sans-serif;
+  --fb:'DM Sans',sans-serif;
+  --fc:'JetBrains Mono',monospace;
+
+  /* Syntax colors */
+  --syn-kw:#c792ea;
+  --syn-str:#c3e88d;
+  --syn-fn:#82aaff;
+  --syn-cm:#546e7a;
+  --syn-num:#f78c6c;
+  --syn-tag:#f07178;
+  --syn-attr:#ffcb6b;
+  --syn-val:#c3e88d;
+  --syn-op:#89ddff;
+}
+
+body{background:var(--bg);color:var(--t);font-family:var(--fb);min-height:100vh;overflow-x:hidden}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:260px;background:var(--s1);border-right:1px solid var(--b1);
+  display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--b2)}
+.sb-header{padding:18px 16px 14px;border-bottom:1px solid var(--b1)}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sb-logo-ico{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--a2),var(--a1));display:flex;align-items:center;justify-content:center;font-size:17px}
+.sb-logo-name{font-family:var(--fh);font-size:15px;font-weight:800;letter-spacing:-.3px}
+.sb-logo-sub{font-size:10px;color:var(--t3);margin-top:1px}
+.search-box{display:flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:7px 11px}
+.search-box input{background:none;border:none;outline:none;color:var(--t);font-family:var(--fb);font-size:12.5px;width:100%;font-weight:500}
+.search-box input::placeholder{color:var(--t3)}
+
+.sb-section{padding:12px 0 6px}
+.sb-sec-lbl{font-size:9.5px;font-weight:700;letter-spacing:1.8px;color:var(--t3);text-transform:uppercase;padding:4px 16px 8px}
+.sb-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 16px;font-size:12.5px;font-weight:500;color:var(--t2);
+  cursor:pointer;transition:all .15s;border-left:2px solid transparent;
+}
+.sb-item:hover{background:var(--s2);color:var(--t);border-left-color:var(--b2)}
+.sb-item.active{background:linear-gradient(90deg,rgba(77,158,255,.12),transparent);color:var(--a1);border-left-color:var(--a1)}
+.sb-item .ico{font-size:14px;width:18px;text-align:center}
+.sb-badge{margin-left:auto;font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:8px;background:rgba(77,158,255,.15);color:var(--a1)}
+.sb-badge.g{background:rgba(34,197,94,.12);color:var(--g)}
+.sb-badge.y{background:rgba(245,158,11,.12);color:var(--y)}
+.sb-badge.pu{background:rgba(139,92,246,.12);color:var(--pu)}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── TAB BAR ── */
+.tabbar{display:flex;align-items:center;background:var(--s1);border-bottom:1px solid var(--b1);overflow-x:auto;min-height:40px}
+.tabbar::-webkit-scrollbar{height:2px}
+.tabbar::-webkit-scrollbar-thumb{background:var(--b2)}
+.file-tab{
+  display:flex;align-items:center;gap:8px;padding:0 16px;
+  height:40px;font-size:12px;font-weight:500;color:var(--t2);
+  cursor:pointer;border-right:1px solid var(--b1);white-space:nowrap;
+  transition:all .15s;flex-shrink:0;
+}
+.file-tab:hover{background:var(--s2);color:var(--t)}
+.file-tab.active{background:var(--bg);color:var(--t);border-bottom:2px solid var(--a1)}
+.file-tab .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dot-html{background:#e44d26}.dot-js{background:#f7df1e}.dot-sh{background:#4ec9b0}
+.dot-yml{background:#f05138}.dot-py{background:#3776ab}.dot-json{background:var(--y)}
+.dot-md{background:var(--a1)}
+
+/* ── CONTENT AREA ── */
+.content-area{flex:1;overflow-y:auto;display:none}
+.content-area.active{display:block}
+.content-area::-webkit-scrollbar{width:5px}
+.content-area::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+
+/* ── HERO SECTION ── */
+.hero{
+  padding:40px 40px 32px;
+  background:linear-gradient(135deg,var(--s1) 0%,var(--s2) 100%);
+  border-bottom:1px solid var(--b1);position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-40px;right:-40px;width:280px;height:280px;
+  border-radius:50%;background:radial-gradient(circle,rgba(77,158,255,.08) 0%,transparent 70%);
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);
+  color:var(--g);padding:5px 12px;border-radius:20px;
+  font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:16px;
+}
+.hero-badge .dot2{width:6px;height:6px;border-radius:50%;background:var(--g);animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:var(--fh);font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1.2;margin-bottom:10px}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,var(--a1),var(--pu),var(--cy));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:14px;color:var(--t2);line-height:1.7;max-width:600px;margin-bottom:24px}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{display:flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--b1);padding:5px 11px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--t2)}
+.tag:hover{border-color:var(--b2);color:var(--t)}
+
+/* ── PLATFORM CARDS ── */
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:28px 40px 0}
+.pc{
+  background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:20px;
+  cursor:pointer;transition:all .2s;
+}
+.pc:hover{border-color:var(--b2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.pc.aws{border-top:3px solid #ff9900}
+.pc.netlify{border-top:3px solid #00d5c5}
+.pc.vercel{border-top:3px solid #fff}
+.pc.gh{border-top:3px solid #8b5cf6}
+.pc.firebase{border-top:3px solid #ffca28}
+.pc.digitalocean{border-top:3px solid #0080ff}
+.pc-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.pc-icon{font-size:24px}
+.pc-name{font-family:var(--fh);font-size:15px;font-weight:700}
+.pc-tier{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:8px;margin-left:auto}
+.pc-tier.free{background:rgba(34,197,94,.12);color:var(--g)}
+.pc-tier.paid{background:rgba(245,158,11,.12);color:var(--y)}
+.pc-tier.both{background:rgba(77,158,255,.12);color:var(--a1)}
+.pc-desc{font-size:12.5px;color:var(--t2);line-height:1.6;margin-bottom:12px}
+.pc-features{display:flex;flex-direction:column;gap:5px}
+.pc-feat{font-size:11.5px;color:var(--t3);display:flex;align-items:center;gap:6px}
+.pc-feat::before{content:'✓';color:var(--g);font-weight:700}
+
+/* ── CODE EDITOR ── */
+.editor-wrap{padding:24px 40px}
+.editor-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.editor-title{font-family:var(--fh);font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.editor-actions{display:flex;gap:8px}
+.btn-copy{
+  display:flex;align-items:center;gap:5px;
+  background:var(--s2);border:1px solid var(--b1);color:var(--t2);
+  padding:5px 12px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;
+  font-family:var(--fb);transition:all .15s;
+}
+.btn-copy:hover{color:var(--t);border-color:var(--b2)}
+.btn-copy.copied{color:var(--g);border-color:rgba(34,197,94,.4)}
+.btn-run{display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--a2),var(--a1));color:#fff;border:none;padding:5px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:all .15s}
+.btn-run:hover{opacity:.88}
+
+.code-block{
+  background:var(--s1);border:1px solid var(--b1);border-radius:12px;
+  overflow:hidden;font-family:var(--fc);font-size:13px;line-height:1.7;
+}
+.code-top{display:flex;align-items:center;gap:6px;padding:10px 16px;background:var(--s2);border-bottom:1px solid var(--b1)}
+.code-dot{width:10px;height:10px;border-radius:50%}
+.code-dot:nth-child(1){background:#ff5f57}
+.code-dot:nth-child(2){background:#febc2e}
+.code-dot:nth-child(3){background:#28c840}
+.code-filename{font-size:11.5px;color:var(--t3);margin-left:8px;font-family:var(--fc)}
+.code-lang{margin-left:auto;font-size:10.5px;font-weight:600;color:var(--t3);letter-spacing:.5px;text-transform:uppercase}
+.code-body{padding:18px 0;overflow-x:auto}
+.code-body::-webkit-scrollbar{height:4px}
+.code-body::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+.line{display:flex;align-items:flex-start;padding:0 18px;min-height:22px}
+.line:hover{background:rgba(255,255,255,.025)}
+.ln{color:var(--t3);width:28px;font-size:12px;flex-shrink:0;user-select:none;text-align:right;margin-right:18px;padding-top:1px;font-family:var(--fc)}
+.code-content{flex:1;white-space:pre;font-family:var(--fc)}
+
+/* Syntax highlighting */
+.kw{color:var(--syn-kw)}
+.str{color:var(--syn-str)}
+.fn{color:var(--syn-fn)}
+.cm{color:var(--syn-cm);font-style:italic}
+.num{color:var(--syn-num)}
+.tag2{color:var(--syn-tag)}
+.attr{color:var(--syn-attr)}
+.val{color:var(--syn-val)}
+.op{color:var(--syn-op)}
+.hl-line{background:rgba(77,158,255,.07)}
+
+/* ── TERMINAL ── */
+.terminal{
+  background:#000d1a;border:1px solid var(--b1);border-radius:12px;overflow:hidden;
+  font-family:var(--fc);font-size:13px;
+}
+.term-top{display:flex;align-items:center;gap:6px;padding:10px 14px;background:#0a1628;border-bottom:1px solid var(--b1)}
+.term-dots{display:flex;gap:6px}
+.term-title{font-size:11.5px;color:var(--t3);margin:0 auto}
+.term-body{padding:14px 18px;max-height:320px;overflow-y:auto;min-height:120px}
+.term-body::-webkit-scrollbar{width:3px}
+.term-body::-webkit-scrollbar-thumb{background:var(--b2)}
+.term-line{display:flex;gap:10px;margin-bottom:3px;align-items:flex-start}
+.term-prompt{color:var(--g);font-weight:600;white-space:nowrap;flex-shrink:0}
+.term-cmd{color:var(--a1)}
+.term-out{color:var(--t2)}
+.term-ok{color:var(--g)}
+.term-err{color:var(--r)}
+.term-warn{color:var(--y)}
+.term-input{display:flex;gap:10px;align-items:center;border-top:1px solid var(--b1);padding:10px 18px;background:#050f1e}
+.term-input .prompt{color:var(--g);font-weight:600;white-space:nowrap}
+.term-inp-field{flex:1;background:none;border:none;outline:none;color:var(--a1);font-family:var(--fc);font-size:13px;caret-color:var(--a1)}
+
+/* ── STEP CARDS ── */
+.steps-grid{display:flex;flex-direction:column;gap:12px;padding:0 40px 28px}
+.step{
+  background:var(--s1);border:1px solid var(--b1);border-radius:12px;overflow:hidden;
+  transition:border-color .2s;
+}
+.step:hover{border-color:var(--b2)}
+.step-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer}
+.step-num{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-size:13px;font-weight:800;
+}
+.step-num.aws{background:rgba(255,153,0,.15);color:#ff9900}
+.step-num.done{background:rgba(34,197,94,.15);color:var(--g)}
+.step-info{flex:1}
+.step-title{font-weight:700;font-size:13.5px;margin-bottom:2px}
+.step-sub{font-size:11.5px;color:var(--t3)}
+.step-body{padding:0 20px 16px;display:none}
+.step.open .step-body{display:block}
+.step-chevron{color:var(--t3);transition:transform .2s;font-size:12px}
+.step.open .step-chevron{transform:rotate(180deg)}
+
+/* ── INFO BOXES ── */
+.info-box{border-radius:10px;padding:14px 16px;margin:12px 0;font-size:13px;line-height:1.7}
+.info-box.tip{background:rgba(77,158,255,.08);border:1px solid rgba(77,158,255,.2);color:var(--t2)}
+.info-box.tip::before{content:'💡 ';font-style:normal}
+.info-box.warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--y)}
+.info-box.warn::before{content:'⚠️ ';font-style:normal}
+.info-box.ok{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:var(--g)}
+.info-box.ok::before{content:'✅ ';font-style:normal}
+.info-box.aws{background:rgba(255,153,0,.08);border:1px solid rgba(255,153,0,.2);color:#ff9900}
+.info-box.aws::before{content:'☁️ '}
+
+/* ── COMPARISON TABLE ── */
+.cmp-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.cmp-table th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);background:var(--s2);border-bottom:1px solid var(--b1)}
+.cmp-table td{padding:11px 14px;border-bottom:1px solid var(--b1)}
+.cmp-table tbody tr:hover{background:rgba(255,255,255,.02)}
+.cmp-table .best{color:var(--g);font-weight:700}
+.cmp-table .ok2{color:var(--y);font-weight:600}
+.cmp-table .bad{color:var(--r);font-weight:600}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:fadeUp .3s ease both}
+.pc:nth-child(1){animation-delay:.05s}
+.pc:nth-child(2){animation-delay:.1s}
+.pc:nth-child(3){animation-delay:.15s}
+.pc:nth-child(4){animation-delay:.2s}
+.pc:nth-child(5){animation-delay:.25s}
+.pc:nth-child(6){animation-delay:.3s}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{display:flex;align-items:center;gap:6px;padding:10px 40px;border-bottom:1px solid var(--b1);font-size:12px;color:var(--t3);background:var(--s1)}
+.bc-sep{opacity:.4}
+.bc-curr{color:var(--t2);font-weight:500}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{height:3px;background:var(--b1);position:relative;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--a2),var(--a1));transition:width .4s ease}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<aside class="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">
+      <div class="sb-logo-ico">🚀</div>
+      <div>
+        <div class="sb-logo-name">WebDeploy</div>
+        <div class="sb-logo-sub">Hosting Guide · BCA Final Year</div>
+      </div>
+    </div>
+    <div class="search-box">
+      <span style="color:var(--t3);font-size:13px">🔍</span>
+      <input type="text" placeholder="Search topics..."/>
+    </div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-sec-lbl">Getting Started</div>
+    <div class="sb-item active" onclick="showTab('overview')"><span class="ico">📖</span>What is Hosting?</div>
+    <div class="sb-item" onclick="showTab('compare')"><span class="ico">📊</span>Platform Comparison<span class="sb-badge">6</span></div>
+    <div class="sb-item" onclick="showTab('domains')"><span class="ico">🌐</span>Domains & DNS</div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-sec-lbl">AWS Deployment</div>
+    <div class="sb-item" onclick="showTab('aws-s3')"><span class="ico">🪣</span>AWS S3 Static<span class="sb-badge y">Free Tier</span></div>
+    <div class="sb-item" onclick="showTab('aws-ec2')"><span class="ico">🖥️</span>AWS EC2 Server<span class="sb-badge y">Paid</span></div>
+    <div class="sb-item" onclick="showTab('aws-amplify')"><span class="ico">⚡</span>AWS Amplify<span class="sb-badge g">Easy</span></div>
+    <div class="sb-item" onclick="showTab('aws-lambda')"><span class="ico">λ</span>AWS Lambda</div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-sec-lbl">Other Platforms</div>
+    <div class="sb-item" onclick="showTab('netlify')"><span class="ico">🟢</span>Netlify<span class="sb-badge g">Free</span></div>
+    <div class="sb-item" onclick="showTab('vercel')"><span class="ico">▲</span>Vercel<span class="sb-badge g">Free</span></div>
+    <div class="sb-item" onclick="showTab('github-pages')"><span class="ico">🐙</span>GitHub Pages<span class="sb-badge g">Free</span></div>
+    <div class="sb-item" onclick="showTab('firebase')"><span class="ico">🔥</span>Firebase Hosting</div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-sec-lbl">Code Files</div>
+    <div class="sb-item" onclick="showTab('index-html')"><span class="ico">📄</span>index.html</div>
+    <div class="sb-item" onclick="showTab('deploy-sh')"><span class="ico">⚙️</span>deploy.sh</div>
+    <div class="sb-item" onclick="showTab('ci-cd')"><span class="ico">🔄</span>GitHub Actions CI/CD</div>
+    <div class="sb-item" onclick="showTab('dockerfile')"><span class="ico">🐳</span>Dockerfile</div>
+    <div class="sb-item" onclick="showTab('terminal')"><span class="ico">💻</span>Terminal Simulator</div>
+  </div>
+
+  <div style="padding:14px 16px;border-top:1px solid var(--b1);margin-top:auto">
+    <div style="font-size:11px;color:var(--t3);line-height:1.7">
+      <strong style="color:var(--t2)">KLH University</strong><br>BCA Final Year Project<br>Web Hosting Module · 2026
+    </div>
+  </div>
+</aside>
+
+<!-- ════════════════ MAIN ════════════════ -->
+<main class="main">
+
+  <!-- TAB BAR -->
+  <div class="tabbar" id="tabbar">
+    <div class="file-tab active" id="tab-overview"><span class="dot dot-md"></span>README.md</div>
+    <div class="file-tab" id="tab-aws-s3"><span class="dot dot-sh"></span>aws-s3-deploy.sh</div>
+    <div class="file-tab" id="tab-aws-ec2"><span class="dot dot-sh"></span>aws-ec2-setup.sh</div>
+    <div class="file-tab" id="tab-aws-amplify"><span class="dot dot-yml"></span>amplify.yml</div>
+    <div class="file-tab" id="tab-netlify"><span class="dot dot-yml"></span>netlify.toml</div>
+    <div class="file-tab" id="tab-vercel"><span class="dot dot-json"></span>vercel.json</div>
+    <div class="file-tab" id="tab-ci-cd"><span class="dot dot-yml"></span>deploy.yml</div>
+    <div class="file-tab" id="tab-terminal"><span class="dot dot-sh"></span>terminal</div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+  <!-- ════ OVERVIEW ════ -->
+  <div class="content-area active" id="page-overview">
+    <div class="hero fade">
+      <div class="hero-badge"><span class="dot2"></span>BCA Final Year · Web Hosting Module</div>
+      <h1>Web Hosting &amp;<br><em>AWS Deployment Guide</em></h1>
+      <div class="hero-sub">Learn how to deploy your website online using AWS, Netlify, Vercel, and more. Complete with working code, terminal commands, and step-by-step guides for BCA students.</div>
+      <div class="hero-tags">
+        <div class="tag">☁️ AWS S3</div>
+        <div class="tag">🖥️ AWS EC2</div>
+        <div class="tag">⚡ AWS Amplify</div>
+        <div class="tag">🟢 Netlify</div>
+        <div class="tag">▲ Vercel</div>
+        <div class="tag">🐙 GitHub Pages</div>
+        <div class="tag">🔄 CI/CD Pipeline</div>
+        <div class="tag">🐳 Docker</div>
+      </div>
+    </div>
+
+    <div class="breadcrumb">
+      <span>🏠 Home</span><span class="bc-sep">›</span>
+      <span class="bc-curr">📖 What is Web Hosting?</span>
+    </div>
+
+    <!-- CONCEPT -->
+    <div style="padding:28px 40px 0">
+      <div style="font-family:var(--fh);font-size:18px;font-weight:800;margin-bottom:16px">🌐 What is Web Hosting?</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+        <div style="background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:18px">
+          <div style="font-size:22px;margin-bottom:8px">📦</div>
+          <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:6px">Before Hosting</div>
+          <div style="font-size:12.5px;color:var(--t2);line-height:1.7">Your website only works on YOUR computer. No one else can see it. Files are stored locally.</div>
+          <div style="margin-top:12px;font-family:var(--fc);font-size:12px;background:var(--s2);padding:10px;border-radius:8px;color:var(--t3)">C:\Users\You\website\index.html<br><span style="color:var(--r)">❌ Only you can open this</span></div>
+        </div>
+        <div style="background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:18px">
+          <div style="font-size:22px;margin-bottom:8px">🌍</div>
+          <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:6px">After Hosting</div>
+          <div style="font-size:12.5px;color:var(--t2);line-height:1.7">Your website lives on a server. Anyone in the world can visit it using a URL/domain name.</div>
+          <div style="margin-top:12px;font-family:var(--fc);font-size:12px;background:var(--s2);padding:10px;border-radius:8px;color:var(--g)">https://mysite.com/index.html<br>✅ Anyone in the world can open this</div>
+        </div>
+      </div>
+
+      <!-- HOW IT WORKS -->
+      <div style="font-family:var(--fh);font-size:16px;font-weight:700;margin-bottom:14px">⚙️ How It Works</div>
+      <div style="display:flex;align-items:center;gap:0;margin-bottom:24px;overflow-x:auto;padding-bottom:4px">
+        <div style="background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:14px 18px;text-align:center;flex-shrink:0;min-width:120px">
+          <div style="font-size:20px;margin-bottom:5px">💻</div>
+          <div style="font-size:12px;font-weight:700">Your Code</div>
+          <div style="font-size:10.5px;color:var(--t3)">HTML/CSS/JS</div>
+        </div>
+        <div style="padding:0 10px;color:var(--a1);font-size:18px;flex-shrink:0">→</div>
+        <div style="background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:14px 18px;text-align:center;flex-shrink:0;min-width:120px">
+          <div style="font-size:20px;margin-bottom:5px">📤</div>
+          <div style="font-size:12px;font-weight:700">Upload/Deploy</div>
+          <div style="font-size:10.5px;color:var(--t3)">Push to server</div>
+        </div>
+        <div style="padding:0 10px;color:var(--a1);font-size:18px;flex-shrink:0">→</div>
+        <div style="background:rgba(255,153,0,.1);border:1px solid rgba(255,153,0,.3);border-radius:10px;padding:14px 18px;text-align:center;flex-shrink:0;min-width:120px">
+          <div style="font-size:20px;margin-bottom:5px">☁️</div>
+          <div style="font-size:12px;font-weight:700;color:#ff9900">AWS Server</div>
+          <div style="font-size:10.5px;color:var(--t3)">Runs 24/7</div>
+        </div>
+        <div style="padding:0 10px;color:var(--a1);font-size:18px;flex-shrink:0">→</div>
+        <div style="background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:14px 18px;text-align:center;flex-shrink:0;min-width:120px">
+          <div style="font-size:20px;margin-bottom:5px">🌐</div>
+          <div style="font-size:12px;font-weight:700">Domain Name</div>
+          <div style="font-size:10.5px;color:var(--t3)">www.mysite.com</div>
+        </div>
+        <div style="padding:0 10px;color:var(--a1);font-size:18px;flex-shrink:0">→</div>
+        <div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:14px 18px;text-align:center;flex-shrink:0;min-width:120px">
+          <div style="font-size:20px;margin-bottom:5px">👥</div>
+          <div style="font-size:12px;font-weight:700;color:var(--g)">Users Visit</div>
+          <div style="font-size:10.5px;color:var(--t3)">Anyone worldwide</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLATFORM CARDS -->
+    <div style="padding:0 40px 8px"><div style="font-family:var(--fh);font-size:16px;font-weight:700">🏆 Choose Your Hosting Platform</div></div>
+    <div class="platform-grid" style="padding-bottom:28px">
+      <div class="pc aws fade" onclick="showTab('aws-s3')">
+        <div class="pc-header">
+          <div class="pc-icon">☁️</div>
+          <div><div class="pc-name">AWS S3</div><div style="font-size:11px;color:#ff9900">Amazon Web Services</div></div>
+          <div class="pc-tier both">Free Tier</div>
+        </div>
+        <div class="pc-desc">Host static websites (HTML/CSS/JS) on Amazon S3 bucket. 5GB free storage, extremely reliable.</div>
+        <div class="pc-features">
+          <div class="pc-feat">5GB free storage</div>
+          <div class="pc-feat">99.99% uptime SLA</div>
+          <div class="pc-feat">Global CDN via CloudFront</div>
+          <div class="pc-feat">Custom domain support</div>
+        </div>
+      </div>
+      <div class="pc fade" style="border-top:3px solid #ff6b35" onclick="showTab('aws-ec2')">
+        <div class="pc-header">
+          <div class="pc-icon">🖥️</div>
+          <div><div class="pc-name">AWS EC2</div><div style="font-size:11px;color:#ff6b35">Elastic Compute Cloud</div></div>
+          <div class="pc-tier both">Free Tier</div>
+        </div>
+        <div class="pc-desc">Full virtual server — run Node.js, PHP, Python, databases. 750 hrs/month free (t2.micro).</div>
+        <div class="pc-features">
+          <div class="pc-feat">750 hrs/month free</div>
+          <div class="pc-feat">Full Linux/Windows server</div>
+          <div class="pc-feat">Run any backend language</div>
+          <div class="pc-feat">Install MySQL, MongoDB</div>
+        </div>
+      </div>
+      <div class="pc aws fade" onclick="showTab('aws-amplify')">
+        <div class="pc-header">
+          <div class="pc-icon">⚡</div>
+          <div><div class="pc-name">AWS Amplify</div><div style="font-size:11px;color:#ff9900">Full-Stack Hosting</div></div>
+          <div class="pc-tier g">Easiest</div>
+        </div>
+        <div class="pc-desc">Easiest AWS option. Connect GitHub repo → auto-deploy on every push. Like Netlify but AWS.</div>
+        <div class="pc-features">
+          <div class="pc-feat">Auto-deploy from GitHub</div>
+          <div class="pc-feat">Free tier available</div>
+          <div class="pc-feat">SSL certificate auto</div>
+          <div class="pc-feat">Preview deployments</div>
+        </div>
+      </div>
+      <div class="pc netlify fade" onclick="showTab('netlify')">
+        <div class="pc-header">
+          <div class="pc-icon">🟢</div>
+          <div><div class="pc-name">Netlify</div><div style="font-size:11px;color:#00d5c5">Best for Beginners</div></div>
+          <div class="pc-tier free">100% Free</div>
+        </div>
+        <div class="pc-desc">Drag &amp; drop deploy. Connect GitHub for auto-deploy. Best choice for BCA static projects.</div>
+        <div class="pc-features">
+          <div class="pc-feat">Drag &amp; drop deploy</div>
+          <div class="pc-feat">Free SSL (HTTPS)</div>
+          <div class="pc-feat">Auto-deploy from Git</div>
+          <div class="pc-feat">Free subdomain</div>
+        </div>
+      </div>
+      <div class="pc vercel fade" onclick="showTab('vercel')">
+        <div class="pc-header">
+          <div class="pc-icon">▲</div>
+          <div><div class="pc-name">Vercel</div><div style="font-size:11px;color:#aaa">Best for React/Next.js</div></div>
+          <div class="pc-tier free">100% Free</div>
+        </div>
+        <div class="pc-desc">Best for React, Next.js apps. One command deploy. Auto-scales. Used by top companies.</div>
+        <div class="pc-features">
+          <div class="pc-feat">Zero config deploys</div>
+          <div class="pc-feat">Edge network (global)</div>
+          <div class="pc-feat">React/Next.js optimized</div>
+          <div class="pc-feat">Preview URLs per branch</div>
+        </div>
+      </div>
+      <div class="pc gh fade" onclick="showTab('github-pages')">
+        <div class="pc-header">
+          <div class="pc-icon">🐙</div>
+          <div><div class="pc-name">GitHub Pages</div><div style="font-size:11px;color:#8b5cf6">Free Forever</div></div>
+          <div class="pc-tier free">Always Free</div>
+        </div>
+        <div class="pc-desc">Host directly from your GitHub repository. Push code → site updates automatically. Perfect for portfolios.</div>
+        <div class="pc-features">
+          <div class="pc-feat">Free forever</div>
+          <div class="pc-feat">Push-to-deploy</div>
+          <div class="pc-feat">Free username.github.io URL</div>
+          <div class="pc-feat">Custom domain support</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ AWS S3 ════ -->
+  <div class="content-area" id="page-aws-s3">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge" style="background:rgba(255,153,0,.1);border-color:rgba(255,153,0,.3);color:#ff9900"><span class="dot2" style="background:#ff9900"></span>AWS S3 — Static Website Hosting</div>
+      <h1 style="font-size:24px">Deploy Static Website to <em style="background:linear-gradient(120deg,#ff9900,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">AWS S3</em></h1>
+      <div class="hero-sub" style="font-size:13px">Host HTML/CSS/JS websites on Amazon S3. Free tier: 5GB storage, 20,000 GET requests/month. Best for BCA project static sites.</div>
+    </div>
+
+    <div class="breadcrumb"><span>🏠</span><span class="bc-sep">›</span><span>☁️ AWS</span><span class="bc-sep">›</span><span class="bc-curr">🪣 S3 Static Hosting</span></div>
+
+    <!-- STEPS -->
+    <div style="padding:20px 40px 0;font-family:var(--fh);font-size:16px;font-weight:700;margin-bottom:14px">📋 Step-by-Step Deployment</div>
+    <div class="steps-grid">
+      <div class="step open">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num done">1</div>
+          <div class="step-info"><div class="step-title">Create AWS Account &amp; Install AWS CLI</div><div class="step-sub">One-time setup — takes 5 minutes</div></div>
+          <span class="step-chevron">▼</span>
+        </div>
+        <div class="step-body">
+          <div class="info-box tip">Go to <strong>aws.amazon.com</strong> → Create Free Account → Add credit card (won't be charged for free tier)</div>
+          <div class="code-block" style="margin-top:12px">
+            <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">install-aws-cli.sh</div><div class="code-lang">BASH</div></div>
+            <div class="code-body">
+              <div class="line"><span class="ln">1</span><span class="code-content cm"># Step 1: Install AWS CLI on your computer</span></div>
+              <div class="line"><span class="ln">2</span><span class="code-content cm"># For Windows — download installer from:</span></div>
+              <div class="line"><span class="ln">3</span><span class="code-content cm"># https://awscli.amazonaws.com/AWSCLIV2.msi</span></div>
+              <div class="line"><span class="ln">4</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">5</span><span class="code-content cm"># For Mac/Linux:</span></div>
+              <div class="line"><span class="ln">6</span><span class="code-content"><span class="fn">curl</span> <span class="str">"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"</span> -o <span class="str">"awscliv2.zip"</span></span></div>
+              <div class="line"><span class="ln">7</span><span class="code-content"><span class="fn">unzip</span> awscliv2.zip</span></div>
+              <div class="line"><span class="ln">8</span><span class="code-content"><span class="fn">sudo</span> ./aws/install</span></div>
+              <div class="line"><span class="ln">9</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">10</span><span class="code-content cm"># Verify installation:</span></div>
+              <div class="line"><span class="ln">11</span><span class="code-content"><span class="fn">aws</span> --version</span></div>
+              <div class="line"><span class="ln">12</span><span class="code-content cm"># Output: aws-cli/2.x.x Python/3.x...</span></div>
+              <div class="line"><span class="ln">13</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">14</span><span class="code-content cm"># Configure with your AWS credentials:</span></div>
+              <div class="line"><span class="ln">15</span><span class="code-content"><span class="fn">aws</span> configure</span></div>
+              <div class="line"><span class="ln">16</span><span class="code-content cm"># Enter: AWS Access Key ID</span></div>
+              <div class="line"><span class="ln">17</span><span class="code-content cm"># Enter: AWS Secret Access Key</span></div>
+              <div class="line"><span class="ln">18</span><span class="code-content cm"># Enter: Default region (e.g., ap-south-1 for India)</span></div>
+              <div class="line"><span class="ln">19</span><span class="code-content cm"># Enter: Default output format (json)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num aws">2</div>
+          <div class="step-info"><div class="step-title">Create S3 Bucket &amp; Enable Website Hosting</div><div class="step-sub">Run these AWS CLI commands</div></div>
+          <span class="step-chevron">▼</span>
+        </div>
+        <div class="step-body">
+          <div class="info-box aws">Replace <strong>my-bca-project</strong> with your bucket name. Bucket names must be globally unique!</div>
+          <div class="code-block" style="margin-top:12px">
+            <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">create-s3-bucket.sh</div><div class="code-lang">BASH</div></div>
+            <div class="code-body">
+              <div class="line"><span class="ln">1</span><span class="code-content cm"># ── STEP 2: Create your S3 bucket ──</span></div>
+              <div class="line"><span class="ln">2</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">3</span><span class="code-content cm"># Create the bucket (ap-south-1 = India/Mumbai region)</span></div>
+              <div class="line hl-line"><span class="ln">4</span><span class="code-content"><span class="fn">aws</span> s3api create-bucket \</span></div>
+              <div class="line hl-line"><span class="ln">5</span><span class="code-content">  --bucket my-bca-project-2026 \</span></div>
+              <div class="line hl-line"><span class="ln">6</span><span class="code-content">  --region ap-south-1 \</span></div>
+              <div class="line hl-line"><span class="ln">7</span><span class="code-content">  --create-bucket-configuration LocationConstraint=ap-south-1</span></div>
+              <div class="line"><span class="ln">8</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">9</span><span class="code-content cm"># Enable static website hosting on the bucket</span></div>
+              <div class="line hl-line"><span class="ln">10</span><span class="code-content"><span class="fn">aws</span> s3 website s3://my-bca-project-2026 \</span></div>
+              <div class="line hl-line"><span class="ln">11</span><span class="code-content">  --index-document index.html \</span></div>
+              <div class="line hl-line"><span class="ln">12</span><span class="code-content">  --error-document error.html</span></div>
+              <div class="line"><span class="ln">13</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">14</span><span class="code-content cm"># Make the bucket PUBLIC (so anyone can visit your site)</span></div>
+              <div class="line"><span class="ln">15</span><span class="code-content"><span class="fn">aws</span> s3api put-public-access-block \</span></div>
+              <div class="line"><span class="ln">16</span><span class="code-content">  --bucket my-bca-project-2026 \</span></div>
+              <div class="line"><span class="ln">17</span><span class="code-content">  --public-access-block-configuration \</span></div>
+              <div class="line"><span class="ln">18</span><span class="code-content">  BlockPublicAcls=false,IgnorePublicAcls=false,\</span></div>
+              <div class="line"><span class="ln">19</span><span class="code-content">  BlockPublicPolicy=false,RestrictPublicBuckets=false</span></div>
+              <div class="line"><span class="ln">20</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">21</span><span class="code-content cm"># Add bucket policy to allow public read access</span></div>
+              <div class="line"><span class="ln">22</span><span class="code-content"><span class="fn">aws</span> s3api put-bucket-policy \</span></div>
+              <div class="line"><span class="ln">23</span><span class="code-content">  --bucket my-bca-project-2026 \</span></div>
+              <div class="line"><span class="ln">24</span><span class="code-content">  --policy file://bucket-policy.json</span></div>
+            </div>
+          </div>
+          <div class="code-block" style="margin-top:12px">
+            <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">bucket-policy.json</div><div class="code-lang">JSON</div></div>
+            <div class="code-body">
+              <div class="line"><span class="ln">1</span><span class="code-content">{</span></div>
+              <div class="line"><span class="ln">2</span><span class="code-content">  <span class="attr">"Version"</span>: <span class="val">"2012-10-17"</span>,</span></div>
+              <div class="line"><span class="ln">3</span><span class="code-content">  <span class="attr">"Statement"</span>: [</span></div>
+              <div class="line"><span class="ln">4</span><span class="code-content">    {</span></div>
+              <div class="line"><span class="ln">5</span><span class="code-content">      <span class="attr">"Sid"</span>: <span class="val">"PublicReadGetObject"</span>,</span></div>
+              <div class="line"><span class="ln">6</span><span class="code-content">      <span class="attr">"Effect"</span>: <span class="val">"Allow"</span>,</span></div>
+              <div class="line"><span class="ln">7</span><span class="code-content">      <span class="attr">"Principal"</span>: <span class="val">"*"</span>,</span></div>
+              <div class="line"><span class="ln">8</span><span class="code-content">      <span class="attr">"Action"</span>: <span class="val">"s3:GetObject"</span>,</span></div>
+              <div class="line"><span class="ln">9</span><span class="code-content">      <span class="attr">"Resource"</span>: <span class="val">"arn:aws:s3:::my-bca-project-2026/*"</span></span></div>
+              <div class="line"><span class="ln">10</span><span class="code-content">    }</span></div>
+              <div class="line"><span class="ln">11</span><span class="code-content">  ]</span></div>
+              <div class="line"><span class="ln">12</span><span class="code-content">}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num aws">3</div>
+          <div class="step-info"><div class="step-title">Upload Your Website Files to S3</div><div class="step-sub">Deploy all HTML/CSS/JS files</div></div>
+          <span class="step-chevron">▼</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+            <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">upload-to-s3.sh</div><div class="code-lang">BASH</div></div>
+            <div class="code-body">
+              <div class="line"><span class="ln">1</span><span class="code-content cm"># ── STEP 3: Upload files to S3 ──</span></div>
+              <div class="line"><span class="ln">2</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">3</span><span class="code-content cm"># Upload a single file:</span></div>
+              <div class="line"><span class="ln">4</span><span class="code-content"><span class="fn">aws</span> s3 cp index.html s3://my-bca-project-2026/</span></div>
+              <div class="line"><span class="ln">5</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">6</span><span class="code-content cm"># Upload entire folder (your project directory):</span></div>
+              <div class="line hl-line"><span class="ln">7</span><span class="code-content"><span class="fn">aws</span> s3 sync ./my-website/ s3://my-bca-project-2026/</span></div>
+              <div class="line"><span class="ln">8</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">9</span><span class="code-content cm"># Upload with correct MIME types (important!):</span></div>
+              <div class="line"><span class="ln">10</span><span class="code-content"><span class="fn">aws</span> s3 sync ./my-website/ s3://my-bca-project-2026/ \</span></div>
+              <div class="line"><span class="ln">11</span><span class="code-content">  --exclude <span class="str">"*.DS_Store"</span> \</span></div>
+              <div class="line"><span class="ln">12</span><span class="code-content">  --delete</span></div>
+              <div class="line"><span class="ln">13</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">14</span><span class="code-content cm"># Check uploaded files:</span></div>
+              <div class="line"><span class="ln">15</span><span class="code-content"><span class="fn">aws</span> s3 ls s3://my-bca-project-2026/</span></div>
+              <div class="line"><span class="ln">16</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">17</span><span class="code-content cm"># Your site is now live at:</span></div>
+              <div class="line"><span class="ln">18</span><span class="code-content cm"># http://my-bca-project-2026.s3-website.ap-south-1.amazonaws.com</span></div>
+            </div>
+          </div>
+          <div class="info-box ok">Your website is now live! Visit the S3 website endpoint URL to see it online.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num aws">4</div>
+          <div class="step-info"><div class="step-title">Add CloudFront CDN + Custom Domain (Optional)</div><div class="step-sub">Make it faster worldwide with free SSL</div></div>
+          <span class="step-chevron">▼</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+            <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">cloudfront-setup.sh</div><div class="code-lang">BASH</div></div>
+            <div class="code-body">
+              <div class="line"><span class="ln">1</span><span class="code-content cm"># Create CloudFront distribution for your S3 bucket</span></div>
+              <div class="line"><span class="ln">2</span><span class="code-content cm"># This gives you HTTPS + global CDN (faster worldwide)</span></div>
+              <div class="line"><span class="ln">3</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">4</span><span class="code-content"><span class="fn">aws</span> cloudfront create-distribution \</span></div>
+              <div class="line"><span class="ln">5</span><span class="code-content">  --distribution-config file://cloudfront-config.json</span></div>
+              <div class="line"><span class="ln">6</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">7</span><span class="code-content cm"># OR use this one-liner to get the distribution URL:</span></div>
+              <div class="line"><span class="ln">8</span><span class="code-content"><span class="fn">aws</span> cloudfront list-distributions \</span></div>
+              <div class="line"><span class="ln">9</span><span class="code-content">  --query <span class="str">"DistributionList.Items[*].DomainName"</span></span></div>
+              <div class="line"><span class="ln">10</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">11</span><span class="code-content cm"># Your CloudFront URL will be like:</span></div>
+              <div class="line"><span class="ln">12</span><span class="code-content cm"># https://d3abc123xyz.cloudfront.net</span></div>
+              <div class="line"><span class="ln">13</span><span class="code-content"></span></div>
+              <div class="line"><span class="ln">14</span><span class="code-content cm"># Invalidate cache after updating files:</span></div>
+              <div class="line"><span class="ln">15</span><span class="code-content"><span class="fn">aws</span> cloudfront create-invalidation \</span></div>
+              <div class="line"><span class="ln">16</span><span class="code-content">  --distribution-id YOUR_DISTRIBUTION_ID \</span></div>
+              <div class="line"><span class="ln">17</span><span class="code-content">  --paths <span class="str">"/*"</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FULL DEPLOY SCRIPT -->
+    <div class="editor-wrap">
+      <div class="editor-header">
+        <div class="editor-title">🚀 Complete AWS S3 Deploy Script (One File)</div>
+        <div class="editor-actions">
+          <button class="btn-copy" onclick="copyCode('full-s3')">📋 Copy Code</button>
+        </div>
+      </div>
+      <div class="code-block" id="full-s3">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">deploy-to-aws-s3.sh</div><div class="code-lang">BASH</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm">#!/bin/bash</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content cm"># ════════════════════════════════════════════════</span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content cm"># AWS S3 Static Website Deployment Script</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content cm"># BCA Final Year Project — KLH University 2026</span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content cm"># ════════════════════════════════════════════════</span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content cm"># ── CONFIGURATION ──</span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content"><span class="kw">BUCKET_NAME</span>=<span class="str">"my-bca-project-2026"</span>    <span class="cm"># Change this!</span></span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content"><span class="kw">REGION</span>=<span class="str">"ap-south-1"</span>               <span class="cm"># India/Mumbai</span></span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content"><span class="kw">SOURCE_DIR</span>=<span class="str">"./build"</span>              <span class="cm"># Your project folder</span></span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content"><span class="kw">INDEX_DOC</span>=<span class="str">"index.html"</span></span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content"><span class="kw">ERROR_DOC</span>=<span class="str">"error.html"</span></span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content cm"># Colors for output</span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content"><span class="kw">GREEN</span>=<span class="str">'\033[0;32m'</span>; <span class="kw">RED</span>=<span class="str">'\033[0;31m'</span>; <span class="kw">NC</span>=<span class="str">'\033[0m'</span></span></div>
+          <div class="line"><span class="ln">16</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">17</span><span class="code-content"><span class="fn">echo</span> <span class="str">"🚀 Starting AWS S3 Deployment..."</span></span></div>
+          <div class="line"><span class="ln">18</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">19</span><span class="code-content cm"># ── STEP 1: Check AWS CLI is installed ──</span></div>
+          <div class="line"><span class="ln">20</span><span class="code-content"><span class="kw">if</span> ! command -v aws &amp;&gt;/dev/null; <span class="kw">then</span></span></div>
+          <div class="line"><span class="ln">21</span><span class="code-content">  <span class="fn">echo</span> <span class="str">"${RED}❌ AWS CLI not installed. Install from aws.amazon.com/cli${NC}"</span></span></div>
+          <div class="line"><span class="ln">22</span><span class="code-content">  <span class="fn">exit</span> 1</span></div>
+          <div class="line"><span class="ln">23</span><span class="code-content"><span class="kw">fi</span></span></div>
+          <div class="line"><span class="ln">24</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">25</span><span class="code-content cm"># ── STEP 2: Create bucket if it doesn't exist ──</span></div>
+          <div class="line"><span class="ln">26</span><span class="code-content"><span class="fn">echo</span> <span class="str">"📦 Creating S3 bucket: $BUCKET_NAME"</span></span></div>
+          <div class="line"><span class="ln">27</span><span class="code-content"><span class="fn">aws</span> s3api create-bucket \</span></div>
+          <div class="line"><span class="ln">28</span><span class="code-content">  --bucket <span class="str">"$BUCKET_NAME"</span> \</span></div>
+          <div class="line"><span class="ln">29</span><span class="code-content">  --region <span class="str">"$REGION"</span> \</span></div>
+          <div class="line"><span class="ln">30</span><span class="code-content">  --create-bucket-configuration \</span></div>
+          <div class="line"><span class="ln">31</span><span class="code-content">    LocationConstraint=<span class="str">"$REGION"</span> 2&gt;/dev/null || <span class="fn">true</span></span></div>
+          <div class="line"><span class="ln">32</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">33</span><span class="code-content cm"># ── STEP 3: Configure for static website hosting ──</span></div>
+          <div class="line"><span class="ln">34</span><span class="code-content"><span class="fn">echo</span> <span class="str">"🌐 Enabling website hosting..."</span></span></div>
+          <div class="line"><span class="ln">35</span><span class="code-content"><span class="fn">aws</span> s3api put-bucket-website \</span></div>
+          <div class="line"><span class="ln">36</span><span class="code-content">  --bucket <span class="str">"$BUCKET_NAME"</span> \</span></div>
+          <div class="line"><span class="ln">37</span><span class="code-content">  --website-configuration <span class="str">'{</span></span></div>
+          <div class="line"><span class="ln">38</span><span class="code-content"><span class="str">    "IndexDocument":{"Suffix":"'$INDEX_DOC'"},</span></span></div>
+          <div class="line"><span class="ln">39</span><span class="code-content"><span class="str">    "ErrorDocument":{"Key":"'$ERROR_DOC'"}}'</span></span></div>
+          <div class="line"><span class="ln">40</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">41</span><span class="code-content cm"># ── STEP 4: Set public access ──</span></div>
+          <div class="line"><span class="ln">42</span><span class="code-content"><span class="fn">echo</span> <span class="str">"🔓 Setting public access..."</span></span></div>
+          <div class="line"><span class="ln">43</span><span class="code-content"><span class="fn">aws</span> s3api put-public-access-block \</span></div>
+          <div class="line"><span class="ln">44</span><span class="code-content">  --bucket <span class="str">"$BUCKET_NAME"</span> \</span></div>
+          <div class="line"><span class="ln">45</span><span class="code-content">  --public-access-block-configuration \</span></div>
+          <div class="line"><span class="ln">46</span><span class="code-content">    BlockPublicAcls=false,IgnorePublicAcls=false,\</span></div>
+          <div class="line"><span class="ln">47</span><span class="code-content">    BlockPublicPolicy=false,RestrictPublicBuckets=false</span></div>
+          <div class="line"><span class="ln">48</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">49</span><span class="code-content cm"># ── STEP 5: Apply bucket policy ──</span></div>
+          <div class="line"><span class="ln">50</span><span class="code-content"><span class="fn">echo</span> <span class="str">"📋 Applying bucket policy..."</span></span></div>
+          <div class="line"><span class="ln">51</span><span class="code-content"><span class="fn">aws</span> s3api put-bucket-policy \</span></div>
+          <div class="line"><span class="ln">52</span><span class="code-content">  --bucket <span class="str">"$BUCKET_NAME"</span> \</span></div>
+          <div class="line"><span class="ln">53</span><span class="code-content">  --policy <span class="str">'{"Version":"2012-10-17","Statement":[{</span></span></div>
+          <div class="line"><span class="ln">54</span><span class="code-content"><span class="str">    "Sid":"PublicRead","Effect":"Allow","Principal":"*",</span></span></div>
+          <div class="line"><span class="ln">55</span><span class="code-content"><span class="str">    "Action":"s3:GetObject",</span></span></div>
+          <div class="line"><span class="ln">56</span><span class="code-content"><span class="str">    "Resource":"arn:aws:s3:::'$BUCKET_NAME'/*"}]}'</span></span></div>
+          <div class="line"><span class="ln">57</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">58</span><span class="code-content cm"># ── STEP 6: Upload all files ──</span></div>
+          <div class="line"><span class="ln">59</span><span class="code-content"><span class="fn">echo</span> <span class="str">"📤 Uploading website files..."</span></span></div>
+          <div class="line"><span class="ln">60</span><span class="code-content"><span class="fn">aws</span> s3 sync <span class="str">"$SOURCE_DIR"</span> s3://<span class="str">"$BUCKET_NAME"</span>/ \</span></div>
+          <div class="line"><span class="ln">61</span><span class="code-content">  --delete \</span></div>
+          <div class="line"><span class="ln">62</span><span class="code-content">  --exclude <span class="str">"*.DS_Store"</span> \</span></div>
+          <div class="line"><span class="ln">63</span><span class="code-content">  --exclude <span class="str">"*.git/*"</span></span></div>
+          <div class="line"><span class="ln">64</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">65</span><span class="code-content cm"># ── DONE ──</span></div>
+          <div class="line"><span class="ln">66</span><span class="code-content"><span class="fn">echo</span> <span class="str">"${GREEN}✅ DEPLOYMENT SUCCESSFUL!${NC}"</span></span></div>
+          <div class="line"><span class="ln">67</span><span class="code-content"><span class="fn">echo</span> <span class="str">"🌐 Your website URL:"</span></span></div>
+          <div class="line"><span class="ln">68</span><span class="code-content"><span class="fn">echo</span> <span class="str">"   http://$BUCKET_NAME.s3-website.$REGION.amazonaws.com"</span></span></div>
+        </div>
+      </div>
+      <div class="info-box ok" style="margin-top:12px">Save this as <strong>deploy.sh</strong> → run <strong>chmod +x deploy.sh</strong> → then <strong>./deploy.sh</strong> to deploy!</div>
+    </div>
+  </div>
+
+  <!-- ════ AWS EC2 ════ -->
+  <div class="content-area" id="page-aws-ec2">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge" style="background:rgba(255,107,53,.1);border-color:rgba(255,107,53,.3);color:#ff6b35"><span class="dot2" style="background:#ff6b35"></span>AWS EC2 — Full Server Deployment</div>
+      <h1 style="font-size:24px">Deploy Full-Stack App to <em style="background:linear-gradient(120deg,#ff6b35,#ff9900);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">AWS EC2</em></h1>
+      <div class="hero-sub" style="font-size:13px">Full virtual Linux server. Run Node.js, PHP, Python. Host databases. 750 hrs/month FREE with t2.micro. Perfect for BCA final year dynamic projects.</div>
+    </div>
+    <div class="breadcrumb"><span>🏠</span><span class="bc-sep">›</span><span>☁️ AWS</span><span class="bc-sep">›</span><span class="bc-curr">🖥️ EC2 Server</span></div>
+    <div class="editor-wrap">
+      <div class="editor-header"><div class="editor-title">🖥️ EC2 Complete Setup Script</div><div class="editor-actions"><button class="btn-copy" onclick="copyCode('ec2-code')">📋 Copy</button></div></div>
+      <div class="code-block" id="ec2-code">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">aws-ec2-setup.sh</div><div class="code-lang">BASH</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm">#!/bin/bash</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content cm"># ═══════════════════════════════════════════════</span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content cm"># AWS EC2 — Full Server Setup for BCA Project</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content cm"># Run this AFTER SSH-ing into your EC2 instance</span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content cm"># ═══════════════════════════════════════════════</span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content cm"># ── 1. Launch EC2 Instance (AWS Console steps) ──</span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content cm"># Go to: EC2 → Launch Instance</span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content cm"># Choose: Amazon Linux 2 / Ubuntu 22.04 LTS</span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content cm"># Type: t2.micro (FREE TIER)</span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content cm"># Create key pair → download .pem file</span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content cm"># Open ports: 22 (SSH), 80 (HTTP), 443 (HTTPS)</span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content cm"># ── 2. Connect via SSH ──</span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content cm"># From your computer (replace with your values):</span></div>
+          <div class="line"><span class="ln">16</span><span class="code-content"><span class="fn">ssh</span> -i <span class="str">"my-key.pem"</span> ubuntu@<span class="str">"YOUR-EC2-PUBLIC-IP"</span></span></div>
+          <div class="line"><span class="ln">17</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">18</span><span class="code-content cm"># ── 3. Update server packages ──</span></div>
+          <div class="line"><span class="ln">19</span><span class="code-content"><span class="fn">sudo</span> apt update && sudo apt upgrade -y</span></div>
+          <div class="line"><span class="ln">20</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">21</span><span class="code-content cm"># ── 4. Install Node.js ──</span></div>
+          <div class="line"><span class="ln">22</span><span class="code-content"><span class="fn">curl</span> -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -</span></div>
+          <div class="line"><span class="ln">23</span><span class="code-content"><span class="fn">sudo</span> apt install -y nodejs</span></div>
+          <div class="line"><span class="ln">24</span><span class="code-content"><span class="fn">node</span> --version   <span class="cm"># Should show v18.x</span></span></div>
+          <div class="line"><span class="ln">25</span><span class="code-content"><span class="fn">npm</span> --version    <span class="cm"># Should show 9.x</span></span></div>
+          <div class="line"><span class="ln">26</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">27</span><span class="code-content cm"># ── 5. Install Nginx web server ──</span></div>
+          <div class="line"><span class="ln">28</span><span class="code-content"><span class="fn">sudo</span> apt install nginx -y</span></div>
+          <div class="line"><span class="ln">29</span><span class="code-content"><span class="fn">sudo</span> systemctl start nginx</span></div>
+          <div class="line"><span class="ln">30</span><span class="code-content"><span class="fn">sudo</span> systemctl enable nginx   <span class="cm"># Auto-start on reboot</span></span></div>
+          <div class="line"><span class="ln">31</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">32</span><span class="code-content cm"># ── 6. Install MySQL (optional - for database) ──</span></div>
+          <div class="line"><span class="ln">33</span><span class="code-content"><span class="fn">sudo</span> apt install mysql-server -y</span></div>
+          <div class="line"><span class="ln">34</span><span class="code-content"><span class="fn">sudo</span> mysql_secure_installation   <span class="cm"># Set root password</span></span></div>
+          <div class="line"><span class="ln">35</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">36</span><span class="code-content cm"># ── 7. Clone your project from GitHub ──</span></div>
+          <div class="line"><span class="ln">37</span><span class="code-content"><span class="fn">cd</span> /var/www/html</span></div>
+          <div class="line"><span class="ln">38</span><span class="code-content"><span class="fn">sudo</span> git clone https://github.com/yourusername/bca-project.git</span></div>
+          <div class="line"><span class="ln">39</span><span class="code-content"><span class="fn">cd</span> bca-project</span></div>
+          <div class="line"><span class="ln">40</span><span class="code-content"><span class="fn">npm</span> install</span></div>
+          <div class="line"><span class="ln">41</span><span class="code-content"><span class="fn">npm</span> run build</span></div>
+          <div class="line"><span class="ln">42</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">43</span><span class="code-content cm"># ── 8. Install PM2 to keep Node running ──</span></div>
+          <div class="line"><span class="ln">44</span><span class="code-content"><span class="fn">sudo</span> npm install -g pm2</span></div>
+          <div class="line"><span class="ln">45</span><span class="code-content"><span class="fn">pm2</span> start app.js --name <span class="str">"bca-project"</span></span></div>
+          <div class="line"><span class="ln">46</span><span class="code-content"><span class="fn">pm2</span> startup     <span class="cm"># Auto-restart on reboot</span></span></div>
+          <div class="line"><span class="ln">47</span><span class="code-content"><span class="fn">pm2</span> save</span></div>
+          <div class="line"><span class="ln">48</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">49</span><span class="code-content cm"># ── 9. Configure Nginx to proxy to Node ──</span></div>
+          <div class="line"><span class="ln">50</span><span class="code-content"><span class="fn">sudo</span> nano /etc/nginx/sites-available/bca-project</span></div>
+          <div class="line"><span class="ln">51</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">52</span><span class="code-content cm"># Add this Nginx config:</span></div>
+          <div class="line"><span class="ln">53</span><span class="code-content">server {</span></div>
+          <div class="line"><span class="ln">54</span><span class="code-content">  listen <span class="num">80</span>;</span></div>
+          <div class="line"><span class="ln">55</span><span class="code-content">  server_name YOUR-EC2-PUBLIC-IP;</span></div>
+          <div class="line"><span class="ln">56</span><span class="code-content">  location / {</span></div>
+          <div class="line"><span class="ln">57</span><span class="code-content">    proxy_pass http://localhost:<span class="num">3000</span>;</span></div>
+          <div class="line"><span class="ln">58</span><span class="code-content">    proxy_http_version <span class="num">1.1</span>;</span></div>
+          <div class="line"><span class="ln">59</span><span class="code-content">    proxy_set_header Upgrade $http_upgrade;</span></div>
+          <div class="line"><span class="ln">60</span><span class="code-content">    proxy_set_header Connection <span class="str">'upgrade'</span>;</span></div>
+          <div class="line"><span class="ln">61</span><span class="code-content">  }</span></div>
+          <div class="line"><span class="ln">62</span><span class="code-content">}</span></div>
+          <div class="line"><span class="ln">63</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">64</span><span class="code-content"><span class="fn">sudo</span> nginx -t   <span class="cm"># Test config</span></span></div>
+          <div class="line"><span class="ln">65</span><span class="code-content"><span class="fn">sudo</span> systemctl reload nginx</span></div>
+          <div class="line"><span class="ln">66</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">67</span><span class="code-content cm"># ✅ Visit: http://YOUR-EC2-PUBLIC-IP to see your site!</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ AWS AMPLIFY ════ -->
+  <div class="content-area" id="page-aws-amplify">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge" style="background:rgba(255,153,0,.1);border-color:rgba(255,153,0,.3);color:#ff9900"><span class="dot2" style="background:#ff9900"></span>AWS Amplify — Easiest AWS Hosting</div>
+      <h1 style="font-size:24px">Deploy with <em style="background:linear-gradient(120deg,#ff9900,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">AWS Amplify</em></h1>
+      <div class="hero-sub" style="font-size:13px">Connect GitHub → Amplify auto-builds and deploys. Every git push = auto-update. Easiest AWS option for BCA students.</div>
+    </div>
+    <div class="breadcrumb"><span>🏠</span><span class="bc-sep">›</span><span>☁️ AWS</span><span class="bc-sep">›</span><span class="bc-curr">⚡ Amplify</span></div>
+    <div class="editor-wrap">
+      <div class="editor-header"><div class="editor-title">⚡ amplify.yml — Build Configuration</div><div class="editor-actions"><button class="btn-copy" onclick="copyCode('amplify-code')">📋 Copy</button></div></div>
+      <div class="code-block" id="amplify-code">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">amplify.yml</div><div class="code-lang">YAML</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm"># ═══════════════════════════════════════</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content cm"># AWS Amplify Build Configuration</span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content cm"># Place this file in your project root</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content cm"># ═══════════════════════════════════════</span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content"><span class="kw">version:</span> <span class="num">1</span></span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content"><span class="kw">frontend:</span></span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content">  <span class="kw">phases:</span></span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content">    <span class="kw">preBuild:</span></span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content">      <span class="kw">commands:</span></span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content">        - <span class="str">npm ci</span>         <span class="cm"># Install dependencies</span></span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content">    <span class="kw">build:</span></span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content">      <span class="kw">commands:</span></span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content">        - <span class="str">npm run build</span>  <span class="cm"># Build your project</span></span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content">  <span class="kw">artifacts:</span></span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content">    <span class="kw">baseDirectory:</span> <span class="str">build</span>  <span class="cm"># Output folder</span></span></div>
+          <div class="line"><span class="ln">16</span><span class="code-content">    <span class="kw">files:</span></span></div>
+          <div class="line"><span class="ln">17</span><span class="code-content">      - <span class="str">'**/*'</span>             <span class="cm"># All files</span></span></div>
+          <div class="line"><span class="ln">18</span><span class="code-content">  <span class="kw">cache:</span></span></div>
+          <div class="line"><span class="ln">19</span><span class="code-content">    <span class="kw">paths:</span></span></div>
+          <div class="line"><span class="ln">20</span><span class="code-content">      - <span class="str">node_modules/**/*</span>  <span class="cm"># Cache for faster builds</span></span></div>
+          <div class="line"><span class="ln">21</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">22</span><span class="code-content cm"># ── For plain HTML project (no build step): ──</span></div>
+          <div class="line"><span class="ln">23</span><span class="code-content cm"># version: 1</span></div>
+          <div class="line"><span class="ln">24</span><span class="code-content cm"># frontend:</span></div>
+          <div class="line"><span class="ln">25</span><span class="code-content cm">#   phases:</span></div>
+          <div class="line"><span class="ln">26</span><span class="code-content cm">#     build:</span></div>
+          <div class="line"><span class="ln">27</span><span class="code-content cm">#       commands: []  # No build needed</span></div>
+          <div class="line"><span class="ln">28</span><span class="code-content cm">#   artifacts:</span></div>
+          <div class="line"><span class="ln">29</span><span class="code-content cm">#     baseDirectory: /  # Root folder</span></div>
+          <div class="line"><span class="ln">30</span><span class="code-content cm">#     files: ['**/*']</span></div>
+        </div>
+      </div>
+      <div class="info-box tip" style="margin-top:12px">Steps: AWS Console → Amplify → New App → Connect GitHub → Select repo → Amplify detects settings automatically → Deploy!</div>
+    </div>
+  </div>
+
+  <!-- ════ NETLIFY ════ -->
+  <div class="content-area" id="page-netlify">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge" style="background:rgba(0,213,197,.08);border-color:rgba(0,213,197,.25);color:#00d5c5"><span class="dot2" style="background:#00d5c5"></span>Netlify — Best for Beginners · 100% Free</div>
+      <h1 style="font-size:24px">Deploy to <em style="background:linear-gradient(120deg,#00d5c5,#00b4a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Netlify</em> in 2 Minutes</h1>
+      <div class="hero-sub" style="font-size:13px">Drag &amp; drop your project folder onto netlify.com — site is live in seconds. Or connect GitHub for auto-deploy.</div>
+    </div>
+    <div class="breadcrumb"><span>🏠</span><span class="bc-sep">›</span><span>🟢 Netlify</span><span class="bc-sep">›</span><span class="bc-curr">Deploy Guide</span></div>
+    <div class="editor-wrap">
+      <div class="editor-header"><div class="editor-title">🟢 netlify.toml — Config File</div><div class="editor-actions"><button class="btn-copy" onclick="copyCode('netlify-code')">📋 Copy</button></div></div>
+      <div class="code-block" id="netlify-code">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">netlify.toml</div><div class="code-lang">TOML</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm"># ═══════════════════════════════════════</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content cm"># Netlify Configuration File</span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content cm"># Place this in your project root folder</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content cm"># ═══════════════════════════════════════</span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content">[build]</span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content">  <span class="attr">command</span> = <span class="str">"npm run build"</span>  <span class="cm"># Build command</span></span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content">  <span class="attr">publish</span> = <span class="str">"build"</span>         <span class="cm"># Folder to deploy</span></span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content">[build.environment]</span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content">  <span class="attr">NODE_VERSION</span> = <span class="str">"18"</span></span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content cm"># Redirect rules (for React/Vue single page apps)</span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content">[[redirects]]</span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content">  <span class="attr">from</span>   = <span class="str">"/*"</span></span></div>
+          <div class="line"><span class="ln">16</span><span class="code-content">  <span class="attr">to</span>     = <span class="str">"/index.html"</span></span></div>
+          <div class="line"><span class="ln">17</span><span class="code-content">  <span class="attr">status</span> = <span class="num">200</span></span></div>
+          <div class="line"><span class="ln">18</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">19</span><span class="code-content cm"># Security headers</span></div>
+          <div class="line"><span class="ln">20</span><span class="code-content">[[headers]]</span></div>
+          <div class="line"><span class="ln">21</span><span class="code-content">  <span class="attr">for</span> = <span class="str">"/*"</span></span></div>
+          <div class="line"><span class="ln">22</span><span class="code-content">  [headers.values]</span></div>
+          <div class="line"><span class="ln">23</span><span class="code-content">    X-Frame-Options = <span class="str">"DENY"</span></span></div>
+          <div class="line"><span class="ln">24</span><span class="code-content">    X-XSS-Protection = <span class="str">"1; mode=block"</span></span></div>
+          <div class="line"><span class="ln">25</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">26</span><span class="code-content cm"># For plain HTML — NO build step needed!</span></div>
+          <div class="line"><span class="ln">27</span><span class="code-content cm"># Just drag & drop your folder on netlify.com</span></div>
+          <div class="line"><span class="ln">28</span><span class="code-content cm"># Your site gets a URL like: https://random-name.netlify.app</span></div>
+        </div>
+      </div>
+      <div class="code-block" style="margin-top:16px">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">netlify-cli-deploy.sh</div><div class="code-lang">BASH</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm"># Deploy using Netlify CLI (command line)</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content cm"># Install Netlify CLI:</span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content"><span class="fn">npm</span> install -g netlify-cli</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content cm"># Login to Netlify:</span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content"><span class="fn">netlify</span> login</span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content cm"># Deploy current folder:</span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content"><span class="fn">netlify</span> deploy --prod --dir=.</span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content cm"># Or deploy build folder:</span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content"><span class="fn">netlify</span> deploy --prod --dir=./build</span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content cm"># Done! Your site is live at:</span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content cm"># https://your-project-name.netlify.app</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ VERCEL ════ -->
+  <div class="content-area" id="page-vercel">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:#ddd"><span class="dot2" style="background:#fff"></span>Vercel — Best for React / Next.js</div>
+      <h1 style="font-size:24px">Deploy to <em style="background:linear-gradient(120deg,#fff,#aaa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Vercel</em></h1>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor-header"><div class="editor-title">▲ vercel.json + Deploy Commands</div><div class="editor-actions"><button class="btn-copy" onclick="copyCode('vercel-code')">📋 Copy</button></div></div>
+      <div class="code-block" id="vercel-code">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">vercel.json</div><div class="code-lang">JSON</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content">{</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content">  <span class="attr">"version"</span>: <span class="num">2</span>,</span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content">  <span class="attr">"builds"</span>: [</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content">    { <span class="attr">"src"</span>: <span class="val">"*.html"</span>, <span class="attr">"use"</span>: <span class="val">"@vercel/static"</span> }</span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content">  ],</span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content">  <span class="attr">"routes"</span>: [</span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content">    { <span class="attr">"src"</span>: <span class="val">"/(.*)"</span>, <span class="attr">"dest"</span>: <span class="val">"/$1"</span> }</span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content">  ]</span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content">}</span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content cm"># CLI Deploy Commands:</span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content"><span class="fn">npm</span> install -g vercel   <span class="cm"># Install Vercel CLI</span></span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content"><span class="fn">vercel</span> login            <span class="cm"># Login with GitHub</span></span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content"><span class="fn">vercel</span>                  <span class="cm"># Deploy (preview)</span></span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content"><span class="fn">vercel</span> --prod           <span class="cm"># Deploy to production</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ GITHUB PAGES ════ -->
+  <div class="content-area" id="page-github-pages">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge" style="background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.3);color:var(--pu)"><span class="dot2" style="background:var(--pu)"></span>GitHub Pages — Free Forever</div>
+      <h1 style="font-size:24px">Deploy to <em style="background:linear-gradient(120deg,var(--pu),var(--a1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">GitHub Pages</em></h1>
+    </div>
+    <div class="editor-wrap">
+      <div class="code-block">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">github-pages-deploy.sh</div><div class="code-lang">BASH</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm"># ── Deploy to GitHub Pages ──</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content cm"># Step 1: Push your code to GitHub</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content"><span class="fn">git</span> init</span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content"><span class="fn">git</span> add .</span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content"><span class="fn">git</span> commit -m <span class="str">"Initial commit - BCA Project"</span></span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content"><span class="fn">git</span> remote add origin https://github.com/yourusername/bca-project.git</span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content"><span class="fn">git</span> push -u origin main</span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content cm"># Step 2: Enable GitHub Pages</span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content cm"># Go to: GitHub Repo → Settings → Pages</span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content cm"># Source: Deploy from branch → main → /root</span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content cm"># Save → Your site is live in 2-3 minutes!</span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content cm"># Your URL: https://yourusername.github.io/bca-project</span></div>
+          <div class="line"><span class="ln">16</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">17</span><span class="code-content cm"># Auto-deploy on every push:</span></div>
+          <div class="line"><span class="ln">18</span><span class="code-content"><span class="fn">git</span> add .</span></div>
+          <div class="line"><span class="ln">19</span><span class="code-content"><span class="fn">git</span> commit -m <span class="str">"Update website"</span></span></div>
+          <div class="line"><span class="ln">20</span><span class="code-content"><span class="fn">git</span> push    <span class="cm"># Site updates automatically!</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ CI/CD ════ -->
+  <div class="content-area" id="page-ci-cd">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge" style="background:rgba(6,182,212,.08);border-color:rgba(6,182,212,.25);color:var(--cy)"><span class="dot2" style="background:var(--cy)"></span>GitHub Actions — Automated CI/CD Pipeline</div>
+      <h1 style="font-size:24px"><em style="background:linear-gradient(120deg,var(--cy),var(--a1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Auto-Deploy</em> on Every Git Push</h1>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor-header"><div class="editor-title">🔄 .github/workflows/deploy.yml — Full CI/CD Pipeline</div><div class="editor-actions"><button class="btn-copy" onclick="copyCode('cicd-code')">📋 Copy</button></div></div>
+      <div class="code-block" id="cicd-code">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">.github/workflows/deploy.yml</div><div class="code-lang">YAML</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm"># ══════════════════════════════════════════════════</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content cm"># GitHub Actions CI/CD — Auto Deploy to AWS S3</span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content cm"># Every git push → build → test → deploy automatically</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content cm"># ══════════════════════════════════════════════════</span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content"><span class="kw">name:</span> <span class="str">Deploy BCA Project to AWS S3</span></span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content"><span class="kw">on:</span></span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content">  <span class="kw">push:</span></span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content">    <span class="kw">branches:</span> [ <span class="str">main</span> ]  <span class="cm"># Trigger on push to main</span></span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content">  <span class="kw">pull_request:</span></span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content">    <span class="kw">branches:</span> [ <span class="str">main</span> ]</span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content"><span class="kw">env:</span></span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content">  <span class="kw">AWS_REGION:</span> <span class="str">ap-south-1</span></span></div>
+          <div class="line"><span class="ln">16</span><span class="code-content">  <span class="kw">S3_BUCKET:</span>  <span class="str">my-bca-project-2026</span></span></div>
+          <div class="line"><span class="ln">17</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">18</span><span class="code-content"><span class="kw">jobs:</span></span></div>
+          <div class="line"><span class="ln">19</span><span class="code-content">  <span class="kw">build-and-deploy:</span></span></div>
+          <div class="line"><span class="ln">20</span><span class="code-content">    <span class="kw">runs-on:</span> <span class="str">ubuntu-latest</span></span></div>
+          <div class="line"><span class="ln">21</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">22</span><span class="code-content">    <span class="kw">steps:</span></span></div>
+          <div class="line"><span class="ln">23</span><span class="code-content">      <span class="cm"># Step 1: Get the code</span></span></div>
+          <div class="line"><span class="ln">24</span><span class="code-content">      - <span class="kw">name:</span> <span class="str">📥 Checkout Code</span></span></div>
+          <div class="line"><span class="ln">25</span><span class="code-content">        <span class="kw">uses:</span> <span class="str">actions/checkout@v4</span></span></div>
+          <div class="line"><span class="ln">26</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">27</span><span class="code-content">      <span class="cm"># Step 2: Setup Node.js</span></span></div>
+          <div class="line"><span class="ln">28</span><span class="code-content">      - <span class="kw">name:</span> <span class="str">⚙️ Setup Node.js</span></span></div>
+          <div class="line"><span class="ln">29</span><span class="code-content">        <span class="kw">uses:</span> <span class="str">actions/setup-node@v4</span></span></div>
+          <div class="line"><span class="ln">30</span><span class="code-content">        <span class="kw">with:</span></span></div>
+          <div class="line"><span class="ln">31</span><span class="code-content">          <span class="kw">node-version:</span> <span class="str">'18'</span></span></div>
+          <div class="line"><span class="ln">32</span><span class="code-content">          <span class="kw">cache:</span> <span class="str">'npm'</span></span></div>
+          <div class="line"><span class="ln">33</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">34</span><span class="code-content">      <span class="cm"># Step 3: Install & Build</span></span></div>
+          <div class="line"><span class="ln">35</span><span class="code-content">      - <span class="kw">name:</span> <span class="str">📦 Install Dependencies</span></span></div>
+          <div class="line"><span class="ln">36</span><span class="code-content">        <span class="kw">run:</span> <span class="str">npm ci</span></span></div>
+          <div class="line"><span class="ln">37</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">38</span><span class="code-content">      - <span class="kw">name:</span> <span class="str">🔨 Build Project</span></span></div>
+          <div class="line"><span class="ln">39</span><span class="code-content">        <span class="kw">run:</span> <span class="str">npm run build</span></span></div>
+          <div class="line"><span class="ln">40</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">41</span><span class="code-content">      - <span class="kw">name:</span> <span class="str">🧪 Run Tests</span></span></div>
+          <div class="line"><span class="ln">42</span><span class="code-content">        <span class="kw">run:</span> <span class="str">npm test -- --watchAll=false</span></span></div>
+          <div class="line"><span class="ln">43</span><span class="code-content">        <span class="kw">continue-on-error:</span> <span class="kw">true</span></span></div>
+          <div class="line"><span class="ln">44</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">45</span><span class="code-content">      <span class="cm"># Step 4: Configure AWS</span></span></div>
+          <div class="line"><span class="ln">46</span><span class="code-content">      - <span class="kw">name:</span> <span class="str">🔐 Configure AWS Credentials</span></span></div>
+          <div class="line"><span class="ln">47</span><span class="code-content">        <span class="kw">uses:</span> <span class="str">aws-actions/configure-aws-credentials@v4</span></span></div>
+          <div class="line"><span class="ln">48</span><span class="code-content">        <span class="kw">with:</span></span></div>
+          <div class="line"><span class="ln">49</span><span class="code-content">          <span class="kw">aws-access-key-id:</span>     <span class="str">${{ secrets.AWS_ACCESS_KEY_ID }}</span></span></div>
+          <div class="line"><span class="ln">50</span><span class="code-content">          <span class="kw">aws-secret-access-key:</span> <span class="str">${{ secrets.AWS_SECRET_ACCESS_KEY }}</span></span></div>
+          <div class="line"><span class="ln">51</span><span class="code-content">          <span class="kw">aws-region:</span>            <span class="str">${{ env.AWS_REGION }}</span></span></div>
+          <div class="line"><span class="ln">52</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">53</span><span class="code-content">      <span class="cm"># Step 5: Deploy to S3</span></span></div>
+          <div class="line"><span class="ln">54</span><span class="code-content">      - <span class="kw">name:</span> <span class="str">🚀 Deploy to S3</span></span></div>
+          <div class="line"><span class="ln">55</span><span class="code-content">        <span class="kw">run:</span> |</span></div>
+          <div class="line"><span class="ln">56</span><span class="code-content">          aws s3 sync ./build s3://<span class="str">${{ env.S3_BUCKET }}</span> \</span></div>
+          <div class="line"><span class="ln">57</span><span class="code-content">            --delete --exact-timestamps</span></div>
+          <div class="line"><span class="ln">58</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">59</span><span class="code-content">      <span class="cm"># Step 6: Invalidate CloudFront cache</span></span></div>
+          <div class="line"><span class="ln">60</span><span class="code-content">      - <span class="kw">name:</span> <span class="str">🔄 Invalidate CloudFront Cache</span></span></div>
+          <div class="line"><span class="ln">61</span><span class="code-content">        <span class="kw">if:</span> <span class="str">github.ref == 'refs/heads/main'</span></span></div>
+          <div class="line"><span class="ln">62</span><span class="code-content">        <span class="kw">run:</span> |</span></div>
+          <div class="line"><span class="ln">63</span><span class="code-content">          aws cloudfront create-invalidation \</span></div>
+          <div class="line"><span class="ln">64</span><span class="code-content">            --distribution-id <span class="str">${{ secrets.CF_DISTRIBUTION_ID }}</span> \</span></div>
+          <div class="line"><span class="ln">65</span><span class="code-content">            --paths <span class="str">"/*"</span></span></div>
+          <div class="line"><span class="ln">66</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">67</span><span class="code-content">      - <span class="kw">name:</span> <span class="str">✅ Deployment Complete</span></span></div>
+          <div class="line"><span class="ln">68</span><span class="code-content">        <span class="kw">run:</span> <span class="str">echo "🎉 BCA Project deployed!"</span></span></div>
+        </div>
+      </div>
+      <div class="info-box tip" style="margin-top:12px">Add <strong>AWS_ACCESS_KEY_ID</strong> and <strong>AWS_SECRET_ACCESS_KEY</strong> in GitHub → Settings → Secrets. Never put real keys in code!</div>
+    </div>
+  </div>
+
+  <!-- ════ DOCKERFILE ════ -->
+  <div class="content-area" id="page-dockerfile">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge" style="background:rgba(77,158,255,.08);border-color:rgba(77,158,255,.25);color:var(--a1)"><span class="dot2"></span>Docker — Containerized Deployment</div>
+      <h1 style="font-size:24px">Deploy with <em>Docker</em> on AWS EC2</h1>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor-header"><div class="editor-title">🐳 Dockerfile + docker-compose.yml</div><div class="editor-actions"><button class="btn-copy" onclick="copyCode('docker-code')">📋 Copy</button></div></div>
+      <div class="code-block" id="docker-code">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">Dockerfile</div><div class="code-lang">DOCKER</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm"># ── Dockerfile for BCA Project ──</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content"><span class="kw">FROM</span> <span class="fn">node:18-alpine</span> <span class="kw">AS</span> builder</span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content"><span class="kw">WORKDIR</span> /app</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content"><span class="kw">COPY</span> package*.json ./</span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content"><span class="kw">RUN</span> <span class="fn">npm ci</span></span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content"><span class="kw">COPY</span> . .</span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content"><span class="kw">RUN</span> <span class="fn">npm run build</span></span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content"><span class="kw">FROM</span> <span class="fn">nginx:alpine</span></span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content"><span class="kw">COPY</span> --from=builder /app/build /usr/share/nginx/html</span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content"><span class="kw">EXPOSE</span> <span class="num">80</span></span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content"><span class="kw">CMD</span> [<span class="str">"nginx"</span>, <span class="str">"-g"</span>, <span class="str">"daemon off;"</span>]</span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content cm"># ── Build & Run Commands ──</span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content cm"># docker build -t bca-project .</span></div>
+          <div class="line"><span class="ln">16</span><span class="code-content cm"># docker run -p 80:80 bca-project</span></div>
+          <div class="line"><span class="ln">17</span><span class="code-content cm"># Visit: http://localhost</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ COMPARE ════ -->
+  <div class="content-area" id="page-compare">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge"><span class="dot2"></span>Platform Comparison Guide</div>
+      <h1 style="font-size:24px">Which Platform Should <em>You Choose?</em></h1>
+    </div>
+    <div style="padding:20px 40px 28px">
+      <div class="tw">
+        <table class="cmp-table">
+          <thead><tr><th>Platform</th><th>Price</th><th>Best For</th><th>Difficulty</th><th>Auto-Deploy</th><th>Custom Domain</th><th>Backend?</th><th>BCA Recommendation</th></tr></thead>
+          <tbody>
+            <tr><td><strong>☁️ AWS S3</strong></td><td class="ok2">Free Tier</td><td>Static sites</td><td class="ok2">Medium</td><td>❌ Manual</td><td class="ok2">Yes (paid)</td><td>❌ No</td><td class="best">✓ For AWS projects</td></tr>
+            <tr><td><strong>🖥️ AWS EC2</strong></td><td class="ok2">Free 750h</td><td>Full-stack apps</td><td class="bad">Hard</td><td>❌ Manual</td><td class="ok2">Yes</td><td class="best">✓ Yes</td><td class="ok2">Advanced students</td></tr>
+            <tr><td><strong>⚡ AWS Amplify</strong></td><td class="ok2">Free Tier</td><td>React/Node apps</td><td class="ok2">Medium</td><td class="best">✓ GitHub</td><td class="ok2">Yes</td><td class="best">✓ Yes</td><td class="best">✓ Recommended AWS</td></tr>
+            <tr><td><strong>🟢 Netlify</strong></td><td class="best">FREE</td><td>Static/JAMstack</td><td class="best">Easy</td><td class="best">✓ GitHub</td><td class="ok2">Yes</td><td class="ok2">Functions only</td><td class="best">⭐ Best for BCA</td></tr>
+            <tr><td><strong>▲ Vercel</strong></td><td class="best">FREE</td><td>React/Next.js</td><td class="best">Easy</td><td class="best">✓ GitHub</td><td class="ok2">Yes</td><td class="ok2">Serverless</td><td class="best">⭐ Best for React</td></tr>
+            <tr><td><strong>🐙 GitHub Pages</strong></td><td class="best">FREE</td><td>Portfolios/Docs</td><td class="best">Easiest</td><td class="best">✓ Auto</td><td class="ok2">Yes</td><td class="bad">❌ No</td><td class="best">✓ For portfolios</td></tr>
+            <tr><td><strong>🔥 Firebase</strong></td><td class="best">FREE</td><td>Full-stack/PWA</td><td class="ok2">Medium</td><td class="best">✓ CLI</td><td class="ok2">Yes</td><td class="best">✓ Functions+DB</td><td class="ok2">Good option</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:20px">
+        <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:12px;padding:16px">
+          <div style="font-weight:700;color:var(--g);margin-bottom:8px">🎓 For BCA Static Projects</div>
+          <div style="font-size:12.5px;color:var(--t2);line-height:1.7">Use <strong style="color:var(--t)">Netlify</strong> or <strong style="color:var(--t)">GitHub Pages</strong>. Free forever, drag &amp; drop deploy, no configuration needed.</div>
+        </div>
+        <div style="background:rgba(255,153,0,.06);border:1px solid rgba(255,153,0,.2);border-radius:12px;padding:16px">
+          <div style="font-weight:700;color:#ff9900;margin-bottom:8px">☁️ For AWS in Curriculum</div>
+          <div style="font-size:12.5px;color:var(--t2);line-height:1.7">Use <strong style="color:var(--t)">AWS Amplify</strong> — easiest AWS option. Or <strong style="color:var(--t)">S3</strong> for static. <strong style="color:var(--t)">EC2</strong> for full-stack.</div>
+        </div>
+        <div style="background:rgba(77,158,255,.06);border:1px solid rgba(77,158,255,.2);border-radius:12px;padding:16px">
+          <div style="font-weight:700;color:var(--a1);margin-bottom:8px">⚡ For React/Node.js Projects</div>
+          <div style="font-size:12.5px;color:var(--t2);line-height:1.7">Use <strong style="color:var(--t)">Vercel</strong> — zero config, auto-scales, free tier is generous. Best DX.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ TERMINAL ════ -->
+  <div class="content-area" id="page-terminal">
+    <div class="hero" style="padding:22px 40px">
+      <div class="hero-badge" style="background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.25);color:var(--g)"><span class="dot2" style="background:var(--g)"></span>Interactive Terminal Simulator</div>
+      <h1 style="font-size:22px">Practice <em>Deploy Commands</em> Here</h1>
+      <div class="hero-sub" style="font-size:12.5px;margin-bottom:0">Type AWS, git, npm, or netlify commands. Practice before running on real servers!</div>
+    </div>
+    <div style="padding:20px 40px 28px">
+      <div style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-copy" onclick="runDemo('aws')">☁️ AWS S3 Demo</button>
+        <button class="btn-copy" onclick="runDemo('git')">🐙 Git Deploy Demo</button>
+        <button class="btn-copy" onclick="runDemo('netlify')">🟢 Netlify Demo</button>
+        <button class="btn-copy" onclick="runDemo('ec2')">🖥️ EC2 Setup Demo</button>
+        <button class="btn-copy" onclick="clearTerm()">🗑️ Clear</button>
+      </div>
+      <div class="terminal">
+        <div class="term-top">
+          <div class="term-dots">
+            <div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div>
+          </div>
+          <div class="term-title">bash — BCA Deploy Terminal</div>
+        </div>
+        <div class="term-body" id="term-body">
+          <div class="term-line"><span class="term-out">Welcome to BCA Web Hosting Terminal Simulator 🚀</span></div>
+          <div class="term-line"><span class="term-out" style="color:var(--y)">Try the demo buttons above or type commands below!</span></div>
+          <div class="term-line"><span class="term-out">Available: aws, git, npm, netlify, vercel, node, ls, pwd, echo</span></div>
+          <div class="term-line"><span class="term-out" style="color:var(--t3)">─────────────────────────────────────────</span></div>
+        </div>
+        <div class="term-input">
+          <span class="term-prompt">student@klh:~/bca-project$</span>
+          <input type="text" class="term-inp-field" id="term-inp" placeholder="Type a command..." onkeydown="handleTermKey(event)"/>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:12px">📚 Common Deploy Commands Reference</div>
+      <div class="code-block">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">common-commands.sh</div><div class="code-lang">BASH</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm"># ═══════════ GIT COMMANDS ═══════════</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content"><span class="fn">git</span> init                    <span class="cm"># Initialize git repository</span></span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content"><span class="fn">git</span> add .                   <span class="cm"># Stage all files</span></span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content"><span class="fn">git</span> commit -m <span class="str">"message"</span>    <span class="cm"># Commit changes</span></span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content"><span class="fn">git</span> push origin main       <span class="cm"># Push to GitHub</span></span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content cm"># ═══════════ AWS CLI COMMANDS ═══════════</span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content"><span class="fn">aws</span> configure               <span class="cm"># Set up AWS credentials</span></span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content"><span class="fn">aws</span> s3 ls                   <span class="cm"># List S3 buckets</span></span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content"><span class="fn">aws</span> s3 sync ./build s3://bucket-name/  <span class="cm"># Deploy files</span></span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content"><span class="fn">aws</span> s3api list-buckets      <span class="cm"># List all buckets</span></span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content cm"># ═══════════ NPM COMMANDS ═══════════</span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content"><span class="fn">npm</span> install                 <span class="cm"># Install dependencies</span></span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content"><span class="fn">npm</span> run build               <span class="cm"># Build for production</span></span></div>
+          <div class="line"><span class="ln">16</span><span class="code-content"><span class="fn">npm</span> start                   <span class="cm"># Run development server</span></span></div>
+          <div class="line"><span class="ln">17</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">18</span><span class="code-content cm"># ═══════════ NETLIFY CLI ═══════════</span></div>
+          <div class="line"><span class="ln">19</span><span class="code-content"><span class="fn">netlify</span> login               <span class="cm"># Login to Netlify</span></span></div>
+          <div class="line"><span class="ln">20</span><span class="code-content"><span class="fn">netlify</span> deploy --prod       <span class="cm"># Deploy to production</span></span></div>
+          <div class="line"><span class="ln">21</span><span class="code-content"><span class="fn">netlify</span> status              <span class="cm"># Check deploy status</span></span></div>
+          <div class="line"><span class="ln">22</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">23</span><span class="code-content cm"># ═══════════ VERCEL CLI ═══════════</span></div>
+          <div class="line"><span class="ln">24</span><span class="code-content"><span class="fn">vercel</span> login                <span class="cm"># Login to Vercel</span></span></div>
+          <div class="line"><span class="ln">25</span><span class="code-content"><span class="fn">vercel</span> --prod               <span class="cm"># Deploy to production</span></span></div>
+          <div class="line"><span class="ln">26</span><span class="code-content"><span class="fn">vercel</span> ls                   <span class="cm"># List deployments</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ DOMAINS ════ -->
+  <div class="content-area" id="page-domains">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge"><span class="dot2"></span>Domains &amp; DNS — Make it www.yoursite.com</div>
+      <h1 style="font-size:24px">Setting Up a <em>Custom Domain</em></h1>
+    </div>
+    <div style="padding:20px 40px 28px">
+      <div class="code-block">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">domain-dns-setup.sh</div><div class="code-lang">BASH</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm"># ── Custom Domain Setup for AWS S3 / Netlify / Vercel ──</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content cm"># Step 1: Buy a domain (Cheapest options)</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content cm"># GoDaddy:   https://godaddy.com      (₹800/year)</span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content cm"># Namecheap: https://namecheap.com    (₹700/year)</span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content cm"># AWS Route53: https://aws.amazon.com/route53 (₹1200/year)</span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content cm"># FREE: yourname.netlify.app / yourname.vercel.app</span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content cm"># Step 2: Add DNS Records (in your domain registrar)</span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content cm"># For Netlify:</span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content cm"># Type: CNAME | Name: www | Value: your-site.netlify.app</span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content cm"># Type: A    | Name: @   | Value: 75.2.60.5 (Netlify IP)</span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content cm"># For AWS S3 + CloudFront:</span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content"><span class="fn">aws</span> route53 change-resource-record-sets \</span></div>
+          <div class="line"><span class="ln">16</span><span class="code-content">  --hosted-zone-id YOUR_ZONE_ID \</span></div>
+          <div class="line"><span class="ln">17</span><span class="code-content">  --change-batch file://dns-record.json</span></div>
+          <div class="line"><span class="ln">18</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">19</span><span class="code-content cm"># Step 3: Add FREE SSL Certificate (HTTPS)</span></div>
+          <div class="line"><span class="ln">20</span><span class="code-content cm"># Netlify/Vercel: Automatic! Done!</span></div>
+          <div class="line"><span class="ln">21</span><span class="code-content cm"># AWS: Use AWS Certificate Manager (ACM)</span></div>
+          <div class="line"><span class="ln">22</span><span class="code-content"><span class="fn">aws</span> acm request-certificate \</span></div>
+          <div class="line"><span class="ln">23</span><span class="code-content">  --domain-name www.mysite.com \</span></div>
+          <div class="line"><span class="ln">24</span><span class="code-content">  --validation-method DNS</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ INDEX.HTML ════ -->
+  <div class="content-area" id="page-index-html">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge"><span class="dot2"></span>Sample Project — Ready to Deploy</div>
+      <h1 style="font-size:24px">Sample <em>index.html</em> to Deploy</h1>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor-header"><div class="editor-title">📄 index.html — BCA Project Template</div><div class="editor-actions"><button class="btn-copy" onclick="copyCode('html-code')">📋 Copy</button></div></div>
+      <div class="code-block" id="html-code">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">index.html</div><div class="code-lang">HTML</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content"><span class="tag2">&lt;!DOCTYPE html&gt;</span></span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content"><span class="tag2">&lt;html</span> <span class="attr">lang</span>=<span class="val">"en"</span><span class="tag2">&gt;</span></span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content"><span class="tag2">&lt;head&gt;</span></span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content">  <span class="tag2">&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag2">/&gt;</span></span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content">  <span class="tag2">&lt;meta</span> <span class="attr">name</span>=<span class="val">"viewport"</span> <span class="attr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag2">/&gt;</span></span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content">  <span class="tag2">&lt;title&gt;</span>BCA Final Year Project — KLH University<span class="tag2">&lt;/title&gt;</span></span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content"><span class="tag2">&lt;/head&gt;</span></span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content"><span class="tag2">&lt;body</span> <span class="attr">style</span>=<span class="val">"font-family:sans-serif;background:#0e1117;color:#fff;text-align:center;padding:60px"</span><span class="tag2">&gt;</span></span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content">  <span class="tag2">&lt;h1&gt;</span>🎓 My BCA Project is Live!<span class="tag2">&lt;/h1&gt;</span></span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content">  <span class="tag2">&lt;p&gt;</span>Deployed on AWS S3 | KLH University 2026<span class="tag2">&lt;/p&gt;</span></span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content">  <span class="tag2">&lt;p&gt;</span>Student: Tankthireddy | Roll: 2320520034<span class="tag2">&lt;/p&gt;</span></span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content"><span class="tag2">&lt;/body&gt;</span></span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content"><span class="tag2">&lt;/html&gt;</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ FIREBASE ════ -->
+  <div class="content-area" id="page-firebase">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge" style="background:rgba(255,202,40,.08);border-color:rgba(255,202,40,.25);color:#ffca28"><span class="dot2" style="background:#ffca28"></span>Firebase — Google's Hosting Platform</div>
+      <h1 style="font-size:24px">Deploy to <em style="background:linear-gradient(120deg,#ffca28,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Firebase Hosting</em></h1>
+    </div>
+    <div class="editor-wrap">
+      <div class="code-block">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">firebase-deploy.sh</div><div class="code-lang">BASH</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm"># Firebase Hosting — Deploy in 3 steps</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content cm"># Step 1: Install Firebase CLI</span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content"><span class="fn">npm</span> install -g firebase-tools</span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content cm"># Step 2: Login and initialize</span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content"><span class="fn">firebase</span> login</span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content"><span class="fn">firebase</span> init hosting</span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content cm"># Select: Use existing project / Create new</span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content cm"># Public directory: build (or your folder)</span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content cm"># Step 3: Deploy!</span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content"><span class="fn">firebase</span> deploy --only hosting</span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content cm"># Your site: https://your-project.web.app</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ DEPLOY.SH ════ -->
+  <div class="content-area" id="page-deploy-sh">
+    <div class="hero" style="padding:28px 40px">
+      <div class="hero-badge"><span class="dot2"></span>Universal Deploy Script</div>
+      <h1 style="font-size:24px">One-Click <em>deploy.sh</em> for All Platforms</h1>
+    </div>
+    <div class="editor-wrap">
+      <div class="editor-header"><div class="editor-title">⚙️ deploy.sh — Deploy Anywhere</div><div class="editor-actions"><button class="btn-copy" onclick="copyCode('sh-code')">📋 Copy</button></div></div>
+      <div class="code-block" id="sh-code">
+        <div class="code-top"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div><div class="code-filename">deploy.sh</div><div class="code-lang">BASH</div></div>
+        <div class="code-body">
+          <div class="line"><span class="ln">1</span><span class="code-content cm">#!/bin/bash</span></div>
+          <div class="line"><span class="ln">2</span><span class="code-content cm"># Universal Deploy Script — Choose your platform</span></div>
+          <div class="line"><span class="ln">3</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">4</span><span class="code-content"><span class="fn">echo</span> <span class="str">"🚀 BCA Project Deployment Tool"</span></span></div>
+          <div class="line"><span class="ln">5</span><span class="code-content"><span class="fn">echo</span> <span class="str">"Choose platform:"</span></span></div>
+          <div class="line"><span class="ln">6</span><span class="code-content"><span class="fn">echo</span> <span class="str">"1) AWS S3   2) Netlify   3) Vercel   4) GitHub Pages"</span></span></div>
+          <div class="line"><span class="ln">7</span><span class="code-content"><span class="fn">read</span> -p <span class="str">"Enter choice [1-4]: "</span> choice</span></div>
+          <div class="line"><span class="ln">8</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">9</span><span class="code-content"><span class="fn">npm</span> run build   <span class="cm"># Build first</span></span></div>
+          <div class="line"><span class="ln">10</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">11</span><span class="code-content"><span class="kw">case</span> $choice <span class="kw">in</span></span></div>
+          <div class="line"><span class="ln">12</span><span class="code-content">  1) <span class="fn">aws</span> s3 sync ./build s3://my-bca-project/ --delete ;;</span></div>
+          <div class="line"><span class="ln">13</span><span class="code-content">  2) <span class="fn">netlify</span> deploy --prod --dir=./build ;;</span></div>
+          <div class="line"><span class="ln">14</span><span class="code-content">  3) <span class="fn">vercel</span> --prod ;;</span></div>
+          <div class="line"><span class="ln">15</span><span class="code-content">  4) <span class="fn">git</span> add . && git commit -m <span class="str">"Deploy"</span> && git push ;;</span></div>
+          <div class="line"><span class="ln">16</span><span class="code-content">  *) <span class="fn">echo</span> <span class="str">"Invalid choice"</span> ;;</span></div>
+          <div class="line"><span class="ln">17</span><span class="code-content"><span class="kw">esac</span></span></div>
+          <div class="line"><span class="ln">18</span><span class="code-content"></span></div>
+          <div class="line"><span class="ln">19</span><span class="code-content"><span class="fn">echo</span> <span class="str">"✅ Deployment complete!"</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+// ── STATE ──
+var currentTab = 'overview';
+var termHistory = [];
+var termIdx = -1;
+
+// ── TAB SWITCHING ──
+function showTab(id) {
+  // Hide all content areas
+  document.querySelectorAll('.content-area').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  // Show target
+  var target = document.getElementById('page-' + id);
+  if (target) target.classList.add('active');
+
+  // Update sidebar active state
+  document.querySelectorAll('.sb-item').forEach(function(el) {
+    el.classList.remove('active');
+  });
+
+  // Update file tabs
+  document.querySelectorAll('.file-tab').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  var ftab = document.getElementById('tab-' + id);
+  if (ftab) ftab.classList.add('active');
+
+  currentTab = id;
+  updateProgress(id);
+}
+
+function updateProgress(id) {
+  var map = {
+    'overview':0,'compare':15,'domains':20,
+    'aws-s3':30,'aws-ec2':50,'aws-amplify':65,'aws-lambda':70,
+    'netlify':75,'vercel':80,'github-pages':85,'firebase':88,
+    'index-html':90,'deploy-sh':93,'ci-cd':96,'dockerfile':98,'terminal':100
+  };
+  var pct = map[id] || 0;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+// ── COPY CODE ──
+function copyCode(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = el.innerText.replace(/^\d+\t/gm, '').trim();
+  navigator.clipboard.writeText(text).then(function() {
+    var btns = document.querySelectorAll('.btn-copy');
+    btns.forEach(function(b) {
+      if (b.onclick && b.onclick.toString().includes(id)) {
+        b.textContent = '✅ Copied!';
+        b.classList.add('copied');
+        setTimeout(function() {
+          b.textContent = '📋 Copy Code';
+          b.classList.remove('copied');
+        }, 2000);
+      }
+    });
+  });
+
+  // Generic feedback
+  var allCopy = document.querySelectorAll('.btn-copy');
+  allCopy.forEach(function(b) {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(id)) {
+      b.textContent = '✅ Copied!';
+      b.classList.add('copied');
+      setTimeout(function() {
+        b.textContent = '📋 Copy Code';
+        b.classList.remove('copied');
+      }, 2000);
+    }
+  });
+}
+
+// ── TOGGLE STEPS ──
+function toggleStep(header) {
+  var step = header.closest('.step');
+  step.classList.toggle('open');
+}
+
+// ── TERMINAL ──
+var DEMOS = {
+  aws: [
+    {type:'cmd', text:'aws configure'},
+    {type:'out', text:'AWS Access Key ID: AKIA...'},
+    {type:'out', text:'AWS Secret Access Key: ****'},
+    {type:'out', text:'Default region: ap-south-1'},
+    {type:'ok',  text:'✓ AWS configured successfully'},
+    {type:'cmd', text:'aws s3api create-bucket --bucket my-bca-project-2026 --region ap-south-1'},
+    {type:'out', text:'{ "Location": "/my-bca-project-2026" }'},
+    {type:'ok',  text:'✓ Bucket created!'},
+    {type:'cmd', text:'aws s3 sync ./build s3://my-bca-project-2026/ --delete'},
+    {type:'out', text:'upload: build/index.html to s3://my-bca-project-2026/index.html'},
+    {type:'out', text:'upload: build/style.css to s3://my-bca-project-2026/style.css'},
+    {type:'out', text:'upload: build/main.js to s3://my-bca-project-2026/main.js'},
+    {type:'ok',  text:'✅ Deployment successful!'},
+    {type:'ok',  text:'🌐 URL: http://my-bca-project-2026.s3-website.ap-south-1.amazonaws.com'},
+  ],
+  git: [
+    {type:'cmd', text:'git init'},
+    {type:'out', text:'Initialized empty Git repository in /bca-project/.git/'},
+    {type:'cmd', text:'git add .'},
+    {type:'out', text:''},
+    {type:'cmd', text:'git commit -m "Initial commit - BCA Project 2026"'},
+    {type:'out', text:'[main (root-commit) a3b4c5d] Initial commit - BCA Project 2026'},
+    {type:'out', text:'  8 files changed, 342 insertions(+)'},
+    {type:'cmd', text:'git remote add origin https://github.com/tankthireddy/bca-project.git'},
+    {type:'cmd', text:'git push -u origin main'},
+    {type:'out', text:'Enumerating objects: 10, done.'},
+    {type:'out', text:'Counting objects: 100% (10/10), done.'},
+    {type:'out', text:'Writing objects: 100% (10/10), 4.25 KiB | 4.25 MiB/s, done.'},
+    {type:'ok',  text:'✅ Branch main set up to track remote branch main from origin.'},
+    {type:'ok',  text:'🐙 Pushed to GitHub! Enable Pages in Settings → Pages.'},
+  ],
+  netlify: [
+    {type:'cmd', text:'npm install -g netlify-cli'},
+    {type:'out', text:'added 1234 packages in 12s'},
+    {type:'cmd', text:'netlify login'},
+    {type:'ok',  text:'✓ Logged in to netlify as tankthireddy@klh.edu'},
+    {type:'cmd', text:'netlify deploy --prod --dir=./build'},
+    {type:'out', text:'Deploy path: /bca-project/build'},
+    {type:'out', text:'Deploying to main site URL...'},
+    {type:'out', text:'✔ Finished hashing 12 files'},
+    {type:'out', text:'✔ CDN requesting 12 files'},
+    {type:'out', text:'✔ Finished uploading 12 assets'},
+    {type:'ok',  text:'✅ Deploy is Live!'},
+    {type:'ok',  text:'🟢 URL: https://bca-project-2026.netlify.app'},
+  ],
+  ec2: [
+    {type:'cmd', text:'ssh -i "my-key.pem" ubuntu@13.234.56.78'},
+    {type:'out', text:'Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-1045-aws x86_64)'},
+    {type:'cmd', text:'sudo apt update && sudo apt upgrade -y'},
+    {type:'out', text:'Reading package lists... Done'},
+    {type:'out', text:'... upgrading 45 packages ...'},
+    {type:'ok',  text:'✓ System updated'},
+    {type:'cmd', text:'curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -'},
+    {type:'cmd', text:'sudo apt install -y nodejs'},
+    {type:'out', text:'Processing: nodejs (18.19.0-1nodesource1)'},
+    {type:'ok',  text:'✓ Node.js 18.19.0 installed'},
+    {type:'cmd', text:'sudo apt install nginx -y'},
+    {type:'ok',  text:'✓ Nginx installed and running'},
+    {type:'cmd', text:'sudo npm install -g pm2'},
+    {type:'ok',  text:'✓ PM2 installed'},
+    {type:'cmd', text:'pm2 start app.js --name "bca-project"'},
+    {type:'ok',  text:'✅ App running! Visit: http://13.234.56.78'},
+  ]
+};
+
+var COMMANDS = {
+  'aws --version': 'aws-cli/2.15.0 Python/3.11.6 Linux/5.15.0 exe/x86_64.ubuntu.22',
+  'aws s3 ls': '2026-03-22 10:30:00 my-bca-project-2026\n2025-12-01 08:15:00 bca-backup',
+  'node --version': 'v18.19.0',
+  'npm --version': '9.8.1',
+  'npm install': '\nadded 1247 packages, and audited 1248 packages in 18s\n✓ found 0 vulnerabilities',
+  'npm run build': '\n> bca-project@1.0.0 build\n> react-scripts build\n\nCreating an optimized production build...\n✓ Compiled successfully.\nFile sizes after gzip: 48.35 kB  build/static/js/main.js',
+  'git status': 'On branch main\nYour branch is up to date with origin/main.\nnothing to commit, working tree clean',
+  'git log': 'commit a3b4c5d (HEAD -> main)\nAuthor: Tankthireddy <2320520034@klh.edu>\nDate:   Sun Mar 22 09:00:00 2026\n    Initial commit - BCA Project 2026',
+  'ls': 'index.html   style.css   app.js   package.json   amplify.yml   netlify.toml   vercel.json   Dockerfile',
+  'ls -la': 'total 64\ndrwxr-xr-x  8 student  staff   256 Mar 22 09:00 .\ndrwxr-xr-x  5 student  staff   160 Mar 21 08:00 ..\n-rw-r--r--  1 student  staff  4200 Mar 22 09:00 index.html\n-rw-r--r--  1 student  staff  8400 Mar 22 09:00 app.js\n-rw-r--r--  1 student  staff  1200 Mar 22 09:00 package.json',
+  'pwd': '/home/student/bca-project',
+  'netlify login': '✓ Logged in to netlify as tankthireddy@klh.edu',
+  'netlify deploy --prod': '✅ Deploy is Live!\n🟢 URL: https://bca-project-2026.netlify.app',
+  'netlify status': 'Current Netlify User: tankthireddy@klh.edu\nNetlify Site: bca-project-2026\nSite URL: https://bca-project-2026.netlify.app',
+  'vercel login': '✓ Logged in as tankthireddy@klh.edu (GitHub)',
+  'vercel --prod': '▲ Vercel\n🔍 Inspecting [bca-project] ...\n✅ Production: https://bca-project.vercel.app',
+  'help': 'Available commands:\n  aws, git, npm, node, netlify, vercel, ls, pwd, echo, help, clear',
+  'clear': '__CLEAR__',
+};
+
+function addTermLine(type, text) {
+  var body = document.getElementById('term-body');
+  if (!body) return;
+  var lines = text.split('\n');
+  lines.forEach(function(line) {
+    var div = document.createElement('div');
+    div.className = 'term-line';
+    var span = document.createElement('span');
+    if (type === 'cmd') {
+      div.innerHTML = '<span class="term-prompt">student@klh:~/bca-project$</span> <span class="term-cmd">' + escHtml(line) + '</span>';
+    } else {
+      span.className = type === 'ok' ? 'term-ok' : type === 'err' ? 'term-err' : type === 'warn' ? 'term-warn' : 'term-out';
+      span.textContent = line;
+      div.appendChild(span);
+    }
+    body.appendChild(div);
+  });
+  body.scrollTop = body.scrollHeight;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function handleTermKey(e) {
+  var inp = document.getElementById('term-inp');
+  if (e.key === 'Enter') {
+    var cmd = inp.value.trim();
+    if (!cmd) return;
+    termHistory.unshift(cmd);
+    termIdx = -1;
+    addTermLine('cmd', cmd);
+    processCmd(cmd.toLowerCase());
+    inp.value = '';
+  } else if (e.key === 'ArrowUp') {
+    if (termIdx < termHistory.length - 1) termIdx++;
+    inp.value = termHistory[termIdx] || '';
+    e.preventDefault();
+  } else if (e.key === 'ArrowDown') {
+    if (termIdx > 0) termIdx--;
+    else { termIdx = -1; inp.value = ''; }
+    inp.value = termHistory[termIdx] || '';
+  }
+}
+
+function processCmd(cmd) {
+  if (cmd === 'clear') { clearTerm(); return; }
+
+  var found = false;
+  Object.keys(COMMANDS).forEach(function(key) {
+    if (cmd === key.toLowerCase()) {
+      found = true;
+      var val = COMMANDS[key];
+      if (val === '__CLEAR__') { clearTerm(); }
+      else { addTermLine('out', val); }
+    }
+  });
+
+  if (!found) {
+    if (cmd.startsWith('echo ')) {
+      addTermLine('out', cmd.slice(5).replace(/['"]/g, ''));
+    } else if (cmd.startsWith('aws s3 sync')) {
+      addTermLine('out', 'upload: build/index.html → s3://my-bca-project-2026/index.html');
+      addTermLine('out', 'upload: build/style.css → s3://my-bca-project-2026/style.css');
+      addTermLine('ok', '✅ Sync complete!');
+    } else if (cmd.startsWith('git add')) {
+      addTermLine('ok', '✓ Files staged');
+    } else if (cmd.startsWith('git commit')) {
+      addTermLine('ok', '[main abc1234] Commit saved');
+    } else if (cmd.startsWith('git push')) {
+      addTermLine('out', 'Enumerating objects: 5, done.');
+      addTermLine('ok', '✅ Pushed to GitHub!');
+    } else if (cmd.startsWith('ssh ')) {
+      addTermLine('out', 'Welcome to Ubuntu 22.04.3 LTS');
+      addTermLine('ok', '✓ Connected to EC2 instance');
+    } else if (cmd.startsWith('sudo apt')) {
+      addTermLine('out', 'Reading package lists... Done');
+      addTermLine('ok', '✓ Package operation complete');
+    } else if (cmd.startsWith('pm2 ')) {
+      addTermLine('ok', '✓ PM2: App running on port 3000');
+    } else {
+      addTermLine('err', 'Command not found: ' + cmd + '\n(Type "help" for available commands)');
+    }
+  }
+}
+
+function runDemo(type) {
+  showTab('terminal');
+  clearTerm();
+  var steps = DEMOS[type];
+  if (!steps) return;
+  var delay = 0;
+  steps.forEach(function(step) {
+    setTimeout(function() {
+      addTermLine(step.type, step.text);
+    }, delay);
+    delay += step.type === 'cmd' ? 600 : 300;
+  });
+}
+
+function clearTerm() {
+  var body = document.getElementById('term-body');
+  if (body) {
+    body.innerHTML = '<div class="term-line"><span class="term-out" style="color:var(--t3)">Terminal cleared. Type "help" for commands.</span></div>';
+  }
+}
+
+// ── INIT ──
+(function() {
+  // Tab bar clicks
+  document.querySelectorAll('.file-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var id = tab.id.replace('tab-', '');
+      showTab(id);
+    });
+  });
+
+  // Sidebar clicks (non-onclick items) - handled by onclick attrs inline
+
+  // Focus terminal on tab switch
+  document.getElementById('tab-terminal').addEventListener('click', function() {
+    setTimeout(function() {
+      var inp = document.getElementById('term-inp');
+      if (inp) inp.focus();
+    }, 100);
+  });
+})();
+</script>
+</body>
+</html>

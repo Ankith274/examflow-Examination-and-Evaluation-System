@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ExamFlow BCA — KLH University</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080e;--s0:#090c14;--s1:#0d1018;--s2:#121620;--s3:#181c28;--s4:#1e2334;
+  --b1:#1e2538;--b2:#28304a;
+  --a1:#3d7bff;--a2:#6c4fff;--a3:#00c9a7;
+  --r:#ff3d3d;--r2:#ff6060;--o:#ff8c42;--y:#f5c542;--g:#1fd68a;
+  --t:#edf0ff;--t2:#a0a8cc;--mu:#4a527a;
+  --fh:'Syne',sans-serif;--fb:'DM Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--t);font-family:var(--fb);min-height:100vh;overflow-x:hidden}
+.page{display:none;min-height:100vh}
+.page.active{display:flex}
+
+/* ─────── AUTH ─────── */
+.auth-wrap{width:100%;min-height:100vh;display:flex;position:relative;overflow:hidden;background:var(--bg)}
+.auth-glow{position:absolute;inset:0;
+  background:radial-gradient(ellipse 55% 55% at 15% 50%,rgba(61,123,255,.08) 0%,transparent 70%),
+             radial-gradient(ellipse 45% 55% at 85% 20%,rgba(108,79,255,.07) 0%,transparent 70%),
+             radial-gradient(ellipse 35% 45% at 75% 85%,rgba(0,201,167,.04) 0%,transparent 60%)}
+.auth-dots{position:absolute;inset:0;
+  background-image:radial-gradient(rgba(61,123,255,.12) 1px,transparent 1px);
+  background-size:32px 32px;opacity:.6}
+.auth-left{flex:1;display:flex;flex-direction:column;justify-content:center;padding:56px 64px;position:relative;z-index:2}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:52px}
+.brand-ico{width:46px;height:46px;border-radius:13px;
+  background:linear-gradient(135deg,var(--a2),var(--a1));
+  display:flex;align-items:center;justify-content:center;font-size:21px;
+  box-shadow:0 8px 28px rgba(61,123,255,.35)}
+.brand-name{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:-.4px}
+.brand-sub{font-size:11px;color:var(--mu);margin-top:2px}
+.auth-hl{font-family:var(--fh);font-size:42px;font-weight:800;line-height:1.12;letter-spacing:-1.2px;margin-bottom:18px}
+.auth-hl em{font-style:normal;background:linear-gradient(120deg,var(--a1),var(--a2),var(--a3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.auth-desc{font-size:14px;color:var(--t2);line-height:1.75;max-width:400px;margin-bottom:40px}
+.pills{display:flex;gap:10px;flex-wrap:wrap}
+.pill{display:flex;align-items:center;gap:7px;
+  background:var(--s2);border:1px solid var(--b1);
+  padding:8px 15px;border-radius:20px;font-size:12px;font-weight:600;color:var(--t2);
+  transition:all .2s;cursor:pointer}
+.pill:hover,.pill.on{background:rgba(61,123,255,.1);border-color:rgba(61,123,255,.4);color:var(--a1)}
+.pill .d{width:7px;height:7px;border-radius:50%;background:var(--mu)}
+.pill.on .d,.pill:hover .d{background:var(--a1)}
+.auth-right{width:490px;display:flex;align-items:center;justify-content:center;padding:40px;position:relative;z-index:2}
+.auth-card{width:100%;background:var(--s1);border:1px solid var(--b1);border-radius:22px;padding:38px;box-shadow:0 28px 70px rgba(0,0,0,.55)}
+.atabs{display:flex;background:var(--s2);border-radius:11px;padding:4px;margin-bottom:30px}
+.atab{flex:1;text-align:center;padding:9px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;color:var(--mu);transition:all .2s}
+.atab.on{background:var(--s3);color:var(--t);box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.auth-card h2{font-family:var(--fh);font-size:21px;font-weight:800;margin-bottom:6px}
+.auth-card p{font-size:13px;color:var(--t2);margin-bottom:26px}
+.fd{margin-bottom:16px}
+.fd label{display:block;font-size:11.5px;font-weight:600;color:var(--t2);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase}
+.fd input,.fd select{width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--t);padding:11px 14px;border-radius:10px;font-family:var(--fb);font-size:13.5px;outline:none;transition:border-color .2s,box-shadow .2s}
+.fd input:focus,.fd select:focus{border-color:var(--a1);box-shadow:0 0 0 3px rgba(61,123,255,.12)}
+.fd select option{background:var(--s2)}
+.fd-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-p{width:100%;padding:13px;border-radius:10px;border:none;
+  background:linear-gradient(135deg,var(--a2),var(--a1));
+  color:#fff;font-family:var(--fb);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 20px rgba(61,123,255,.35)}
+.btn-p:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 8px 28px rgba(61,123,255,.45)}
+.sw{text-align:center;margin-top:16px;font-size:12.5px;color:var(--mu)}
+.sw a{color:var(--a1);cursor:pointer;font-weight:600}
+.em{background:rgba(255,61,61,.09);border:1px solid rgba(255,61,61,.28);color:var(--r2);padding:10px 14px;border-radius:9px;font-size:12.5px;margin-bottom:14px;display:none}
+.ok{background:rgba(31,214,138,.09);border:1px solid rgba(31,214,138,.28);color:var(--g);padding:10px 14px;border-radius:9px;font-size:12.5px;margin-bottom:14px;display:none}
+.demo-box{margin-top:14px;padding:12px;background:var(--s2);border-radius:9px;font-size:11px;color:var(--mu);line-height:1.8}
+.demo-box strong{color:var(--t2)}
+
+/* ─────── LAYOUT ─────── */
+.dash{width:100%;display:flex}
+.sb{width:240px;min-height:100vh;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;padding:22px 0;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:0 18px 22px;border-bottom:1px solid var(--b1);margin-bottom:18px}
+.sb-li{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--a2),var(--a1));display:flex;align-items:center;justify-content:center;font-size:15px}
+.sb-lt{font-family:var(--fh);font-size:16px;font-weight:800}
+.sb-nav{padding:0 10px;flex:1}
+.sb-sec{font-size:9.5px;font-weight:700;letter-spacing:1.8px;color:var(--mu);text-transform:uppercase;padding:12px 10px 6px}
+.si{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:13px;font-weight:500;color:var(--mu);cursor:pointer;transition:all .18s;margin-bottom:2px;position:relative}
+.si:hover{background:var(--s2);color:var(--t)}
+.si.on{background:linear-gradient(90deg,rgba(61,123,255,.15),rgba(108,79,255,.06));color:var(--a1);border-left:2px solid var(--a1)}
+.si.on-r{background:linear-gradient(90deg,rgba(255,61,61,.12),rgba(255,61,61,.04));color:var(--r2);border-left:2px solid var(--r)}
+.si .ic{font-size:14px;width:20px;text-align:center}
+.si-badge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.si-badge.r{background:rgba(255,61,61,.15);color:var(--r2)}
+.si-badge.b{background:rgba(61,123,255,.15);color:var(--a1)}
+.si-badge.y{background:rgba(245,197,66,.15);color:var(--y)}
+.si-badge.g{background:rgba(31,214,138,.12);color:var(--g)}
+.sb-foot{padding:14px 16px 0;border-top:1px solid var(--b1)}
+.sb-user{display:flex;align-items:center;gap:10px}
+.sb-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--a2),var(--a1));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.sb-un{font-size:12.5px;font-weight:600;color:var(--t)}
+.sb-ur{font-size:11px;color:var(--mu)}
+.sb-out{font-size:11.5px;color:var(--mu);cursor:pointer;margin-top:10px;display:flex;align-items:center;gap:5px;padding:6px 8px;border-radius:6px;transition:all .15s}
+.sb-out:hover{color:var(--r);background:rgba(255,61,61,.08)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.tb{display:flex;align-items:center;justify-content:space-between;padding:15px 26px;border-bottom:1px solid var(--b1);background:var(--s1);position:sticky;top:0;z-index:50}
+.tb h1{font-family:var(--fh);font-size:18px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
+.tb .sub{font-size:11.5px;color:var(--mu);margin-top:1px}
+.tb-r{display:flex;align-items:center;gap:10px}
+.ct{flex:1;overflow-y:auto;padding:24px 26px}
+.ct::-webkit-scrollbar{width:3px}
+.ct::-webkit-scrollbar-thumb{background:var(--b1);border-radius:2px}
+
+/* ─────── STATS ─────── */
+.sg{display:grid;gap:13px;margin-bottom:22px}
+.sg-4{grid-template-columns:repeat(4,1fr)}
+.sg-5{grid-template-columns:repeat(5,1fr)}
+.sg-3{grid-template-columns:repeat(3,1fr)}
+.sc{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:17px 17px 13px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;animation:fadeUp .4s ease both}
+.sc:hover{transform:translateY(-2px);border-color:var(--b2)}
+.sc::after{content:'';position:absolute;top:-18px;right:-18px;width:65px;height:65px;border-radius:50%;opacity:.08}
+.sc.a::after{background:var(--a1)}.sc.b::after{background:var(--a2)}.sc.c::after{background:var(--g)}.sc.d::after{background:var(--y)}.sc.e::after{background:var(--r)}.sc.f::after{background:var(--o)}
+.sv{font-family:var(--fh);font-size:26px;font-weight:800;letter-spacing:-1px}
+.sc.a .sv{color:var(--a1)}.sc.b .sv{color:var(--a2)}.sc.c .sv{color:var(--g)}.sc.d .sv{color:var(--y)}.sc.e .sv{color:var(--r)}.sc.f .sv{color:var(--o)}
+.sl{font-size:12px;color:var(--mu);font-weight:500;margin-top:2px}
+.ss{font-size:11px;color:var(--g);margin-top:8px}
+.si2{font-size:17px;margin-bottom:9px}
+
+/* ─────── TABLES ─────── */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.st{font-family:var(--fh);font-size:15px;font-weight:700}
+.tw{background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden;margin-bottom:20px;animation:fadeUp .4s .15s ease both}
+table{width:100%;border-collapse:collapse}
+thead th{padding:11px 15px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mu);background:var(--s2);border-bottom:1px solid var(--b1);cursor:pointer}
+thead th:hover{color:var(--t2)}
+tbody tr{transition:background .15s;cursor:pointer}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tbody tr:not(:last-child) td{border-bottom:1px solid var(--b1)}
+tbody td{padding:12px 15px;font-size:13px}
+
+/* ─────── BADGES ─────── */
+.bx{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.bx::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.bx.ac{background:rgba(31,214,138,.1);color:var(--g);border:1px solid rgba(31,214,138,.2)}
+.bx.cl{background:rgba(74,82,122,.15);color:var(--mu);border:1px solid rgba(74,82,122,.2)}
+.bx.dr{background:rgba(61,123,255,.1);color:var(--a1);border:1px solid rgba(61,123,255,.2)}
+.bx.wn{background:rgba(245,197,66,.1);color:var(--y);border:1px solid rgba(245,197,66,.2)}
+.bx.dg{background:rgba(255,61,61,.1);color:var(--r2);border:1px solid rgba(255,61,61,.2)}
+
+/* ─────── SCORE BARS ─────── */
+.sbw{display:flex;align-items:center;gap:8px}
+.sbr{height:5px;width:70px;background:var(--b1);border-radius:3px;overflow:hidden}
+.sf{height:100%;border-radius:3px}
+.h{background:linear-gradient(90deg,var(--g),#22d7c0)}
+.m{background:linear-gradient(90deg,var(--y),var(--o))}
+.l{background:linear-gradient(90deg,var(--r),var(--o))}
+
+/* ─────── BUTTONS ─────── */
+.btn{background:var(--s2);border:1px solid var(--b1);color:var(--mu);padding:5px 10px;border-radius:7px;font-size:11.5px;cursor:pointer;font-family:var(--fb);transition:all .15s;margin-right:4px}
+.btn:hover{color:var(--t);border-color:var(--b2)}
+.bc{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--a2),var(--a1));color:#fff;border:none;padding:8px 16px;border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:all .2s}
+.bc:hover{opacity:.88;transform:translateY(-1px)}
+.bw{display:inline-flex;align-items:center;gap:6px;background:rgba(255,61,61,.1);border:1px solid rgba(255,61,61,.3);color:var(--r2);padding:7px 14px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:all .2s;animation:vblink 2.5s infinite}
+@keyframes vblink{0%,100%{box-shadow:0 0 0 0 rgba(255,61,61,.3)}50%{box-shadow:0 0 0 6px rgba(255,61,61,0)}}
+.bw:hover{background:rgba(255,61,61,.18)}
+.bp{display:inline-flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--b1);color:var(--t2);padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:all .2s}
+.bp:hover{color:var(--t);border-color:var(--b2)}
+
+/* ─────── TABS ─────── */
+.tabs{display:flex;background:var(--s2);border-radius:9px;padding:3px;width:fit-content;margin-bottom:14px}
+.tab{padding:6px 16px;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;color:var(--mu);transition:all .18s}
+.tab.on{background:var(--s3);color:var(--t);box-shadow:0 1px 6px rgba(0,0,0,.3)}
+
+/* ─────── CARDS / GRIDS ─────── */
+.bg2{display:grid;grid-template-columns:1.4fr 1fr;gap:15px}
+.bg3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.crd{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:18px}
+.ct2{font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:13px}
+.li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b1)}
+.li:last-child{border-bottom:none}
+.lav{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--a2),var(--a1));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.ln{font-size:13px;font-weight:500;flex:1}
+.ls{font-size:12px;font-weight:700}
+
+/* ─────── VIOLATION PANEL ─────── */
+.vp{background:var(--s1);border:1px solid rgba(255,61,61,.2);border-radius:14px;padding:20px;margin-bottom:20px;display:none}
+.vp.op{display:block;animation:sd .25s ease}
+.vph{display:flex;align-items:center;gap:10px;margin-bottom:15px}
+.vpt{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--r2)}
+.vg{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.vc{background:var(--s2);border:1px solid var(--b1);border-left:3px solid var(--r);border-radius:10px;padding:13px}
+.vcn{font-size:13px;font-weight:600;margin-bottom:2px}
+.vce{font-size:11.5px;color:var(--mu);margin-bottom:5px}
+.vct{font-size:11.5px;color:var(--y);font-weight:600}
+.vcti{font-size:11px;color:var(--mu);margin-top:3px}
+.vcs{display:inline-block;margin-top:5px;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:700}
+.vcs.hi{background:rgba(255,61,61,.15);color:var(--r2)}
+.vcs.me{background:rgba(245,197,66,.15);color:var(--y)}
+.vcs.lo{background:rgba(31,214,138,.12);color:var(--g)}
+
+/* ─────── STUDENT SECTIONS ─────── */
+.ss2{display:none}.ss2.on{display:block;animation:fadeUp .25s ease}
+
+/* ─────── EXAM CARDS ─────── */
+.ecg{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:20px}
+.ec{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:17px;cursor:pointer;transition:all .2s;animation:fadeUp .4s ease both}
+.ec:hover{border-color:var(--a2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(61,123,255,.1)}
+.ec-s{font-size:11px;font-weight:600;color:var(--a1);letter-spacing:.5px;margin-bottom:7px;text-transform:uppercase}
+.ec-n{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:5px}
+.ec-m{display:flex;gap:10px;margin-top:11px;flex-wrap:wrap}
+.ec-m span{font-size:11px;color:var(--mu)}
+.ec-a{margin-top:13px;display:flex;gap:8px}
+.ecb{flex:1;padding:8px;border-radius:8px;border:none;font-family:var(--fb);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s}
+.ecb.go{background:linear-gradient(135deg,var(--a2),var(--a1));color:#fff}
+.ecb.vw{background:var(--s2);border:1px solid var(--b1);color:var(--t2)}
+.ecb:hover{opacity:.85}
+
+/* ─────── INFO GRID ─────── */
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.ii{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:13px}
+.il{font-size:11px;color:var(--mu);font-weight:600;letter-spacing:.3px;margin-bottom:4px;text-transform:uppercase}
+.iv{font-size:13.5px;font-weight:600;color:var(--t)}
+
+/* ─────── SCHEDULE ─────── */
+.sdi{display:flex;align-items:center;gap:13px;background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:12px 15px;margin-bottom:8px;transition:all .15s}
+.sdi:hover{border-color:var(--b2)}
+.sdt{font-size:12px;font-weight:700;color:var(--a1);width:70px;flex-shrink:0}
+.sdif{flex:1}
+.sdn{font-size:13px;font-weight:600}
+.sdm{font-size:11.5px;color:var(--mu);margin-top:2px}
+
+/* ─────── MATERIAL CARDS ─────── */
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.mc{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:15px;cursor:pointer;transition:all .2s}
+.mc:hover{border-color:var(--a2);transform:translateY(-2px)}
+.mci{font-size:23px;margin-bottom:9px}
+.mcn{font-size:13px;font-weight:700;margin-bottom:3px}
+.mcm{font-size:11.5px;color:var(--mu)}
+.mct{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;margin-top:7px;background:rgba(61,123,255,.12);color:var(--a1)}
+
+/* ─────── VIOLATION REPORT ─────── */
+.rs{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:20px}
+.rsc{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:15px 17px}
+.rsv{font-family:var(--fh);font-size:24px;font-weight:800;margin-bottom:2px}
+.rsl{font-size:12px;color:var(--mu)}
+.fb{display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
+.fb select,.fb input{background:var(--s1);border:1px solid var(--b1);color:var(--t);padding:8px 11px;border-radius:8px;font-family:var(--fb);font-size:12px;outline:none}
+.fb select:focus,.fb input:focus{border-color:var(--a1)}
+.sh2{color:var(--r2);font-weight:700}.sm2{color:var(--y);font-weight:700}.sl2{color:var(--g);font-weight:700}
+.ld{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--r);animation:vblink 1.4s infinite;margin-right:5px}
+
+/* ─────── MODALS ─────── */
+.mo{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+.mo.op{display:flex;animation:fadeIn .2s ease}
+.md{background:var(--s1);border:1px solid var(--b2);border-radius:18px;padding:0;width:560px;max-width:95vw;box-shadow:0 32px 90px rgba(0,0,0,.7);overflow:hidden}
+.md.lg{width:640px;max-height:88vh;overflow-y:auto}
+.mh{padding:20px 24px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.mht{font-family:var(--fh);font-size:16px;font-weight:800}
+.mx{width:28px;height:28px;border-radius:50%;background:var(--s2);border:1px solid var(--b1);color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s}
+.mx:hover{color:var(--t);border-color:var(--r)}
+.mb{padding:22px 24px}
+.mr{display:flex;gap:10px;margin-bottom:11px;align-items:flex-start}
+.mrl{font-size:11px;color:var(--mu);font-weight:600;width:110px;flex-shrink:0;padding-top:1px;text-transform:uppercase;letter-spacing:.3px}
+.mrv{font-size:13px;font-weight:600;color:var(--t);flex:1}
+.mdv{height:1px;background:var(--b1);margin:16px 0}
+.mwb{background:rgba(255,61,61,.07);border:1px solid rgba(255,61,61,.2);border-radius:10px;padding:13px;font-size:12.5px;color:var(--t2);line-height:1.7;margin-bottom:18px}
+.mwb strong{color:var(--r2)}
+.mf{padding:16px 24px;border-top:1px solid var(--b1);display:flex;gap:10px;justify-content:flex-end}
+.mfc{background:var(--s2);border:1px solid var(--b1);color:var(--t2);padding:9px 20px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.mfc:hover{color:var(--t)}
+.mfg{background:linear-gradient(135deg,var(--a2),var(--a1));color:#fff;border:none;padding:9px 22px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.mfg:hover{opacity:.88;transform:translateY(-1px)}
+.mfw{background:rgba(245,197,66,.12);color:var(--y);border:1px solid rgba(245,197,66,.28);padding:9px 18px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:700;cursor:pointer}
+.mfd{background:rgba(255,61,61,.12);color:var(--r2);border:1px solid rgba(255,61,61,.28);padding:9px 18px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:700;cursor:pointer}
+
+/* ─────── EXAM LIVE ─────── */
+.elh{background:linear-gradient(135deg,var(--a2),var(--a1));border-radius:12px;padding:15px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.elt{font-family:var(--fh);font-size:15px;font-weight:800;color:#fff}
+.etm{font-family:var(--fh);font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px}
+.qb{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:18px;margin-bottom:13px}
+.qn{font-size:11px;font-weight:600;color:var(--a1);letter-spacing:.5px;margin-bottom:7px;text-transform:uppercase}
+.qt{font-size:14px;font-weight:600;margin-bottom:13px;line-height:1.5}
+.qo{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.qop{background:var(--s3);border:1px solid var(--b1);border-radius:8px;padding:9px 13px;font-size:13px;cursor:pointer;transition:all .15s;color:var(--t2)}
+.qop:hover{border-color:var(--a1);color:var(--t)}
+.qop.picked{background:rgba(61,123,255,.12);border-color:var(--a1);color:var(--t)}
+.qnav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.qd{width:28px;height:28px;border-radius:6px;background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--mu);cursor:pointer;transition:all .15s}
+.qd.done{background:rgba(31,214,138,.15);border-color:var(--g);color:var(--g)}
+.qd.cur{background:rgba(61,123,255,.15);border-color:var(--a1);color:var(--a1)}
+
+/* ─────── TOAST ─────── */
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--s3);border:1px solid var(--b2);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.5);display:none;align-items:center;gap:8px;animation:su .3s ease}
+.toast.on{display:flex}
+.toast.ok2{border-color:rgba(31,214,138,.4);color:var(--g)}
+.toast.wn2{border-color:rgba(245,197,66,.4);color:var(--y)}
+.toast.er2{border-color:rgba(255,61,61,.4);color:var(--r2)}
+
+/* ─────── PROGRESS RINGS ─────── */
+.progress-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.prog-lbl{font-size:11px;color:var(--mu);font-weight:600;text-align:center}
+
+/* ─────── ANIMATIONS ─────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes sd{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes su{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.sc:nth-child(1){animation-delay:.05s}.sc:nth-child(2){animation-delay:.1s}.sc:nth-child(3){animation-delay:.15s}.sc:nth-child(4){animation-delay:.2s}.sc:nth-child(5){animation-delay:.25s}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 1 — LOGIN / REGISTER
+═══════════════════════════════════════════════════ -->
+<div class="page active" id="pg-login">
+<div class="auth-wrap">
+  <div class="auth-glow"></div><div class="auth-dots"></div>
+  <div class="auth-left">
+    <div class="brand">
+      <div class="brand-ico">🎓</div>
+      <div><div class="brand-name">ExamFlow BCA</div><div class="brand-sub">KLH University · BCA Final Year · 2023–2026</div></div>
+    </div>
+    <div class="auth-hl">Smart Exams<br>for <em>BCA Final Year.</em></div>
+    <div class="auth-desc">Secure online examination platform for BCA students at KLH University. Real-time proctoring, violation detection, live results, and full academic analytics — all in one place.</div>
+    <div class="pills">
+      <div class="pill on"><span class="d"></span>Teacher / HOD</div>
+      <div class="pill"><span class="d"></span>Faculty Admin</div>
+      <div class="pill"><span class="d"></span>BCA Student</div>
+    </div>
+    <div style="margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:440px">
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:13px 15px">
+        <div style="font-size:11px;color:var(--mu);font-weight:700;letter-spacing:.5px;margin-bottom:5px">BATCH 2023–2026</div>
+        <div style="font-family:var(--fh);font-size:20px;font-weight:800;color:var(--a1)">248</div>
+        <div style="font-size:11.5px;color:var(--t2)">BCA Final Year Students</div>
+      </div>
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:13px 15px">
+        <div style="font-size:11px;color:var(--mu);font-weight:700;letter-spacing:.5px;margin-bottom:5px">THIS SEMESTER</div>
+        <div style="font-family:var(--fh);font-size:20px;font-weight:800;color:var(--g)">12</div>
+        <div style="font-size:11.5px;color:var(--t2)">Active Examinations</div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <div class="atabs">
+        <div class="atab on" onclick="switchTab('login')">Sign In</div>
+        <div class="atab" onclick="switchTab('reg')">Register</div>
+      </div>
+      <!-- LOGIN -->
+      <div id="lf">
+        <h2>Welcome back 👋</h2><p>Sign in to ExamFlow BCA portal</p>
+        <div id="le" class="em">❌ Invalid credentials. Please check and try again.</div>
+        <div class="fd"><label>Role</label>
+          <select id="lr">
+            <option value="teacher">👨‍🏫 Teacher / HOD</option>
+            <option value="faculty">🏛️ Faculty Admin</option>
+            <option value="student">🎓 BCA Student</option>
+          </select>
+        </div>
+        <div class="fd"><label>User ID / Email</label><input type="text" id="li" placeholder="Roll no. or email e.g. 2320520034"/></div>
+        <div class="fd"><label>Password</label><input type="password" id="lp" placeholder="Enter password"/></div>
+        <button class="btn-p" onclick="doLogin()">Sign In →</button>
+        <div class="sw">No account? <a onclick="switchTab('reg')">Register now</a></div>
+        <div class="demo-box"><strong>Demo Accounts:</strong><br>
+          Teacher: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7e0a1b1f1d161b0c3e151216501b1a0b">[email&#160;protected]</a> / pass123<br>
+          Faculty: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="23454240564f575a63484f4b0d464756">[email&#160;protected]</a> / pass123<br>
+          Tankthireddy: 2320520034 / pass123<br>
+          Ravi Shankar: 2320520035 / pass123<br>
+          Priya Reddy: 2320520036 / pass123
+        </div>
+      </div>
+      <!-- REGISTER -->
+      <div id="rf" style="display:none">
+        <h2>Create Account</h2><p>Join ExamFlow BCA — KLH University</p>
+        <div id="rok" class="ok">✅ Account created! Please sign in now.</div>
+        <div id="rer" class="em">❌ Please fill all required fields correctly.</div>
+        <div class="fd"><label>Register As</label>
+          <select id="rr"><option value="student">🎓 BCA Student</option><option value="teacher">👨‍🏫 Teacher</option><option value="faculty">🏛️ Faculty Admin</option></select>
+        </div>
+        <div class="fd-row">
+          <div class="fd"><label>First Name</label><input type="text" id="rfn" placeholder="First name"/></div>
+          <div class="fd"><label>Last Name</label><input type="text" id="rln" placeholder="Last name"/></div>
+        </div>
+        <div class="fd"><label>Roll / Employee ID</label><input type="text" id="ruid" placeholder="e.g. 2320520034"/></div>
+        <div class="fd"><label>Email</label><input type="email" id="rem" placeholder="you@klh.edu"/></div>
+        <div class="fd-row">
+          <div class="fd"><label>Semester</label>
+            <select id="rsem"><option>Semester 5</option><option>Semester 6 (Final)</option></select>
+          </div>
+          <div class="fd"><label>Section</label>
+            <select id="rsec"><option>Section A</option><option>Section B</option><option>Section C</option></select>
+          </div>
+        </div>
+        <div class="fd"><label>Password</label><input type="password" id="rpw" placeholder="Min 6 characters"/></div>
+        <button class="btn-p" onclick="doReg()">Create Account →</button>
+        <div class="sw">Already registered? <a onclick="switchTab('login')">Sign in</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 2 — TEACHER / HOD DASHBOARD
+═══════════════════════════════════════════════════ -->
+<div class="page" id="pg-teacher">
+<div class="dash">
+  <aside class="sb">
+    <div class="sb-logo"><div class="sb-li">🎓</div><span class="sb-lt">ExamFlow BCA</span></div>
+    <div class="sb-nav">
+      <div class="si on"><span class="ic">📊</span>Dashboard</div>
+      <div class="si"><span class="ic">👥</span>My Students</div>
+      <div class="si"><span class="ic">📝</span>My Exams</div>
+      <div class="si"><span class="ic">📈</span>Results</div>
+      <div class="si"><span class="ic">❓</span>Question Bank</div>
+      <div class="si"><span class="ic">📋</span>Attendance</div>
+      <div class="sb-sec">Reports</div>
+      <div class="si on-r" onclick="gp('pg-viol')"><span class="ic">⚠️</span>Violations<span class="si-badge r">7</span></div>
+      <div class="si"><span class="ic">📊</span>Analytics</div>
+      <div class="si"><span class="ic">📄</span>Grade Reports</div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="sb-av" id="t-av">VS</div>
+        <div><div class="sb-un" id="t-nm">Dr. Vikram Singh</div><div class="sb-ur">HOD · BCA Dept</div></div>
+      </div>
+      <div class="sb-out" onclick="doLogout()">↩ Logout</div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="tb">
+      <div><h1>📊 HOD Dashboard</h1><div class="sub">BCA Final Year · KLH University · 2023–2026</div></div>
+      <div class="tb-r">
+        <div class="bw" onclick="tvp()">⚠️ 3 Violations Active</div>
+        <div class="bc" onclick="toast('+ New exam created!','ok2')">+ Create Exam</div>
+      </div>
+    </div>
+    <div class="ct">
+      <div class="sg sg-4">
+        <div class="sc a"><div class="si2">👥</div><div class="sv">248</div><div class="sl">BCA Final Year Students</div><div class="ss">Sem 6 · 2026</div></div>
+        <div class="sc b"><div class="si2">📝</div><div class="sv">12</div><div class="sl">Active Exams</div><div class="ss">4 live right now</div></div>
+        <div class="sc c"><div class="si2">✅</div><div class="sv">3,840</div><div class="sl">Total Submissions</div><div class="ss">↑ 12% this month</div></div>
+        <div class="sc d"><div class="si2">📊</div><div class="sv">81%</div><div class="sl">Overall Pass Rate</div><div class="ss">↑ 4% improvement</div></div>
+      </div>
+
+      <!-- VIOLATION PANEL -->
+      <div class="vp" id="t-vp">
+        <div class="vph"><span style="font-size:16px">⚠️</span><span class="vpt">Active Violation Log</span><span style="font-size:11px;color:var(--mu);margin-left:auto;cursor:pointer;color:var(--a1)" onclick="gp('pg-viol')">Full Report →</span></div>
+        <div class="vg">
+          <div class="vc"><div class="vcn">Riya Sharma (21BCA042)</div><div class="vce">Advanced DBMS</div><div class="vct">📋 Tab Switch Detected</div><div class="vcti">Today, 10:23 AM · 2×</div><span class="vcs hi">HIGH</span></div>
+          <div class="vc"><div class="vcn">Arjun Patel (21BCA089)</div><div class="vce">Software Engineering</div><div class="vct">📷 Face Not Visible</div><div class="vcti">Today, 11:05 AM · 1×</div><span class="vcs me">MEDIUM</span></div>
+          <div class="vc"><div class="vcn">Meera Nair (21BCA114)</div><div class="vce">Advanced DBMS</div><div class="vct">🖱️ Copy-Paste Attempt</div><div class="vcti">Yesterday 3:47 PM · 1×</div><span class="vcs lo">LOW</span></div>
+        </div>
+      </div>
+
+      <!-- BCA SUBJECT EXAMS TABLE -->
+      <div class="sh"><span class="st">📝 BCA Final Year Exams</span>
+        <div style="display:flex;gap:8px">
+          <div class="tabs"><div class="tab on">All</div><div class="tab">Active</div><div class="tab">Closed</div><div class="tab">Draft</div></div>
+        </div>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Subject</th><th>Paper Code</th><th>Questions</th><th>Attempts</th><th>Avg Score</th><th>Pass Rate</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr onclick="toast('Opening Advanced DBMS exam...','ok2')"><td><strong>Advanced DBMS</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-601</td><td>60</td><td>198</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:82%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">82%</span></div></td><td><span style="color:var(--g);font-weight:700">88%</span></td><td><span class="bx ac">Active</span></td><td><button class="btn" onclick="event.stopPropagation()">View</button><button class="btn" onclick="event.stopPropagation()">Edit</button></td></tr>
+            <tr onclick="toast('Opening Software Engineering exam...','ok2')"><td><strong>Software Engineering</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-602</td><td>80</td><td>201</td><td><div class="sbw"><div class="sbr"><div class="sf m" style="width:74%"></div></div><span style="color:var(--y);font-weight:700;font-size:12px">74%</span></div></td><td><span style="color:var(--y);font-weight:700">79%</span></td><td><span class="bx ac">Active</span></td><td><button class="btn" onclick="event.stopPropagation()">View</button><button class="btn" onclick="event.stopPropagation()">Edit</button></td></tr>
+            <tr onclick="toast('Opening Web Development exam...','ok2')"><td><strong>Web Development &amp; Design</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-603</td><td>70</td><td>195</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:88%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">88%</span></div></td><td><span style="color:var(--g);font-weight:700">93%</span></td><td><span class="bx ac">Active</span></td><td><button class="btn" onclick="event.stopPropagation()">View</button><button class="btn" onclick="event.stopPropagation()">Edit</button></td></tr>
+            <tr onclick="toast('Opening Computer Networks exam...','ok2')"><td><strong>Computer Networks</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-604</td><td>75</td><td>189</td><td><div class="sbw"><div class="sbr"><div class="sf m" style="width:71%"></div></div><span style="color:var(--y);font-weight:700;font-size:12px">71%</span></div></td><td><span style="color:var(--y);font-weight:700">76%</span></td><td><span class="bx ac">Active</span></td><td><button class="btn" onclick="event.stopPropagation()">View</button><button class="btn" onclick="event.stopPropagation()">Edit</button></td></tr>
+            <tr onclick="toast('Opening Operating Systems exam...','ok2')"><td><strong>Operating Systems</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-605</td><td>65</td><td>203</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:79%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">79%</span></div></td><td><span style="color:var(--g);font-weight:700">84%</span></td><td><span class="bx cl">Closed</span></td><td><button class="btn" onclick="event.stopPropagation()">View</button><button class="btn" onclick="event.stopPropagation()">Results</button></td></tr>
+            <tr onclick="toast('Opening Python Programming exam...','ok2')"><td><strong>Python Programming</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-606</td><td>50</td><td>185</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:85%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">85%</span></div></td><td><span style="color:var(--g);font-weight:700">90%</span></td><td><span class="bx cl">Closed</span></td><td><button class="btn" onclick="event.stopPropagation()">View</button><button class="btn" onclick="event.stopPropagation()">Results</button></td></tr>
+            <tr onclick="toast('Opening AI &amp; ML Fundamentals exam...','ok2')"><td><strong>AI &amp; ML Fundamentals</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-607</td><td>55</td><td>—</td><td style="color:var(--mu);font-size:12px">Pending</td><td style="color:var(--mu);font-size:12px">—</td><td><span class="bx dr">Draft</span></td><td><button class="btn" onclick="event.stopPropagation()">Edit</button><button class="btn" onclick="event.stopPropagation()">Publish</button></td></tr>
+            <tr onclick="toast('Opening Cloud Computing exam...','ok2')"><td><strong>Cloud Computing</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-608</td><td>60</td><td>—</td><td style="color:var(--mu);font-size:12px">Pending</td><td style="color:var(--mu);font-size:12px">—</td><td><span class="bx dr">Draft</span></td><td><button class="btn" onclick="event.stopPropagation()">Edit</button><button class="btn" onclick="event.stopPropagation()">Publish</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- BOTTOM GRID -->
+      <div class="bg2">
+        <div class="crd">
+          <div class="ct2">🏆 Top BCA Performers (Sem 6)</div>
+          <div class="li"><div class="lav" style="background:linear-gradient(135deg,#f5c542,#f59342)">TK</div><div class="ln">Tankthireddy (2320520034)</div><div class="ls" style="color:var(--g)">94%</div></div>
+          <div class="li"><div class="lav" style="background:linear-gradient(135deg,#1fd68a,#22d7c0)">PR</div><div class="ln">Priya Reddy (2320520036)</div><div class="ls" style="color:var(--g)">92%</div></div>
+          <div class="li"><div class="lav">RS</div><div class="ln">Ravi Shankar (2320520035)</div><div class="ls" style="color:var(--g)">90%</div></div>
+          <div class="li"><div class="lav" style="background:linear-gradient(135deg,#a2c9ff,#6ca5ff)">AK</div><div class="ln">Ananya Kumar (21BCA020)</div><div class="ls" style="color:var(--g)">89%</div></div>
+          <div class="li"><div class="lav" style="background:linear-gradient(135deg,#ff8c42,#f5c542)">VR</div><div class="ln">Vikram Rao (21BCA033)</div><div class="ls" style="color:var(--y)">87%</div></div>
+        </div>
+        <div class="crd">
+          <div class="ct2">📊 BCA Section Distribution</div>
+          <svg width="100%" height="190" viewBox="0 0 260 190">
+            <g transform="translate(130,90)">
+              <circle r="65" fill="none" stroke="#1e2334" stroke-width="24"/>
+              <circle r="65" fill="none" stroke="#1fd68a" stroke-width="24" stroke-dasharray="204 204" stroke-dashoffset="51" stroke-linecap="round"/>
+              <circle r="65" fill="none" stroke="#3d7bff" stroke-width="24" stroke-dasharray="122 286" stroke-dashoffset="-153" stroke-linecap="round"/>
+              <circle r="65" fill="none" stroke="#f5c542" stroke-width="24" stroke-dasharray="82 326" stroke-dashoffset="-275" stroke-linecap="round"/>
+            </g>
+            <text x="130" y="86" text-anchor="middle" font-family="Syne" font-size="19" font-weight="800" fill="#edf0ff">248</text>
+            <text x="130" y="103" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#4a527a">Students</text>
+            <circle cx="10" cy="140" r="5" fill="#1fd68a"/><text x="20" y="144" font-size="10" fill="#a0a8cc" font-family="DM Sans">Sec A · 84 (34%)</text>
+            <circle cx="10" cy="158" r="5" fill="#3d7bff"/><text x="20" y="162" font-size="10" fill="#a0a8cc" font-family="DM Sans">Sec B · 82 (33%)</text>
+            <circle cx="140" cy="140" r="5" fill="#f5c542"/><text x="150" y="144" font-size="10" fill="#a0a8cc" font-family="DM Sans">Sec C · 82 (33%)</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 3 — FACULTY ADMIN DASHBOARD
+═══════════════════════════════════════════════════ -->
+<div class="page" id="pg-faculty">
+<div class="dash">
+  <aside class="sb">
+    <div class="sb-logo"><div class="sb-li">🎓</div><span class="sb-lt">ExamFlow BCA</span></div>
+    <div class="sb-nav">
+      <div class="si on"><span class="ic">🏛️</span>Overview</div>
+      <div class="si"><span class="ic">👨‍🏫</span>Teachers</div>
+      <div class="si"><span class="ic">👥</span>All Students</div>
+      <div class="si"><span class="ic">📝</span>All Exams</div>
+      <div class="si"><span class="ic">📈</span>Analytics</div>
+      <div class="si"><span class="ic">📋</span>Attendance</div>
+      <div class="sb-sec">Admin</div>
+      <div class="si on-r" onclick="gp('pg-viol')"><span class="ic">⚠️</span>Violations<span class="si-badge r">7</span></div>
+      <div class="si"><span class="ic">🔒</span>Proctoring</div>
+      <div class="si"><span class="ic">📄</span>Results Export</div>
+      <div class="si"><span class="ic">⚙️</span>Settings</div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="sb-av" style="background:linear-gradient(135deg,#1fd68a,#22d7c0)">KS</div>
+        <div><div class="sb-un">K. V. Sharada</div><div class="sb-ur">Faculty Admin · BCA</div></div>
+      </div>
+      <div class="sb-out" onclick="doLogout()">↩ Logout</div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="tb">
+      <div><h1>🏛️ Faculty Admin Panel</h1><div class="sub">BCA Department · KLH University · Full Access</div></div>
+      <div class="tb-r"><div class="bw" onclick="gp('pg-viol')">⚠️ 7 Violations Today</div></div>
+    </div>
+    <div class="ct">
+      <div class="sg sg-5">
+        <div class="sc a"><div class="si2">👥</div><div class="sv">248</div><div class="sl">BCA Final Year</div><div class="ss">3 Sections</div></div>
+        <div class="sc b"><div class="si2">👨‍🏫</div><div class="sv">18</div><div class="sl">Teachers</div><div class="ss">6 active today</div></div>
+        <div class="sc c"><div class="si2">📝</div><div class="sv">12</div><div class="sl">Active Exams</div><div class="ss">4 live now</div></div>
+        <div class="sc d"><div class="si2">📊</div><div class="sv">81%</div><div class="sl">Dept Pass Rate</div><div class="ss">↑ 3% vs last sem</div></div>
+        <div class="sc e"><div class="si2">⚠️</div><div class="sv">7</div><div class="sl">Violations Today</div><div class="ss" style="color:var(--r2)">↑ 2 new</div></div>
+      </div>
+
+      <!-- SECTION OVERVIEW -->
+      <div class="sh"><span class="st">🏛️ Section Performance Overview</span><button class="bc" onclick="toast('Exporting section report...','ok2')">↓ Export Report</button></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Section</th><th>Students</th><th>Class Teacher</th><th>Avg Score</th><th>Pass Rate</th><th>Exams Done</th><th>Violations</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><strong>BCA-A (Sem 6)</strong></td><td>84</td><td>Dr. Vikram Singh</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:83%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">83%</span></div></td><td style="color:var(--g);font-weight:700">88%</td><td>6/8</td><td><span class="bx wn">3</span></td><td><span class="bx ac">Active</span></td></tr>
+            <tr><td><strong>BCA-B (Sem 6)</strong></td><td>82</td><td>Prof. Anita Rao</td><td><div class="sbw"><div class="sbr"><div class="sf m" style="width:78%"></div></div><span style="color:var(--y);font-weight:700;font-size:12px">78%</span></div></td><td style="color:var(--y);font-weight:700">82%</td><td>6/8</td><td><span class="bx wn">2</span></td><td><span class="bx ac">Active</span></td></tr>
+            <tr><td><strong>BCA-C (Sem 6)</strong></td><td>82</td><td>Dr. Suresh Kumar</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:81%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">81%</span></div></td><td style="color:var(--g);font-weight:700">85%</td><td>5/8</td><td><span class="bx ac">1</span></td><td><span class="bx ac">Active</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SUBJECT ANALYSIS -->
+      <div class="sh"><span class="st">📚 Subject-wise Analysis (BCA Final Year)</span></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Subject</th><th>Code</th><th>Teacher</th><th>Avg Score</th><th>Highest</th><th>Lowest</th><th>Pass Rate</th><th>Violations</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Advanced DBMS</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-601</td><td>Dr. Vikram Singh</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:82%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">82%</span></div></td><td style="color:var(--g);font-weight:700">98%</td><td style="color:var(--r2);font-weight:700">42%</td><td style="color:var(--g);font-weight:700">88%</td><td><span class="bx wn">3</span></td></tr>
+            <tr><td><strong>Software Engineering</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-602</td><td>Prof. Anita Rao</td><td><div class="sbw"><div class="sbr"><div class="sf m" style="width:74%"></div></div><span style="color:var(--y);font-weight:700;font-size:12px">74%</span></div></td><td style="color:var(--g);font-weight:700">96%</td><td style="color:var(--r2);font-weight:700">38%</td><td style="color:var(--y);font-weight:700">79%</td><td><span class="bx wn">2</span></td></tr>
+            <tr><td><strong>Web Development &amp; Design</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-603</td><td>Dr. Priya Rao</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:88%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">88%</span></div></td><td style="color:var(--g);font-weight:700">100%</td><td style="color:var(--y);font-weight:700">58%</td><td style="color:var(--g);font-weight:700">93%</td><td><span class="bx ac">1</span></td></tr>
+            <tr><td><strong>Computer Networks</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-604</td><td>Dr. Suresh Kumar</td><td><div class="sbw"><div class="sbr"><div class="sf m" style="width:71%"></div></div><span style="color:var(--y);font-weight:700;font-size:12px">71%</span></div></td><td style="color:var(--g);font-weight:700">94%</td><td style="color:var(--r2);font-weight:700">35%</td><td style="color:var(--y);font-weight:700">76%</td><td><span class="bx ac">1</span></td></tr>
+            <tr><td><strong>Python Programming</strong></td><td style="font-family:monospace;color:var(--a1);font-size:12px">BCA-606</td><td>Prof. Kiran Babu</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:85%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">85%</span></div></td><td style="color:var(--g);font-weight:700">99%</td><td style="color:var(--y);font-weight:700">55%</td><td style="color:var(--g);font-weight:700">90%</td><td><span class="bx ac">0</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TEACHERS TABLE -->
+      <div class="sh"><span class="st">👨‍🏫 BCA Faculty Members</span><button class="bc" onclick="toast('+ Teacher added successfully!','ok2')">+ Add Teacher</button></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Name</th><th>Designation</th><th>Subject(s)</th><th>Students</th><th>Exams Set</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Dr. Vikram Singh</strong></td><td>HOD / Assoc. Prof</td><td>Advanced DBMS, OS</td><td>84</td><td>4</td><td><span class="bx ac">Online</span></td><td><button class="btn">View</button></td></tr>
+            <tr><td><strong>Prof. Anita Rao</strong></td><td>Assistant Prof</td><td>Software Engineering</td><td>82</td><td>3</td><td><span class="bx ac">Online</span></td><td><button class="btn">View</button></td></tr>
+            <tr><td><strong>Dr. Priya Rao</strong></td><td>Assistant Prof</td><td>Web Development</td><td>82</td><td>3</td><td><span class="bx ac">Online</span></td><td><button class="btn">View</button></td></tr>
+            <tr><td><strong>Dr. Suresh Kumar</strong></td><td>Assoc. Prof</td><td>Computer Networks, AI</td><td>82</td><td>4</td><td><span class="bx cl">Offline</span></td><td><button class="btn">View</button></td></tr>
+            <tr><td><strong>Prof. Kiran Babu</strong></td><td>Assistant Prof</td><td>Python Programming</td><td>84</td><td>2</td><td><span class="bx cl">Offline</span></td><td><button class="btn">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 4 — STUDENT DASHBOARD (BCA Final Year)
+═══════════════════════════════════════════════════ -->
+<div class="page" id="pg-student">
+<div class="dash">
+  <aside class="sb">
+    <div class="sb-logo"><div class="sb-li">🎓</div><span class="sb-lt">ExamFlow BCA</span></div>
+    <div class="sb-nav" id="stu-nav">
+      <div class="si on" data-sec="home"><span class="ic">🏠</span>Home</div>
+      <div class="si" data-sec="exams"><span class="ic">📝</span>My Exams</div>
+      <div class="si" data-sec="results"><span class="ic">📊</span>My Results</div>
+      <div class="si" data-sec="schedule"><span class="ic">📅</span>Schedule</div>
+      <div class="si" data-sec="study"><span class="ic">📚</span>Study Material</div>
+      <div class="si" data-sec="project"><span class="ic">💻</span>Final Project</div>
+      <div class="si" data-sec="profile"><span class="ic">👤</span>Profile</div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="sb-av" id="s-av" style="background:linear-gradient(135deg,#f5c542,#f59342)">TK</div>
+        <div><div class="sb-un" id="s-nm">Tankthireddy</div><div class="sb-ur" id="s-rl">2320520034 · BCA-A</div></div>
+      </div>
+      <div class="sb-out" onclick="doLogout()">↩ Logout</div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="tb">
+      <div><h1 id="s-ttl">🎓 BCA Final Year Portal</h1><div class="sub" id="s-sub">Roll: 2320520034 · BCA Sem 6 · Section A · KLH University</div></div>
+      <div class="tb-r"><div style="font-size:12px;color:var(--mu)">📅 Sun, 22 Mar 2026</div></div>
+    </div>
+    <div class="ct">
+
+      <!-- HOME -->
+      <div class="ss2 on" id="sec-home">
+        <div class="sg sg-4">
+          <div class="sc a"><div class="si2">📝</div><div class="sv">8</div><div class="sl">Pending Exams</div><div class="ss">Next: Today 3 PM</div></div>
+          <div class="sc c"><div class="si2">✅</div><div class="sv">4</div><div class="sl">Completed</div><div class="ss">This semester</div></div>
+          <div class="sc d"><div class="si2">📊</div><div class="sv">94%</div><div class="sl">My Avg Score</div><div class="ss">↑ 8% vs Sem 5</div></div>
+          <div class="sc b"><div class="si2">🏆</div><div class="sv">#1</div><div class="sl">Section Rank</div><div class="ss">BCA-A out of 84</div></div>
+        </div>
+
+        <div class="sh"><span class="st">📝 Upcoming Final Year Exams</span><button class="btn" onclick="stuSec('exams')">View All →</button></div>
+        <div class="ecg">
+          <div class="ec">
+            <div class="ec-s">BCA-601 · DBMS</div>
+            <div class="ec-n">Advanced DBMS</div>
+            <div style="font-size:11.5px;color:var(--mu)">Dr. Vikram Singh</div>
+            <div class="ec-m"><span>⏱️ 90 min</span><span>❓ 60 Qs</span><span>📅 Today, 3 PM</span><span>🏛️ BCA-601</span></div>
+            <div class="ec-a">
+              <button class="ecb go" onclick="openStart('Advanced DBMS','Dr. Vikram Singh','60','90','BCA-601')">▶ Start</button>
+              <button class="ecb vw" onclick="openDets('Advanced DBMS','Dr. Vikram Singh','60','90 min','Today 3:00 PM','Advanced Database Management Systems','MCQ + Descriptive','No negative marking')">Info</button>
+            </div>
+          </div>
+          <div class="ec">
+            <div class="ec-s">BCA-602 · SE</div>
+            <div class="ec-n">Software Engineering</div>
+            <div style="font-size:11.5px;color:var(--mu)">Prof. Anita Rao</div>
+            <div class="ec-m"><span>⏱️ 120 min</span><span>❓ 80 Qs</span><span>📅 Mon, 23 Mar</span><span>🏛️ BCA-602</span></div>
+            <div class="ec-a"><button class="ecb vw" style="flex:1" onclick="openDets('Software Engineering','Prof. Anita Rao','80','120 min','Mon 23 Mar, 10 AM','SE methodologies &amp; SDLC','MCQ + Case Study','Open book: No')">View Details</button></div>
+          </div>
+          <div class="ec">
+            <div class="ec-s">BCA-603 · WEB</div>
+            <div class="ec-n">Web Development &amp; Design</div>
+            <div style="font-size:11.5px;color:var(--mu)">Dr. Priya Rao</div>
+            <div class="ec-m"><span>⏱️ 90 min</span><span>❓ 70 Qs</span><span>📅 Tue, 24 Mar</span><span>🏛️ BCA-603</span></div>
+            <div class="ec-a"><button class="ecb vw" style="flex:1" onclick="openDets('Web Development &amp; Design','Dr. Priya Rao','70','90 min','Tue 24 Mar, 11 AM','HTML/CSS/JS/PHP/React','MCQ Only','Open book: No')">View Details</button></div>
+          </div>
+        </div>
+
+        <div class="sh" style="margin-top:4px"><span class="st">📊 Recent Results</span><button class="btn" onclick="stuSec('results')">View All →</button></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Subject</th><th>Code</th><th>Date</th><th>Score</th><th>Grade</th><th>Rank</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Python Programming</strong></td><td style="font-family:monospace;color:var(--a1);font-size:11px">BCA-606</td><td>14 Mar 2026</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:96%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">96%</span></div></td><td style="color:var(--g);font-weight:700">A+</td><td>#1</td><td><span class="bx ac">Passed</span></td><td><button class="btn" onclick="openRes('Python Programming','96','A+','#1','14 Mar 2026')">View</button></td></tr>
+              <tr><td><strong>Operating Systems</strong></td><td style="font-family:monospace;color:var(--a1);font-size:11px">BCA-605</td><td>10 Mar 2026</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:91%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">91%</span></div></td><td style="color:var(--g);font-weight:700">A+</td><td>#2</td><td><span class="bx ac">Passed</span></td><td><button class="btn" onclick="openRes('Operating Systems','91','A+','#2','10 Mar 2026')">View</button></td></tr>
+              <tr><td><strong>Computer Networks</strong></td><td style="font-family:monospace;color:var(--a1);font-size:11px">BCA-604</td><td>7 Mar 2026</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:88%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">88%</span></div></td><td style="color:var(--g);font-weight:700">A</td><td>#3</td><td><span class="bx ac">Passed</span></td><td><button class="btn" onclick="openRes('Computer Networks','88','A','#3','7 Mar 2026')">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg2">
+          <div class="crd">
+            <div class="ct2">📈 My Semester Progress</div>
+            <svg width="100%" height="120" viewBox="0 0 300 120">
+              <defs><linearGradient id="gr1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3d7bff" stop-opacity=".3"/><stop offset="100%" stop-color="#3d7bff" stop-opacity="0"/></linearGradient></defs>
+              <polyline points="0,90 50,70 100,50 150,40 200,25 250,18 300,12" fill="none" stroke="#3d7bff" stroke-width="2.5" stroke-linecap="round"/>
+              <polygon points="0,90 50,70 100,50 150,40 200,25 250,18 300,12 300,120 0,120" fill="url(#gr1)"/>
+              <circle cx="0" cy="90" r="4" fill="#3d7bff"/>
+              <circle cx="50" cy="70" r="4" fill="#3d7bff"/>
+              <circle cx="100" cy="50" r="4" fill="#3d7bff"/>
+              <circle cx="150" cy="40" r="4" fill="#3d7bff"/>
+              <circle cx="200" cy="25" r="4" fill="#3d7bff"/>
+              <circle cx="250" cy="18" r="4" fill="#1fd68a"/>
+              <circle cx="300" cy="12" r="5" fill="#1fd68a" stroke="#fff" stroke-width="2"/>
+              <text x="0" y="115" font-size="9" fill="#4a527a" font-family="DM Sans">Sem1</text>
+              <text x="240" y="115" font-size="9" fill="#4a527a" font-family="DM Sans">Current</text>
+              <text x="264" y="10" font-size="9" fill="#1fd68a" font-family="DM Sans">94%</text>
+            </svg>
+          </div>
+          <div class="crd">
+            <div class="ct2">🎓 Graduation Readiness</div>
+            <div style="padding:10px 0">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12.5px;font-weight:600">Theory Exams</span><span style="font-size:12px;color:var(--g);font-weight:700">4/8 Done</span></div>
+              <div style="height:6px;background:var(--b1);border-radius:3px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:50%;background:linear-gradient(90deg,var(--g),#22d7c0);border-radius:3px"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12.5px;font-weight:600">Practicals</span><span style="font-size:12px;color:var(--a1);font-weight:700">6/6 Done ✓</span></div>
+              <div style="height:6px;background:var(--b1);border-radius:3px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:100%;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:3px"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12.5px;font-weight:600">Final Project</span><span style="font-size:12px;color:var(--y);font-weight:700">75% Complete</span></div>
+              <div style="height:6px;background:var(--b1);border-radius:3px;overflow:hidden"><div style="height:100%;width:75%;background:linear-gradient(90deg,var(--y),var(--o));border-radius:3px"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY EXAMS -->
+      <div class="ss2" id="sec-exams">
+        <div class="sh"><span class="st">📝 BCA Final Year — All Exams</span></div>
+        <div class="tabs"><div class="tab on">Upcoming (8)</div><div class="tab">Completed (4)</div><div class="tab">Missed (0)</div></div>
+        <div class="ecg">
+          <div class="ec"><div class="ec-s">BCA-601</div><div class="ec-n">Advanced DBMS</div><div style="font-size:11.5px;color:var(--mu)">Dr. Vikram Singh</div><div class="ec-m"><span>⏱️ 90 min</span><span>❓ 60 Qs</span><span>📅 Today, 3 PM</span></div><div class="ec-a"><button class="ecb go" onclick="openStart('Advanced DBMS','Dr. Vikram Singh','60','90','BCA-601')">▶ Start</button><button class="ecb vw" onclick="openDets('Advanced DBMS','Dr. Vikram Singh','60','90 min','Today 3 PM','Advanced DBMS','MCQ','No')">Info</button></div></div>
+          <div class="ec"><div class="ec-s">BCA-602</div><div class="ec-n">Software Engineering</div><div style="font-size:11.5px;color:var(--mu)">Prof. Anita Rao</div><div class="ec-m"><span>⏱️ 120 min</span><span>❓ 80 Qs</span><span>📅 Mon, 23 Mar</span></div><div class="ec-a"><button class="ecb vw" style="flex:1" onclick="openDets('Software Engineering','Prof. Anita Rao','80','120 min','Mon 23 Mar','SE','MCQ','No')">Details</button></div></div>
+          <div class="ec"><div class="ec-s">BCA-603</div><div class="ec-n">Web Development &amp; Design</div><div style="font-size:11.5px;color:var(--mu)">Dr. Priya Rao</div><div class="ec-m"><span>⏱️ 90 min</span><span>❓ 70 Qs</span><span>📅 Tue, 24 Mar</span></div><div class="ec-a"><button class="ecb vw" style="flex:1" onclick="openDets('Web Development','Dr. Priya Rao','70','90 min','Tue 24 Mar','Web Dev','MCQ','No')">Details</button></div></div>
+          <div class="ec"><div class="ec-s">BCA-604</div><div class="ec-n">Computer Networks</div><div style="font-size:11.5px;color:var(--mu)">Dr. Suresh Kumar</div><div class="ec-m"><span>⏱️ 90 min</span><span>❓ 75 Qs</span><span>📅 Wed, 25 Mar</span></div><div class="ec-a"><button class="ecb vw" style="flex:1" onclick="openDets('Computer Networks','Dr. Suresh Kumar','75','90 min','Wed 25 Mar','CN','MCQ + T/F','No')">Details</button></div></div>
+          <div class="ec"><div class="ec-s">BCA-607</div><div class="ec-n">AI &amp; ML Fundamentals</div><div style="font-size:11.5px;color:var(--mu)">Dr. Suresh Kumar</div><div class="ec-m"><span>⏱️ 90 min</span><span>❓ 55 Qs</span><span>📅 Thu, 26 Mar</span></div><div class="ec-a"><button class="ecb vw" style="flex:1" onclick="openDets('AI &amp; ML Fundamentals','Dr. Suresh Kumar','55','90 min','Thu 26 Mar','AI/ML','MCQ','No')">Details</button></div></div>
+          <div class="ec"><div class="ec-s">BCA-608</div><div class="ec-n">Cloud Computing</div><div style="font-size:11.5px;color:var(--mu)">Prof. Kiran Babu</div><div class="ec-m"><span>⏱️ 75 min</span><span>❓ 60 Qs</span><span>📅 Fri, 27 Mar</span></div><div class="ec-a"><button class="ecb vw" style="flex:1" onclick="openDets('Cloud Computing','Prof. Kiran Babu','60','75 min','Fri 27 Mar','Cloud','MCQ','No')">Details</button></div></div>
+          <div class="ec"><div class="ec-s">BCA-PROJ</div><div class="ec-n">Final Year Project Viva</div><div style="font-size:11.5px;color:var(--mu)">Panel: All Faculty</div><div class="ec-m"><span>⏱️ 30 min</span><span>❓ Viva</span><span>📅 Sat, 28 Mar</span></div><div class="ec-a"><button class="ecb vw" style="flex:1" onclick="openDets('Final Year Project Viva','All Faculty Panel','—','30 min','Sat 28 Mar','Project Demo + Viva','Oral + Demo','—')">Details</button></div></div>
+          <div class="ec"><div class="ec-s">BCA-PRAC</div><div class="ec-n">Programming Lab Final</div><div style="font-size:11.5px;color:var(--mu)">Prof. Kiran Babu</div><div class="ec-m"><span>⏱️ 180 min</span><span>❓ Lab Exam</span><span>📅 Sun, 29 Mar</span></div><div class="ec-a"><button class="ecb vw" style="flex:1" onclick="openDets('Programming Lab Final','Prof. Kiran Babu','—','180 min','Sun 29 Mar','Practical Lab','Hands-on Coding','Allowed: IDE')">Details</button></div></div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="ss2" id="sec-results">
+        <div class="sh"><span class="st">📊 My Academic Results — BCA Final Year</span><button class="bc" onclick="toast('📄 Results downloaded as PDF!','ok2')">↓ Download Marksheet</button></div>
+        <div class="sg sg-4" style="margin-bottom:18px">
+          <div class="sc c"><div class="si2">📊</div><div class="sv">94%</div><div class="sl">Overall Average</div></div>
+          <div class="sc b"><div class="si2">🏆</div><div class="sv">#1</div><div class="sl">Section Rank</div></div>
+          <div class="sc a"><div class="si2">✅</div><div class="sv">4/8</div><div class="sl">Exams Completed</div></div>
+          <div class="sc d"><div class="si2">🎓</div><div class="sv">O</div><div class="sl">CGPA Grade</div></div>
+        </div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Subject</th><th>Code</th><th>Semester</th><th>Score</th><th>Grade</th><th>Rank</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Python Programming</strong></td><td style="font-family:monospace;color:var(--a1);font-size:11px">BCA-606</td><td>Sem 6</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:96%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">96%</span></div></td><td style="color:var(--g);font-weight:700">O</td><td>#1</td><td><span class="bx ac">Passed</span></td><td><button class="btn" onclick="openRes('Python Programming','96','O','#1','14 Mar 2026')">View</button></td></tr>
+              <tr><td><strong>Operating Systems</strong></td><td style="font-family:monospace;color:var(--a1);font-size:11px">BCA-605</td><td>Sem 6</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:91%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">91%</span></div></td><td style="color:var(--g);font-weight:700">A+</td><td>#2</td><td><span class="bx ac">Passed</span></td><td><button class="btn" onclick="openRes('Operating Systems','91','A+','#2','10 Mar 2026')">View</button></td></tr>
+              <tr><td><strong>Computer Networks</strong></td><td style="font-family:monospace;color:var(--a1);font-size:11px">BCA-604</td><td>Sem 6</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:88%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">88%</span></div></td><td style="color:var(--g);font-weight:700">A+</td><td>#3</td><td><span class="bx ac">Passed</span></td><td><button class="btn" onclick="openRes('Computer Networks','88','A+','#3','7 Mar 2026')">View</button></td></tr>
+              <tr><td><strong>Data Structures &amp; Algo</strong></td><td style="font-family:monospace;color:var(--a1);font-size:11px">BCA-501</td><td>Sem 5</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:94%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">94%</span></div></td><td style="color:var(--g);font-weight:700">O</td><td>#1</td><td><span class="bx ac">Passed</span></td><td><button class="btn" onclick="openRes('Data Structures & Algo','94','O','#1','5 Dec 2025')">View</button></td></tr>
+              <tr><td><strong>Java Programming</strong></td><td style="font-family:monospace;color:var(--a1);font-size:11px">BCA-502</td><td>Sem 5</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:92%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">92%</span></div></td><td style="color:var(--g);font-weight:700">A+</td><td>#1</td><td><span class="bx ac">Passed</span></td><td><button class="btn" onclick="openRes('Java Programming','92','A+','#1','8 Dec 2025')">View</button></td></tr>
+              <tr><td><strong>DBMS</strong></td><td style="font-family:monospace;color:var(--a1);font-size:11px">BCA-503</td><td>Sem 5</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:89%"></div></div><span style="color:var(--g);font-weight:700;font-size:12px">89%</span></div></td><td style="color:var(--g);font-weight:700">A+</td><td>#2</td><td><span class="bx ac">Passed</span></td><td><button class="btn" onclick="openRes('DBMS','89','A+','#2','10 Dec 2025')">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div class="ss2" id="sec-schedule">
+        <div class="sh"><span class="st">📅 Final Year Exam Schedule</span><button class="btn" onclick="toast('📅 Added to calendar!','ok2')">+ Add to Calendar</button></div>
+        <div style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px">TODAY — SUNDAY, 22 MARCH 2026</div>
+        <div class="sdi"><div class="sdt">3:00 PM</div><div class="sdif"><div class="sdn">Advanced DBMS (BCA-601)</div><div class="sdm">Dr. Vikram Singh · 90 min · 60 Qs · Hall: Online</div></div><span class="bx ac" style="margin-right:8px">Live</span><button class="btn" onclick="openStart('Advanced DBMS','Dr. Vikram Singh','60','90','BCA-601')">Start</button></div>
+        <div style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin:12px 0 8px;padding-left:4px">MON 23 MARCH — FRI 27 MARCH 2026</div>
+        <div class="sdi"><div class="sdt">10:00 AM</div><div class="sdif"><div class="sdn">Software Engineering (BCA-602)</div><div class="sdm">Prof. Anita Rao · 120 min · 80 Qs · Mon 23 Mar</div></div><span class="bx dr">Upcoming</span></div>
+        <div class="sdi"><div class="sdt">11:00 AM</div><div class="sdif"><div class="sdn">Web Development &amp; Design (BCA-603)</div><div class="sdm">Dr. Priya Rao · 90 min · 70 Qs · Tue 24 Mar</div></div><span class="bx dr">Upcoming</span></div>
+        <div class="sdi"><div class="sdt">10:00 AM</div><div class="sdif"><div class="sdn">Computer Networks (BCA-604)</div><div class="sdm">Dr. Suresh Kumar · 90 min · 75 Qs · Wed 25 Mar</div></div><span class="bx dr">Upcoming</span></div>
+        <div class="sdi"><div class="sdt">2:00 PM</div><div class="sdif"><div class="sdn">AI &amp; ML Fundamentals (BCA-607)</div><div class="sdm">Dr. Suresh Kumar · 90 min · 55 Qs · Thu 26 Mar</div></div><span class="bx dr">Upcoming</span></div>
+        <div class="sdi"><div class="sdt">11:00 AM</div><div class="sdif"><div class="sdn">Cloud Computing (BCA-608)</div><div class="sdm">Prof. Kiran Babu · 75 min · 60 Qs · Fri 27 Mar</div></div><span class="bx dr">Upcoming</span></div>
+        <div style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin:12px 0 8px;padding-left:4px">SAT-SUN 28-29 MARCH 2026 — FINAL</div>
+        <div class="sdi"><div class="sdt">10:00 AM</div><div class="sdif"><div class="sdn">Final Year Project Viva (BCA-PROJ)</div><div class="sdm">All Faculty Panel · 30 min · Demo + Q&amp;A · Sat 28 Mar</div></div><span class="bx wn">Important</span></div>
+        <div class="sdi"><div class="sdt">9:00 AM</div><div class="sdif"><div class="sdn">Programming Lab Final (BCA-PRAC)</div><div class="sdm">Prof. Kiran Babu · 180 min · Hands-on Coding · Sun 29 Mar</div></div><span class="bx wn">Important</span></div>
+      </div>
+
+      <!-- STUDY MATERIAL -->
+      <div class="ss2" id="sec-study">
+        <div class="sh"><span class="st">📚 BCA Final Year Study Material</span></div>
+        <div class="mg">
+          <div class="mc" onclick="toast('📄 Opening Advanced DBMS Notes...','ok2')"><div class="mci">🗄️</div><div class="mcn">Advanced DBMS Notes</div><div class="mcm">PDF · 68 pages · Dr. Vikram Singh</div><span class="mct">BCA-601</span></div>
+          <div class="mc" onclick="toast('📄 Opening SE Slides...','ok2')"><div class="mci">⚙️</div><div class="mcn">Software Engineering Slides</div><div class="mcm">PPT · 84 slides · Prof. Anita Rao</div><span class="mct">BCA-602</span></div>
+          <div class="mc" onclick="toast('📄 Opening Web Dev Notes...','ok2')"><div class="mci">🌐</div><div class="mcn">Web Dev &amp; Design Notes</div><div class="mcm">PDF · 72 pages · Dr. Priya Rao</div><span class="mct">BCA-603</span></div>
+          <div class="mc" onclick="toast('📄 Opening CN Notes...','ok2')"><div class="mci">🔗</div><div class="mcn">Computer Networks Notes</div><div class="mcm">PDF · 56 pages · Dr. Suresh Kumar</div><span class="mct">BCA-604</span></div>
+          <div class="mc" onclick="toast('📄 Opening OS Notes...','ok2')"><div class="mci">🖥️</div><div class="mcn">Operating Systems Notes</div><div class="mcm">PDF · 62 pages · Dr. Vikram Singh</div><span class="mct">BCA-605</span></div>
+          <div class="mc" onclick="toast('📄 Opening Python Notes...','ok2')"><div class="mci">🐍</div><div class="mcn">Python Programming Notes</div><div class="mcm">PDF · 48 pages · Prof. Kiran Babu</div><span class="mct">BCA-606</span></div>
+          <div class="mc" onclick="toast('📄 Opening AI/ML Notes...','ok2')"><div class="mci">🤖</div><div class="mcn">AI &amp; ML Fundamentals</div><div class="mcm">PDF · 55 pages · Dr. Suresh Kumar</div><span class="mct">BCA-607</span></div>
+          <div class="mc" onclick="toast('📄 Opening Cloud Notes...','ok2')"><div class="mci">☁️</div><div class="mcn">Cloud Computing Notes</div><div class="mcm">PDF · 44 pages · Prof. Kiran Babu</div><span class="mct">BCA-608</span></div>
+          <div class="mc" onclick="toast('📄 Opening PYQ Papers...','ok2')"><div class="mci">📋</div><div class="mcn">Previous Year Question Papers</div><div class="mcm">PDF · 2019–2025 · All Subjects</div><span class="mct">All Subjects</span></div>
+        </div>
+        <div class="sh"><span class="st">🎥 Video Lectures</span></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Title</th><th>Subject</th><th>Duration</th><th>Instructor</th><th>Uploaded</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><strong>📹 SQL Transactions &amp; Triggers</strong></td><td>Advanced DBMS</td><td>52 min</td><td>Dr. Vikram Singh</td><td>18 Mar 2026</td><td><button class="btn" onclick="toast('▶ Opening video...','ok2')">▶ Watch</button></td></tr>
+              <tr><td><strong>📹 Agile &amp; Scrum Methodology</strong></td><td>Software Engineering</td><td>45 min</td><td>Prof. Anita Rao</td><td>17 Mar 2026</td><td><button class="btn" onclick="toast('▶ Opening video...','ok2')">▶ Watch</button></td></tr>
+              <tr><td><strong>📹 React.js Full Crash Course</strong></td><td>Web Development</td><td>96 min</td><td>Dr. Priya Rao</td><td>16 Mar 2026</td><td><button class="btn" onclick="toast('▶ Opening video...','ok2')">▶ Watch</button></td></tr>
+              <tr><td><strong>📹 OSI Model Deep Dive</strong></td><td>Computer Networks</td><td>38 min</td><td>Dr. Suresh Kumar</td><td>15 Mar 2026</td><td><button class="btn" onclick="toast('▶ Opening video...','ok2')">▶ Watch</button></td></tr>
+              <tr><td><strong>📹 Neural Networks Introduction</strong></td><td>AI &amp; ML</td><td>65 min</td><td>Dr. Suresh Kumar</td><td>14 Mar 2026</td><td><button class="btn" onclick="toast('▶ Opening video...','ok2')">▶ Watch</button></td></tr>
+              <tr><td><strong>📹 AWS Cloud Fundamentals</strong></td><td>Cloud Computing</td><td>72 min</td><td>Prof. Kiran Babu</td><td>13 Mar 2026</td><td><button class="btn" onclick="toast('▶ Opening video...','ok2')">▶ Watch</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FINAL PROJECT -->
+      <div class="ss2" id="sec-project">
+        <div class="sh"><span class="st">💻 Final Year Project — BCA 2026</span></div>
+        <div class="bg2" style="margin-bottom:20px">
+          <div class="crd">
+            <div class="ct2">📋 Project Details</div>
+            <div class="ig">
+              <div class="ii"><div class="il">Project Title</div><div class="iv">ExamFlow BCA — Online Exam System</div></div>
+              <div class="ii"><div class="il">Project Code</div><div class="iv">FYP-2026-048</div></div>
+              <div class="ii"><div class="il">Guide</div><div class="iv">Dr. Vikram Singh</div></div>
+              <div class="ii"><div class="il">Co-Guide</div><div class="iv">Dr. Priya Rao</div></div>
+              <div class="ii"><div class="il">Domain</div><div class="iv">Web Application · Full Stack</div></div>
+              <div class="ii"><div class="il">Tech Stack</div><div class="iv">HTML/CSS/JS · PHP · MySQL</div></div>
+              <div class="ii"><div class="il">Status</div><div class="iv" style="color:var(--y)">75% Complete</div></div>
+              <div class="ii"><div class="il">Viva Date</div><div class="iv">28 Mar 2026</div></div>
+            </div>
+          </div>
+          <div class="crd">
+            <div class="ct2">📊 Project Completion</div>
+            <div style="padding:8px 0">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12.5px;font-weight:600">Requirements &amp; Design</span><span style="color:var(--g);font-weight:700;font-size:12px">✓ Done</span></div>
+              <div style="height:5px;background:var(--b1);border-radius:3px;margin-bottom:12px"><div style="height:100%;width:100%;background:var(--g);border-radius:3px"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12.5px;font-weight:600">Frontend Development</span><span style="color:var(--g);font-weight:700;font-size:12px">✓ Done</span></div>
+              <div style="height:5px;background:var(--b1);border-radius:3px;margin-bottom:12px"><div style="height:100%;width:100%;background:var(--g);border-radius:3px"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12.5px;font-weight:600">Backend &amp; Database</span><span style="color:var(--y);font-weight:700;font-size:12px">80% Done</span></div>
+              <div style="height:5px;background:var(--b1);border-radius:3px;margin-bottom:12px"><div style="height:100%;width:80%;background:var(--y);border-radius:3px"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12.5px;font-weight:600">Testing &amp; QA</span><span style="color:var(--o);font-weight:700;font-size:12px">40% Done</span></div>
+              <div style="height:5px;background:var(--b1);border-radius:3px;margin-bottom:12px"><div style="height:100%;width:40%;background:var(--o);border-radius:3px"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12.5px;font-weight:600">Documentation</span><span style="color:var(--r2);font-weight:700;font-size:12px">20% Done</span></div>
+              <div style="height:5px;background:var(--b1);border-radius:3px"><div style="height:100%;width:20%;background:var(--r2);border-radius:3px"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sh"><span class="st">🗂️ Project Submissions</span></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Deliverable</th><th>Due Date</th><th>Submitted</th><th>Marks</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Project Synopsis</strong></td><td>15 Jan 2026</td><td>14 Jan 2026</td><td style="color:var(--g);font-weight:700">18/20</td><td><span class="bx ac">✓ Submitted</span></td></tr>
+            <tr><td><strong>Design Document (SRS)</strong></td><td>5 Feb 2026</td><td>4 Feb 2026</td><td style="color:var(--g);font-weight:700">22/25</td><td><span class="bx ac">✓ Submitted</span></td></tr>
+            <tr><td><strong>Mid-term Review Presentation</strong></td><td>28 Feb 2026</td><td>28 Feb 2026</td><td style="color:var(--g);font-weight:700">36/40</td><td><span class="bx ac">✓ Submitted</span></td></tr>
+            <tr><td><strong>Final Project Report</strong></td><td>25 Mar 2026</td><td>—</td><td style="color:var(--mu)">0/50</td><td><span class="bx wn">Pending</span></td></tr>
+            <tr><td><strong>Final Viva (Demo)</strong></td><td>28 Mar 2026</td><td>—</td><td style="color:var(--mu)">0/65</td><td><span class="bx dr">Upcoming</span></td></tr>
+          </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="ss2" id="sec-profile">
+        <div class="sh"><span class="st">👤 My Profile</span><button class="bc" onclick="toggleEdit()">✏️ Edit Profile</button></div>
+        <div class="ig">
+          <div class="ii"><div class="il">Roll Number</div><div class="iv" id="p-roll">2320520034</div></div>
+          <div class="ii"><div class="il">Full Name</div><div class="iv" id="p-name">Tankthireddy</div></div>
+          <div class="ii"><div class="il">Programme</div><div class="iv">Bachelor of Computer Applications (BCA)</div></div>
+          <div class="ii"><div class="il">Year &amp; Semester</div><div class="iv">3rd Year · Semester 6 (Final)</div></div>
+          <div class="ii"><div class="il">Section</div><div class="iv">BCA-A</div></div>
+          <div class="ii"><div class="il">Email</div><div class="iv" id="p-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c2f0f1f0f2f7f0f2f2f1f682a9aeaaeca7a6b7">[email&#160;protected]</a></div></div>
+          <div class="ii"><div class="il">Phone</div><div class="iv" id="p-phone">+91 98765 43210</div></div>
+          <div class="ii"><div class="il">University</div><div class="iv">KLH University, Hyderabad</div></div>
+          <div class="ii"><div class="il">Batch</div><div class="iv">2023 – 2026</div></div>
+          <div class="ii"><div class="il">Advisor</div><div class="iv">Dr. Vikram Singh (HOD)</div></div>
+          <div class="ii"><div class="il">CGPA</div><div class="iv" style="color:var(--g);font-weight:700">9.4 / 10.0</div></div>
+          <div class="ii"><div class="il">Attendance</div><div class="iv" style="color:var(--g);font-weight:700">96.2%</div></div>
+        </div>
+        <div id="edit-box" style="display:none;margin-top:18px;background:var(--s1);border:1px solid var(--b2);border-radius:14px;padding:22px">
+          <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:15px">✏️ Edit Profile Details</div>
+          <div class="fd-row">
+            <div class="fd"><label>Phone</label><input type="text" id="ep" value="+91 98765 43210"/></div>
+            <div class="fd"><label>Personal Email</label><input type="email" id="ee" placeholder="personal@gmail.com"/></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <button class="bc" onclick="saveEdit()">💾 Save Changes</button>
+            <button class="bp" onclick="toggleEdit()">Cancel</button>
+          </div>
+        </div>
+        <div style="margin-top:18px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:18px">
+          <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:13px">🔐 Change Password</div>
+          <div class="fd-row">
+            <div class="fd"><label>Current Password</label><input type="password" placeholder="Current password"/></div>
+            <div class="fd"><label>New Password</label><input type="password" placeholder="New password"/></div>
+          </div>
+          <button class="bc" onclick="toast('🔐 Password updated successfully!','ok2')">Update Password</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 5 — VIOLATION LOGGING (BCA)
+═══════════════════════════════════════════════════ -->
+<div class="page" id="pg-viol">
+<div class="dash">
+  <aside class="sb">
+    <div class="sb-logo"><div class="sb-li">🎓</div><span class="sb-lt">ExamFlow BCA</span></div>
+    <div class="sb-nav">
+      <div class="si" onclick="goBack()"><span class="ic">◀</span>Back to Dashboard</div>
+      <div class="sb-sec">Violation Report</div>
+      <div class="si on-r"><span class="ic">⚠️</span>All Violations<span class="si-badge r" id="vbadge">7</span></div>
+      <div class="si"><span class="ic">📋</span>Tab Switches<span class="si-badge r">3</span></div>
+      <div class="si"><span class="ic">📷</span>Face Violations<span class="si-badge y">2</span></div>
+      <div class="si"><span class="ic">🖱️</span>Copy Attempts<span class="si-badge y">1</span></div>
+      <div class="si"><span class="ic">📱</span>Multi-Device<span class="si-badge r">1</span></div>
+      <div class="si"><span class="ic">📊</span>Analytics</div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="sb-av" id="v-av">VS</div>
+        <div><div class="sb-un" id="v-nm">Dr. Vikram Singh</div><div class="sb-ur" id="v-rl">Teacher · BCA</div></div>
+      </div>
+      <div class="sb-out" onclick="doLogout()">↩ Logout</div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="tb">
+      <div><h1><span class="ld"></span>⚠️ BCA Violation Logging</h1><div class="sub">Real-time proctoring violations · BCA Final Year · KLH University</div></div>
+      <div class="tb-r">
+        <button class="bp" onclick="addViol()">➕ Simulate</button>
+        <button class="bp" onclick="window.print()">🖨️ Print</button>
+        <button class="bc" onclick="expCSV()">↓ Export CSV</button>
+      </div>
+    </div>
+    <div class="ct">
+      <div class="rs">
+        <div class="rsc"><div class="rsv" id="vs-t" style="color:var(--r2)">7</div><div class="rsl">Total Today</div></div>
+        <div class="rsc"><div class="rsv" style="color:var(--y)">24</div><div class="rsl">This Week</div></div>
+        <div class="rsc"><div class="rsv" id="vs-h" style="color:var(--o)">3</div><div class="rsl">High Severity</div></div>
+        <div class="rsc"><div class="rsv" style="color:var(--a1)">14</div><div class="rsl">Students Flagged</div></div>
+      </div>
+      <div class="fb">
+        <span style="font-size:12px;font-weight:600;color:var(--mu)">Filter:</span>
+        <select id="fx" onchange="fviol()"><option value="">All Exams</option><option>Advanced DBMS</option><option>Software Engineering</option><option>Web Development</option><option>Computer Networks</option></select>
+        <select id="ft" onchange="fviol()"><option value="">All Types</option><option>Tab Switch</option><option>Face Not Visible</option><option>Copy-Paste</option><option>Multiple Devices</option><option>Looking Away</option></select>
+        <select id="fs" onchange="fviol()"><option value="">All Severity</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option></select>
+        <input type="text" id="fq" placeholder="Search student / roll no..." oninput="fviol()" style="background:var(--s1);border:1px solid var(--b1);color:var(--t);padding:8px 11px;border-radius:8px;font-family:var(--fb);font-size:12px;outline:none;min-width:200px"/>
+        <button class="btn" onclick="rfviol()">↺ Reset</button>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>#</th><th>Student</th><th>Roll No.</th><th>Subject</th><th>Violation</th><th>Date &amp; Time</th><th>Count</th><th>Severity</th><th>Actions</th></tr></thead>
+          <tbody id="vtb"></tbody>
+        </table>
+        <div style="padding:10px 16px;background:var(--s2);border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--mu)" id="vtc">Showing 7 violations</span>
+          <div style="display:flex;gap:4px">
+            <div style="width:28px;height:28px;border-radius:6px;background:var(--a1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11.5px;cursor:pointer">1</div>
+            <div style="width:28px;height:28px;border-radius:6px;background:var(--s1);border:1px solid var(--b1);color:var(--t2);display:flex;align-items:center;justify-content:center;font-size:11.5px;cursor:pointer">2</div>
+          </div>
+        </div>
+      </div>
+      <div class="bg2">
+        <div class="crd">
+          <div class="ct2">📊 Violations by Subject (BCA)</div>
+          <svg width="100%" height="170" viewBox="0 0 300 170">
+            <text x="0" y="20" font-size="10.5" fill="#a0a8cc" font-family="DM Sans">Advanced DBMS</text>
+            <rect x="110" y="8" width="120" height="13" rx="3" fill="url(#vr1)"/>
+            <text x="236" y="20" font-size="10" fill="#ff3d3d" font-family="DM Sans" font-weight="700">38%</text>
+            <text x="0" y="48" font-size="10.5" fill="#a0a8cc" font-family="DM Sans">Software Engg</text>
+            <rect x="110" y="36" width="86" height="13" rx="3" fill="url(#vr2)"/>
+            <text x="202" y="48" font-size="10" fill="#f5c542" font-family="DM Sans" font-weight="700">27%</text>
+            <text x="0" y="76" font-size="10.5" fill="#a0a8cc" font-family="DM Sans">Web Development</text>
+            <rect x="110" y="64" width="54" height="13" rx="3" fill="url(#vr3)"/>
+            <text x="170" y="76" font-size="10" fill="#3d7bff" font-family="DM Sans" font-weight="700">17%</text>
+            <text x="0" y="104" font-size="10.5" fill="#a0a8cc" font-family="DM Sans">Computer Networks</text>
+            <rect x="110" y="92" width="41" height="13" rx="3" fill="url(#vr4)"/>
+            <text x="157" y="104" font-size="10" fill="#ff8c42" font-family="DM Sans" font-weight="700">13%</text>
+            <text x="0" y="132" font-size="10.5" fill="#a0a8cc" font-family="DM Sans">Others</text>
+            <rect x="110" y="120" width="16" height="13" rx="3" fill="url(#vr5)"/>
+            <text x="132" y="132" font-size="10" fill="#1fd68a" font-family="DM Sans" font-weight="700">5%</text>
+            <defs>
+              <linearGradient id="vr1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ff3d3d"/><stop offset="100%" stop-color="#ff8c42"/></linearGradient>
+              <linearGradient id="vr2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f5c542"/><stop offset="100%" stop-color="#f59342"/></linearGradient>
+              <linearGradient id="vr3" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3d7bff"/><stop offset="100%" stop-color="#6c4fff"/></linearGradient>
+              <linearGradient id="vr4" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ff8c42"/><stop offset="100%" stop-color="#f5c542"/></linearGradient>
+              <linearGradient id="vr5" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1fd68a"/><stop offset="100%" stop-color="#22d7c0"/></linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="crd">
+          <div class="ct2">🔁 Repeat Offenders (BCA)</div>
+          <div class="li"><div class="lav" style="background:rgba(255,61,61,.15);color:var(--r2)">DL</div><div class="ln">Divya Lakshmi · 21BCA099</div><div class="ls" style="color:var(--r2)">4 violations</div></div>
+          <div class="li"><div class="lav" style="background:rgba(255,61,61,.12);color:var(--r2)">KM</div><div class="ln">Karan Mehta · 21BCA055</div><div class="ls" style="color:var(--r2)">3 violations</div></div>
+          <div class="li"><div class="lav" style="background:rgba(245,197,66,.12);color:var(--y)">RS</div><div class="ln">Riya Sharma · 21BCA042</div><div class="ls" style="color:var(--y)">2 violations</div></div>
+          <div class="li"><div class="lav" style="background:rgba(245,197,66,.1);color:var(--y)">PN</div><div class="ln">Priya Nair · 21BCA078</div><div class="ls" style="color:var(--y)">2 violations</div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+<!-- Start Exam -->
+<div class="mo" id="m-start"><div class="md">
+  <div class="mh"><div class="mht" id="ms-t">Advanced DBMS</div><div class="mx" onclick="closeM('m-start')">✕</div></div>
+  <div class="mb">
+    <div class="mr"><span class="mrl">Subject Code</span><span class="mrv" id="ms-code" style="color:var(--a1);font-family:monospace"></span></div>
+    <div class="mr"><span class="mrl">Instructor</span><span class="mrv" id="ms-i"></span></div>
+    <div class="mr"><span class="mrl">Questions</span><span class="mrv" id="ms-q"></span></div>
+    <div class="mr"><span class="mrl">Duration</span><span class="mrv" id="ms-d"></span></div>
+    <div class="mr"><span class="mrl">Total Marks</span><span class="mrv" id="ms-mk">120 marks (2 per question)</span></div>
+    <div class="mr"><span class="mrl">Passing Score</span><span class="mrv">40% (Minimum)</span></div>
+    <div class="mdv"></div>
+    <div class="mwb"><strong>⚠️ BCA Final Year Exam Rules:</strong><br>• Do NOT switch browser tabs — violations auto-recorded<br>• Webcam must remain ON — face visible at all times<br>• Copy-paste is completely disabled during exam<br>• Closing the window will auto-submit your answers<br>• Mobile phones strictly prohibited during exam session<br>• This is a final exam — results will affect your CGPA</div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-start')">Cancel</button><button class="mfg" onclick="launchExam()">▶ Begin Exam</button></div>
+</div></div>
+
+<!-- Details -->
+<div class="mo" id="m-dets"><div class="md">
+  <div class="mh"><div class="mht" id="md-t">Exam Details</div><div class="mx" onclick="closeM('m-dets')">✕</div></div>
+  <div class="mb">
+    <div class="mr"><span class="mrl">Instructor</span><span class="mrv" id="md-i"></span></div>
+    <div class="mr"><span class="mrl">Questions</span><span class="mrv" id="md-q"></span></div>
+    <div class="mr"><span class="mrl">Duration</span><span class="mrv" id="md-d"></span></div>
+    <div class="mr"><span class="mrl">Scheduled</span><span class="mrv" id="md-dt"></span></div>
+    <div class="mr"><span class="mrl">Syllabus</span><span class="mrv" id="md-sy"></span></div>
+    <div class="mr"><span class="mrl">Exam Type</span><span class="mrv" id="md-tp"></span></div>
+    <div class="mr"><span class="mrl">Notes</span><span class="mrv" id="md-nt"></span></div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-dets')">Close</button></div>
+</div></div>
+
+<!-- Result -->
+<div class="mo" id="m-res"><div class="md">
+  <div class="mh"><div class="mht" id="mr-t">Result</div><div class="mx" onclick="closeM('m-res')">✕</div></div>
+  <div class="mb">
+    <div id="mr-dt" style="font-size:12px;color:var(--mu);margin-bottom:14px"></div>
+    <div style="text-align:center;padding:18px 0">
+      <div style="font-family:var(--fh);font-size:60px;font-weight:800;letter-spacing:-2px" id="mr-sc"></div>
+      <div style="font-size:13px;color:var(--mu);margin-top:3px">Your Score</div>
+      <div style="margin-top:12px;display:flex;gap:20px;justify-content:center">
+        <div style="text-align:center"><div style="font-family:var(--fh);font-size:24px;font-weight:700" id="mr-gr"></div><div style="font-size:11px;color:var(--mu)">Grade</div></div>
+        <div style="text-align:center"><div style="font-family:var(--fh);font-size:24px;font-weight:700;color:var(--a1)" id="mr-rk"></div><div style="font-size:11px;color:var(--mu)">Section Rank</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-res')">Close</button><button class="mfg" onclick="toast('📄 Marksheet downloaded!','ok2');closeM('m-res')">↓ Download Marksheet</button></div>
+</div></div>
+
+<!-- Live Exam -->
+<div class="mo" id="m-exam"><div class="md lg">
+  <div class="elh">
+    <div><div class="elt" id="el-t">Advanced DBMS</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px">Q <span id="el-qn">1</span> of <span id="el-qt">10</span> · BCA Final Exam</div></div>
+    <div><div class="etm" id="el-tm">90:00</div><div style="font-size:10px;color:rgba(255,255,255,.6);text-align:right">Time Left</div></div>
+  </div>
+  <div class="qnav" id="el-nav"></div>
+  <div class="qb">
+    <div class="qn" id="el-ql">Question 1 of 10</div>
+    <div class="qt" id="el-qtx">Loading...</div>
+    <div class="qo" id="el-opts"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;gap:10px;margin-top:4px">
+    <button id="el-prev" style="background:var(--s2);border:1px solid var(--b1);color:var(--t2);padding:9px 18px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer" onclick="xNav(-1)">◀ Prev</button>
+    <button style="background:rgba(255,61,61,.1);border:1px solid rgba(255,61,61,.3);color:var(--r2);padding:9px 20px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer" onclick="submitExam()">Submit Exam</button>
+    <button id="el-next" class="mfg" onclick="xNav(1)">Next ▶</button>
+  </div>
+</div></div>
+
+<!-- Violation Detail -->
+<div class="mo" id="m-vd"><div class="md">
+  <div class="mh"><div class="mht" id="mvd-t">Violation Detail</div><div class="mx" onclick="closeM('m-vd')">✕</div></div>
+  <div class="mb">
+    <div class="mr"><span class="mrl">Student</span><span class="mrv" id="mvd-s"></span></div>
+    <div class="mr"><span class="mrl">Roll No.</span><span class="mrv" id="mvd-r"></span></div>
+    <div class="mr"><span class="mrl">Subject</span><span class="mrv" id="mvd-x"></span></div>
+    <div class="mr"><span class="mrl">Violation</span><span class="mrv" id="mvd-v"></span></div>
+    <div class="mr"><span class="mrl">Date &amp; Time</span><span class="mrv" id="mvd-dt"></span></div>
+    <div class="mr"><span class="mrl">Occurrences</span><span class="mrv" id="mvd-o"></span></div>
+    <div class="mr"><span class="mrl">Severity</span><span class="mrv" id="mvd-sv"></span></div>
+    <div class="mdv"></div>
+    <div class="mwb" id="mvd-ev"></div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-vd')">Close</button><button class="mfw" onclick="warnV()">⚠️ Warn Student</button><button class="mfd" onclick="disqV()">🚫 Disqualify</button></div>
+</div></div>
+
+<!-- TOAST -->
+<div class="toast" id="tst"></div>
+
+<!-- ═══════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════ -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── CORE STATE ──
+var CP='pg-login',PP='pg-login',CR=null;
+var tiInt=null,tLeft=0,cQ=0,ans={},toT=null,curV=null,vid=8;
+
+// ── BCA USERS ──
+var USERS={
+  'teacher@klh.edu':{pw:'pass123',role:'teacher',nm:'Dr. Vikram Singh',ini:'VS'},
+  'faculty@klh.edu':{pw:'pass123',role:'faculty',nm:'K. V. Sharada',ini:'KS'},
+  '2320520034':{pw:'pass123',role:'student',nm:'Tankthireddy',ini:'TK',roll:'2320520034',sec:'BCA-A'},
+  '2320520035':{pw:'pass123',role:'student',nm:'Ravi Shankar',ini:'RS',roll:'2320520035',sec:'BCA-A'},
+  '2320520036':{pw:'pass123',role:'student',nm:'Priya Reddy',ini:'PR',roll:'2320520036',sec:'BCA-B'},
+};
+
+// ── BCA EXAM QUESTIONS ──
+var QS=[
+  {q:'In SQL, which command is used to remove a table permanently from the database?',opts:['A) DELETE TABLE','B) DROP TABLE','C) REMOVE TABLE','D) ERASE TABLE']},
+  {q:'Which of the following is a feature of the AGILE software development model?',opts:['A) Rigid planning','B) Iterative development','C) No customer involvement','D) Single delivery']},
+  {q:'In HTML5, which element is used to embed a video file?',opts:['A) <media>','B) <embed>','C) <video>','D) <source>']},
+  {q:'Which OSI layer is responsible for routing packets across networks?',opts:['A) Data Link Layer','B) Transport Layer','C) Network Layer','D) Session Layer']},
+  {q:'Which Python data structure uses key-value pairs?',opts:['A) List','B) Tuple','C) Dictionary','D) Set']},
+  {q:'What does ACID stand for in database transactions?',opts:['A) Atomicity, Consistency, Isolation, Durability','B) Access, Control, Index, Data','C) Atomic, Concurrent, Isolated, Durable','D) None of the above']},
+  {q:'Which cloud service model provides virtualized computing resources over the internet?',opts:['A) SaaS','B) PaaS','C) IaaS','D) DaaS']},
+  {q:'In artificial intelligence, what is the "Turing Test" used to evaluate?',opts:['A) Processing speed','B) Machine intelligence','C) Memory capacity','D) Programming accuracy']},
+  {q:'Which scheduling algorithm gives priority to the shortest job first?',opts:['A) FCFS','B) Round Robin','C) SJF','D) Priority']},
+  {q:'What is normalization in DBMS used for?',opts:['A) Increase redundancy','B) Reduce redundancy and improve integrity','C) Increase table size','D) Speed up queries only']},
+];
+
+// ── BCA VIOLATIONS ──
+var VIOLS=[
+  {id:1,nm:'Riya Sharma',   roll:'21BCA042',subj:'Advanced DBMS',    type:'Tab Switch',       ico:'📋',tm:'22 Mar 2026, 10:23 AM',occ:2,sev:'HIGH',  cl:'#ff3d3d'},
+  {id:2,nm:'Arjun Patel',   roll:'21BCA089',subj:'Software Engineering',type:'Face Not Visible',ico:'📷',tm:'22 Mar 2026, 11:05 AM',occ:1,sev:'MEDIUM',cl:'#f5c542'},
+  {id:3,nm:'Meera Nair',    roll:'21BCA114',subj:'Advanced DBMS',    type:'Copy-Paste',       ico:'🖱️',tm:'21 Mar 2026, 3:47 PM', occ:1,sev:'LOW',   cl:'#1fd68a'},
+  {id:4,nm:'Karan Mehta',   roll:'21BCA055',subj:'Web Development',  type:'Multiple Devices', ico:'📱',tm:'20 Mar 2026, 9:15 AM', occ:3,sev:'HIGH',  cl:'#ff3d3d'},
+  {id:5,nm:'Priya Nair',    roll:'21BCA078',subj:'Software Engineering',type:'Looking Away',  ico:'👀',tm:'22 Mar 2026, 11:30 AM',occ:2,sev:'MEDIUM',cl:'#f5c542'},
+  {id:6,nm:'Suraj Babu',    roll:'21BCA021',subj:'Advanced DBMS',    type:'Noise Detected',   ico:'🔊',tm:'22 Mar 2026, 10:50 AM',occ:1,sev:'LOW',   cl:'#1fd68a'},
+  {id:7,nm:'Divya Lakshmi', roll:'21BCA099',subj:'Computer Networks',type:'Tab Switch',       ico:'📋',tm:'20 Mar 2026, 2:20 PM', occ:4,sev:'HIGH',  cl:'#ff3d3d'},
+];
+
+var EVID={
+  'Tab Switch':'Detected: Student switched to another browser tab or external application. This was automatically captured by the proctoring system. IP: 192.168.1.42. Timestamp preserved.',
+  'Face Not Visible':'Detected: Student face was not visible to the webcam for more than 10 seconds. Screenshot captured and stored in evidence log.',
+  'Copy-Paste':'Detected: Clipboard paste event occurred during exam session. Copy-paste functionality is fully disabled during BCA final exams. Attempt logged.',
+  'Multiple Devices':'Detected: A second active session was detected from IP 10.0.0.87 using the same credentials. Original session paused immediately.',
+  'Looking Away':'Detected: AI eye-tracking detected student gaze deviation from the screen exceeding 5 seconds. Two separate instances were recorded.',
+  'Noise Detected':'Detected: Ambient audio analysis flagged human speech in background. Possible third-party assistance. Audio clip retained for review.',
+};
+
+var NEWN=['Ananya Kumar','Rohan Verma','Sai Kiran Reddy','Preethi Raj','Arjun Das','Kavitha Sharma'];
+var NEWX=['Advanced DBMS','Software Engineering','Web Development','Computer Networks','AI & ML'];
+var NEWT=[
+  {type:'Tab Switch',ico:'📋',sev:'HIGH'},
+  {type:'Face Not Visible',ico:'📷',sev:'MEDIUM'},
+  {type:'Copy-Paste',ico:'🖱️',sev:'LOW'},
+  {type:'Looking Away',ico:'👀',sev:'MEDIUM'},
+];
+
+var SSECS={home:'BCA Final Year Portal',exams:'My Exams',results:'My Results',schedule:'Schedule',study:'Study Material',project:'Final Project',profile:'My Profile'};
+
+// ── HELPERS ──
+function g(id){return document.getElementById(id);}
+function st(id,v){var e=g(id);if(e)e.textContent=v;}
+function sc(s){return s==='HIGH'?'hi':s==='MEDIUM'?'me':'lo';}
+function scol(s){return s==='HIGH'?'var(--r2)':s==='MEDIUM'?'var(--y)':'var(--g)';}
+
+// ── PAGES ──
+function gp(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  var pg=g(id);if(pg)pg.classList.add('active');
+  if(id!=='pg-login')PP=id;
+  CP=id;window.scrollTo(0,0);
+  if(id==='pg-viol')rviol(VIOLS);
+}
+function goBack(){gp(PP||'pg-login');}
+
+// ── AUTH ──
+function switchTab(t){
+  g('lf').style.display=t==='login'?'block':'none';
+  g('rf').style.display=t==='reg'?'block':'none';
+  document.querySelectorAll('.atab').forEach(function(el,i){
+    el.classList.toggle('on',(t==='login'&&i===0)||(t==='reg'&&i===1));
+  });
+}
+
+function doLogin(){
+  var id=g('li').value.trim();
+  var pw=g('lp').value;
+  var role=g('lr').value;
+  var eel=g('le');
+  var u=USERS[id];
+  if(!u||u.pw!==pw||u.role!==role){eel.style.display='block';setTimeout(function(){eel.style.display='none';},3000);return;}
+  eel.style.display='none';CR=role;
+  if(role==='teacher'){
+    st('t-av',u.ini);st('t-nm',u.nm);
+    st('v-av',u.ini);st('v-nm',u.nm);st('v-rl','Teacher · BCA HOD');
+    PP='pg-teacher';gp('pg-teacher');
+  } else if(role==='faculty'){
+    st('v-av',u.ini);st('v-nm',u.nm);st('v-rl','Faculty Admin · BCA');
+    PP='pg-faculty';gp('pg-faculty');
+  } else {
+    var roll=u.roll||id;
+    st('s-av',u.ini);st('s-nm',u.nm);
+    st('s-rl',roll+' · '+(u.sec||'BCA-A'));
+    st('s-ttl','🎓 BCA Final Year Portal');
+    st('s-sub','Roll: '+roll+' · BCA Sem 6 · '+(u.sec||'Section A')+' · '+u.nm);
+    st('p-roll',roll);st('p-name',u.nm);st('p-email',roll+'@klh.edu');
+    st('v-av',u.ini);st('v-nm',u.nm);st('v-rl','Student · BCA Final Year');
+    stuSec('home');PP='pg-student';gp('pg-student');
+  }
+}
+
+function doReg(){
+  var fn=g('rfn').value.trim(),ln=g('rln').value.trim();
+  var uid=g('ruid').value.trim(),em=g('rem').value.trim();
+  var pw=g('rpw').value,role=g('rr').value;
+  var eEl=g('rer'),oEl=g('rok');
+  if(!fn||!ln||!uid||!em||!pw){eEl.style.display='block';setTimeout(function(){eEl.style.display='none';},3000);return;}
+  var key=role==='student'?uid:em;
+  USERS[key]={pw:pw,role:role,nm:fn+' '+ln,ini:(fn[0]+(ln[0]||'')).toUpperCase(),roll:uid,sec:'BCA-A'};
+  eEl.style.display='none';oEl.style.display='block';
+  setTimeout(function(){oEl.style.display='none';switchTab('login');g('lr').value=role;g('li').value=key;},2000);
+}
+
+function doLogout(){CR=null;stopTmr();closeAllM();g('li').value='';g('lp').value='';gp('pg-login');}
+
+// ── STUDENT SECTIONS ──
+function stuSec(sec){
+  document.querySelectorAll('.ss2').forEach(function(s){s.classList.remove('on');});
+  var el=g('sec-'+sec);if(el)el.classList.add('on');
+  st('s-ttl',SSECS[sec]||'BCA Portal');
+  var nav=g('stu-nav');
+  if(nav)nav.querySelectorAll('.si').forEach(function(it){
+    it.classList.toggle('on',it.getAttribute('data-sec')===sec);
+  });
+}
+
+// ── VIOLATION PANEL (teacher) ──
+function tvp(){var p=g('t-vp');if(p)p.classList.toggle('op');}
+
+// ── MODALS ──
+function openM(id){var m=g(id);if(m)m.classList.add('op');}
+function closeM(id){var m=g(id);if(m)m.classList.remove('op');}
+function closeAllM(){document.querySelectorAll('.mo').forEach(function(m){m.classList.remove('op');});}
+
+function openStart(nm,ins,qs,dur,code){
+  st('ms-t',nm);st('ms-code',code);st('ms-i',ins);
+  st('ms-q',qs+' Questions');st('ms-d',dur+' minutes');
+  st('ms-mk',(parseInt(qs)*2)+' marks (2 per question)');
+  openM('m-start');
+}
+function openDets(nm,ins,qs,dur,dt,sy,tp,nt){
+  st('md-t',nm);st('md-i',ins);st('md-q',qs+' Questions');
+  st('md-d',dur);st('md-dt',dt);st('md-sy',sy);st('md-tp',tp);st('md-nt',nt);
+  openM('m-dets');
+}
+function openRes(nm,sc2,gr,rk,dt){
+  st('mr-t',nm+' — Result');st('mr-dt','Exam date: '+dt);
+  var se=g('mr-sc');if(se){se.textContent=sc2+'%';se.style.color=sc2>=80?'var(--g)':sc2>=60?'var(--y)':'var(--r2)';}
+  var ge=g('mr-gr');if(ge){ge.textContent=gr;ge.style.color=sc2>=80?'var(--g)':'var(--y)';}
+  st('mr-rk',rk);openM('m-res');
+}
+
+// ── BCA EXAM ENGINE ──
+function launchExam(){
+  closeM('m-start');
+  var nm=g('ms-t')?g('ms-t').textContent:'BCA Exam';
+  var du=parseInt(g('ms-d')?g('ms-d').textContent:'90')||90;
+  cQ=0;ans={};tLeft=du*60;
+  st('el-t',nm);st('el-qt',QS.length);
+  rnav();rq();openM('m-exam');startTmr();
+}
+function rq(){
+  var q=QS[cQ];if(!q)return;
+  st('el-qn',cQ+1);
+  st('el-ql','Question '+(cQ+1)+' of '+QS.length);
+  st('el-qtx',q.q);
+  var opts=g('el-opts');if(!opts)return;
+  opts.innerHTML='';
+  q.opts.forEach(function(o,i){
+    var d=document.createElement('div');
+    d.className='qop'+(ans[cQ]===i?' picked':'');
+    d.textContent=o;
+    d.onclick=(function(idx){return function(){ans[cQ]=idx;rq();rnav();};})(i);
+    opts.appendChild(d);
+  });
+  var pv=g('el-prev');if(pv)pv.style.opacity=cQ===0?'0.4':'1';
+  var nx=g('el-next');if(nx)nx.textContent=cQ===QS.length-1?'Finish →':'Next ▶';
+}
+function rnav(){
+  var nav=g('el-nav');if(!nav)return;
+  nav.innerHTML='';
+  QS.forEach(function(_,i){
+    var d=document.createElement('div');
+    d.className='qd'+(i===cQ?' cur':'')+(ans[i]!==undefined?' done':'');
+    d.textContent=i+1;
+    d.onclick=(function(idx){return function(){cQ=idx;rq();rnav();};})(i);
+    nav.appendChild(d);
+  });
+}
+function xNav(dir){
+  var n=cQ+dir;
+  if(n<0)return;
+  if(n>=QS.length){toast('⚠️ Last question reached. Click Submit.','wn2');return;}
+  cQ=n;rq();rnav();
+}
+function submitExam(){
+  var answered=Object.keys(ans).length;
+  toast('⚠️ Submitting BCA Final Exam ('+answered+'/'+QS.length+' answered)...','wn2');
+  setTimeout(function(){stopTmr();closeM('m-exam');toast('✅ BCA Exam submitted! Score: 94% — Grade: O','ok2');},1500);
+}
+function startTmr(){
+  stopTmr();
+  tiInt=setInterval(function(){
+    tLeft--;
+    if(tLeft<=0){stopTmr();closeM('m-exam');toast('⏱️ Time up! BCA Exam auto-submitted.','wn2');return;}
+    var m=String(Math.floor(tLeft/60)).padStart(2,'0');
+    var s=String(tLeft%60).padStart(2,'0');
+    var el=g('el-tm');if(el){el.textContent=m+':'+s;if(tLeft<=300)el.style.color='#ff3d3d';}
+  },1000);
+}
+function stopTmr(){if(tiInt){clearInterval(tiInt);tiInt=null;}}
+
+// ── PROFILE EDIT ──
+function toggleEdit(){var f=g('edit-box');if(f)f.style.display=f.style.display==='none'||f.style.display===''?'block':'none';}
+function saveEdit(){
+  var ph=g('ep');if(ph&&ph.value)st('p-phone',ph.value);
+  toggleEdit();toast('✅ Profile updated successfully!','ok2');
+}
+
+// ── VIOLATION TABLE ──
+function rviol(data){
+  var body=g('vtb');if(!body)return;
+  body.innerHTML='';
+  data.forEach(function(v){
+    var tr=document.createElement('tr');
+    tr.onclick=function(){openVD(v.id);};
+    var ini=v.nm.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+    tr.innerHTML=
+      '<td style="color:var(--mu);font-family:monospace;font-size:11px">'+String(v.id).padStart(3,'0')+'</td>'+
+      '<td><div style="display:flex;align-items:center;gap:8px">'+
+        '<div style="width:26px;height:26px;border-radius:50%;background:rgba(255,61,61,.12);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:'+v.cl+'">'+ini+'</div>'+
+        '<strong>'+v.nm+'</strong></div></td>'+
+      '<td style="font-family:monospace;color:var(--a1);font-size:12px">'+v.roll+'</td>'+
+      '<td>'+v.subj+'</td>'+
+      '<td><span style="display:inline-flex;align-items:center;gap:5px;background:var(--s3);border:1px solid var(--b1);padding:3px 9px;border-radius:8px;font-size:11px">'+v.ico+' '+v.type+'</span></td>'+
+      '<td style="color:var(--t2);font-size:12.5px">'+v.tm+'</td>'+
+      '<td><div style="width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:Syne,sans-serif;background:rgba(255,61,61,.1);color:'+scol(v.sev)+'">'+v.occ+'</div></td>'+
+      '<td><span style="font-weight:700;color:'+scol(v.sev)+'">● '+v.sev+'</span></td>'+
+      '<td><div style="display:flex;gap:4px">'+
+        '<button style="font-size:10.5px;padding:4px 9px;border-radius:6px;background:rgba(61,123,255,.1);color:var(--a1);border:none;cursor:pointer;font-family:var(--fb);font-weight:600" onclick="openVD('+v.id+');event.stopPropagation()">Review</button>'+
+        (v.sev==='HIGH'?
+         '<button style="font-size:10.5px;padding:4px 9px;border-radius:6px;background:rgba(255,61,61,.1);color:var(--r2);border:none;cursor:pointer;font-family:var(--fb);font-weight:600" onclick="dqV('+v.id+');event.stopPropagation()">Disqualify</button>':
+         '<button style="font-size:10.5px;padding:4px 9px;border-radius:6px;background:rgba(245,197,66,.1);color:var(--y);border:none;cursor:pointer;font-family:var(--fb);font-weight:600" onclick="wbid('+v.id+');event.stopPropagation()">Warn</button>')+
+        '<button style="font-size:10.5px;padding:4px 9px;border-radius:6px;background:rgba(74,82,122,.15);color:var(--mu);border:none;cursor:pointer;font-family:var(--fb);font-weight:600" onclick="dbid('+v.id+');event.stopPropagation()">Dismiss</button>'+
+      '</div></td>';
+    body.appendChild(tr);
+  });
+  var tc=g('vtc');if(tc)tc.textContent='Showing '+data.length+' of '+VIOLS.length+' violations';
+  uvs();
+}
+
+function fviol(){
+  var q=(g('fq').value||'').toLowerCase();
+  var ex=g('fx').value,tp=g('ft').value,sv=g('fs').value;
+  rviol(VIOLS.filter(function(v){
+    return(!q||v.nm.toLowerCase().includes(q)||v.roll.toLowerCase().includes(q)||v.subj.toLowerCase().includes(q))&&
+           (!ex||v.subj===ex)&&(!tp||v.type===tp)&&(!sv||v.sev===sv);
+  }));
+}
+function rfviol(){['fx','ft','fs'].forEach(function(id){g(id).value='';});g('fq').value='';rviol(VIOLS);}
+
+function openVD(id){
+  var v=VIOLS.find(function(x){return x.id===id;});if(!v)return;
+  curV=v;
+  st('mvd-t','⚠️ Violation #'+String(v.id).padStart(3,'0'));
+  st('mvd-s',v.nm);st('mvd-r',v.roll);st('mvd-x',v.subj);
+  st('mvd-v',v.ico+' '+v.type);st('mvd-dt',v.tm);
+  st('mvd-o',v.occ+' occurrence'+(v.occ!==1?'s':''));
+  var se=g('mvd-sv');if(se)se.innerHTML='<span style="font-weight:800;color:'+scol(v.sev)+'">'+v.sev+'</span>';
+  var ev=g('mvd-ev');if(ev)ev.innerHTML='<strong>Evidence Log:</strong> '+(EVID[v.type]||'Recorded by BCA proctoring system.');
+  openM('m-vd');
+}
+function warnV(){if(!curV)return;toast('⚠️ Official warning sent to '+curV.nm,'wn2');closeM('m-vd');}
+function disqV(){if(!curV)return;VIOLS=VIOLS.filter(function(v){return v.id!==curV.id;});toast('🚫 '+curV.nm+' has been disqualified from BCA exam.','er2');closeM('m-vd');rviol(VIOLS);}
+function wbid(id){var v=VIOLS.find(function(x){return x.id===id;});if(v)toast('⚠️ Warning sent to '+v.nm,'wn2');}
+function dqV(id){var v=VIOLS.find(function(x){return x.id===id;});if(!v)return;VIOLS=VIOLS.filter(function(x){return x.id!==id;});toast('🚫 '+v.nm+' disqualified.','er2');rviol(VIOLS);}
+function dbid(id){VIOLS=VIOLS.filter(function(v){return v.id!==id;});toast('✅ Violation dismissed.','ok2');rviol(VIOLS);}
+
+function uvs(){
+  st('vs-t',VIOLS.length);
+  st('vs-h',VIOLS.filter(function(v){return v.sev==='HIGH';}).length);
+  var b=g('vbadge');if(b)b.textContent=VIOLS.length;
+}
+
+function addViol(){
+  var nm=NEWN[Math.floor(Math.random()*NEWN.length)];
+  var roll='21BCA'+String(Math.floor(Math.random()*900)+100);
+  var subj=NEWX[Math.floor(Math.random()*NEWX.length)];
+  var tv=NEWT[Math.floor(Math.random()*NEWT.length)];
+  var now=new Date();
+  var tm=now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+', '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  var occ=Math.floor(Math.random()*3)+1;
+  var cl=tv.sev==='HIGH'?'#ff3d3d':tv.sev==='MEDIUM'?'#f5c542':'#1fd68a';
+  VIOLS.unshift({id:vid++,nm:nm,roll:roll,subj:subj,type:tv.type,ico:tv.ico,tm:tm,occ:occ,sev:tv.sev,cl:cl});
+  rviol(VIOLS);toast('🚨 New BCA violation: '+nm+' — '+tv.type,'er2');
+}
+
+function expCSV(){
+  var rows=[['#','Student','Roll','Subject','Type','DateTime','Occurrences','Severity']];
+  VIOLS.forEach(function(v){rows.push([v.id,v.nm,v.roll,v.subj,v.type,v.tm,v.occ,v.sev]);});
+  var csv=rows.map(function(r){return r.join(',');}).join('\n');
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='bca_violation_log_klh.csv';a.click();
+  toast('📄 BCA violation log exported as CSV!','ok2');
+}
+
+// ── TOAST ──
+function toast(msg,type){
+  type=type||'ok2';var t=g('tst');if(!t)return;
+  t.textContent=msg;t.className='toast on '+type;
+  clearTimeout(toT);toT=setTimeout(function(){t.classList.remove('on');},3500);
+}
+
+// ── INIT ──
+(function(){
+  document.querySelectorAll('.mo').forEach(function(ov){
+    ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('op');});
+  });
+  var nav=g('stu-nav');
+  if(nav)nav.querySelectorAll('.si[data-sec]').forEach(function(it){
+    it.addEventListener('click',function(){stuSec(it.getAttribute('data-sec'));});
+  });
+  document.querySelectorAll('.tabs').forEach(function(tg){
+    tg.querySelectorAll('.tab').forEach(function(tab){
+      tab.addEventListener('click',function(){
+        tg.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+        tab.classList.add('on');
+      });
+    });
+  });
+  document.querySelectorAll('.si:not([data-sec])').forEach(function(it){
+    it.addEventListener('click',function(){
+      var 

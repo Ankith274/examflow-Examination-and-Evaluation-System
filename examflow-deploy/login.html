@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ExamFlow — KLH University</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s0:#0a0d14;--s1:#0d1018;--s2:#131720;--s3:#191e2c;--s4:#1f2538;
+  --border:#222840;--border2:#2c3350;
+  --accent:#4a7fff;--accent2:#7c5cfc;
+  --green:#1fd68a;--yellow:#f5c542;--red:#ff4444;--red2:#ff6b6b;--orange:#ff8c42;
+  --text:#eceef8;--text2:#a8adc8;--muted:#545c80;
+  --fh:'Syne',sans-serif;--fb:'DM Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);min-height:100vh;overflow-x:hidden}
+
+/* PAGE SYSTEM */
+.page{display:none;min-height:100vh}
+.page.active{display:flex}
+
+/* ═══════════════════════════
+   AUTH — LOGIN / REGISTER
+═══════════════════════════ */
+.auth-root{width:100%;min-height:100vh;display:flex;background:var(--bg);position:relative;overflow:hidden}
+.auth-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 60% 50% at 20% 50%,rgba(74,127,255,.09) 0%,transparent 70%),
+  radial-gradient(ellipse 40% 60% at 80% 20%,rgba(124,92,252,.07) 0%,transparent 70%),
+  radial-gradient(ellipse 30% 40% at 70% 80%,rgba(31,214,138,.04) 0%,transparent 60%)}
+.auth-grid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(74,127,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(74,127,255,.04) 1px,transparent 1px);
+  background-size:48px 48px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+.auth-left{flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px;position:relative;z-index:2}
+.auth-brand{display:flex;align-items:center;gap:12px;margin-bottom:48px}
+.auth-brand-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 8px 24px rgba(74,127,255,.3)}
+.auth-brand-name{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:-.5px}
+.auth-brand-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.auth-headline{font-family:var(--fh);font-size:38px;font-weight:800;line-height:1.15;letter-spacing:-1px;margin-bottom:16px}
+.auth-headline span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.auth-desc{font-size:14px;color:var(--text2);line-height:1.7;max-width:380px;margin-bottom:36px}
+.role-pills{display:flex;gap:10px;flex-wrap:wrap}
+.role-pill{display:flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--border);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:600;color:var(--text2);transition:all .2s;cursor:pointer}
+.role-pill:hover,.role-pill.sel{background:rgba(74,127,255,.12);border-color:rgba(74,127,255,.4);color:var(--accent)}
+.role-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.role-pill.sel .dot,.role-pill:hover .dot{background:var(--accent)}
+.auth-right{width:480px;display:flex;align-items:center;justify-content:center;padding:40px;position:relative;z-index:2}
+.auth-card{width:100%;background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:36px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.auth-tabs{display:flex;background:var(--s2);border-radius:10px;padding:4px;margin-bottom:28px}
+.auth-tab{flex:1;text-align:center;padding:8px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s}
+.auth-tab.active{background:var(--s3);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.auth-card h2{font-family:var(--fh);font-size:20px;font-weight:800;margin-bottom:6px}
+.auth-card p{font-size:13px;color:var(--text2);margin-bottom:24px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;letter-spacing:.3px}
+.field input,.field select{width:100%;background:var(--s2);border:1px solid var(--border);color:var(--text);padding:11px 14px;border-radius:9px;font-family:var(--fb);font-size:13.5px;outline:none;transition:border-color .2s,box-shadow .2s}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,127,255,.12)}
+.field select option{background:var(--s2)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-primary{width:100%;padding:12px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;font-family:var(--fb);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(74,127,255,.3)}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.auth-switch{text-align:center;margin-top:16px;font-size:12.5px;color:var(--muted)}
+.auth-switch a{color:var(--accent);cursor:pointer;font-weight:600}
+.error-msg{background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);color:var(--red2);padding:10px 14px;border-radius:8px;font-size:12.5px;margin-bottom:14px;display:none}
+.success-msg{background:rgba(31,214,138,.1);border:1px solid rgba(31,214,138,.3);color:var(--green);padding:10px 14px;border-radius:8px;font-size:12.5px;margin-bottom:14px;display:none}
+.demo-box{margin-top:14px;padding:10px;background:var(--s2);border-radius:8px;font-size:11px;color:var(--muted)}
+.demo-box strong{color:var(--text2)}
+
+/* ═══════════════════════════
+   SHARED DASHBOARD LAYOUT
+═══════════════════════════ */
+.dash-root{width:100%;display:flex}
+.sidebar{width:235px;min-height:100vh;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 0;flex-shrink:0}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:0 20px 24px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.sb-logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-size:16px}
+.sb-logo-text{font-family:var(--fh);font-size:16px;font-weight:800}
+.sb-nav{padding:0 12px;flex:1}
+.sb-lbl{font-size:9.5px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;padding:10px 10px 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .18s;margin-bottom:2px}
+.sb-item:hover{background:var(--s2);color:var(--text)}
+.sb-item.active{background:linear-gradient(90deg,rgba(74,127,255,.15),rgba(124,92,252,.06));color:var(--accent);border-left:2px solid var(--accent)}
+.sb-item.active-red{background:linear-gradient(90deg,rgba(255,68,68,.12),rgba(255,68,68,.04));color:var(--red2);border-left:2px solid var(--red)}
+.sb-item .ic{font-size:14px;width:20px;text-align:center}
+.sb-badge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(255,68,68,.15);color:var(--red2)}
+.sb-badge.b{background:rgba(74,127,255,.15);color:var(--accent)}
+.sb-badge.y{background:rgba(245,197,66,.15);color:var(--yellow)}
+.sb-foot{padding:14px 18px 0;border-top:1px solid var(--border)}
+.sb-user{display:flex;align-items:center;gap:10px}
+.sb-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.sb-uname{font-size:12.5px;font-weight:600;color:var(--text)}
+.sb-urole{font-size:11px;color:var(--muted)}
+.sb-logout{font-size:11.5px;color:var(--muted);cursor:pointer;margin-top:10px;display:flex;align-items:center;gap:5px;padding:6px 8px;border-radius:6px;transition:all .15s}
+.sb-logout:hover{color:var(--red);background:rgba(255,68,68,.08)}
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--border);background:var(--s1)}
+.topbar h1{font-family:var(--fh);font-size:18px;font-weight:800;letter-spacing:-.3px}
+.topbar .sub{font-size:11.5px;color:var(--muted);margin-top:1px}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.content{flex:1;overflow-y:auto;padding:26px}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:18px 18px 14px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;animation:fadeUp .4s ease both}
+.stat:hover{transform:translateY(-2px);border-color:var(--border2)}
+.stat::before{content:'';position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;opacity:.08}
+.stat.c1::before{background:var(--accent)}.stat.c2::before{background:var(--accent2)}.stat.c3::before{background:var(--green)}.stat.c4::before{background:var(--yellow)}.stat.c5::before{background:var(--red)}
+.stat-ico{font-size:18px;margin-bottom:10px}
+.stat-val{font-family:var(--fh);font-size:26px;font-weight:800;letter-spacing:-1px}
+.stat.c1 .stat-val{color:var(--accent)}.stat.c2 .stat-val{color:var(--accent2)}.stat.c3 .stat-val{color:var(--green)}.stat.c4 .stat-val{color:var(--yellow)}.stat.c5 .stat-val{color:var(--red)}
+.stat-lbl{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px}
+.stat-sub{font-size:11px;color:var(--green);margin-top:8px}
+
+/* TABLES */
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-ttl{font-family:var(--fh);font-size:15px;font-weight:700}
+.tbl-wrap{background:var(--s1);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:22px;animation:fadeUp .4s .2s ease both}
+table{width:100%;border-collapse:collapse}
+thead th{padding:11px 16px;text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);background:var(--s2);border-bottom:1px solid var(--border)}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tbody tr:not(:last-child) td{border-bottom:1px solid var(--border)}
+tbody td{padding:13px 16px;font-size:13px}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.badge.active{background:rgba(31,214,138,.1);color:var(--green);border:1px solid rgba(31,214,138,.2)}
+.badge.closed{background:rgba(84,92,128,.15);color:var(--muted);border:1px solid rgba(84,92,128,.2)}
+.badge.draft{background:rgba(74,127,255,.1);color:var(--accent);border:1px solid rgba(74,127,255,.2)}
+.badge.warn{background:rgba(245,197,66,.1);color:var(--yellow);border:1px solid rgba(245,197,66,.2)}
+.badge.danger{background:rgba(255,68,68,.1);color:var(--red2);border:1px solid rgba(255,68,68,.2)}
+
+/* SCORE BAR */
+.sbar-wrap{display:flex;align-items:center;gap:8px}
+.sbar{height:5px;width:70px;background:var(--border);border-radius:3px;overflow:hidden}
+.sbar-fill{height:100%;border-radius:3px}
+.sf-hi{background:linear-gradient(90deg,var(--green),#22d7c0)}
+.sf-mid{background:linear-gradient(90deg,var(--yellow),var(--orange))}
+.sf-lo{background:linear-gradient(90deg,var(--red),var(--orange))}
+
+/* BUTTONS */
+.btn{background:var(--s2);border:1px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:11.5px;cursor:pointer;font-family:var(--fb);transition:all .15s;margin-right:4px}
+.btn:hover{color:var(--text);border-color:var(--accent2)}
+.btn-create{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:all .2s}
+.btn-create:hover{opacity:.88;transform:translateY(-1px)}
+.btn-warn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);color:var(--red2);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:all .2s;animation:pulse-warn 2.5s infinite}
+@keyframes pulse-warn{0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,.3)}50%{box-shadow:0 0 0 6px rgba(255,68,68,0)}}
+.btn-warn:hover{background:rgba(255,68,68,.18)}
+
+/* TABS */
+.tabs{display:flex;background:var(--s2);border-radius:9px;padding:3px;width:fit-content;margin-bottom:14px}
+.tab{padding:6px 16px;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;color:var(--muted);transition:all .18s}
+.tab.active{background:var(--s3);color:var(--text);box-shadow:0 1px 6px rgba(0,0,0,.3)}
+
+/* VIOLATION PANEL */
+.vpanel{background:var(--s1);border:1px solid rgba(255,68,68,.2);border-radius:14px;padding:20px;margin-bottom:22px;display:none}
+.vpanel.open{display:block;animation:slideDown .25s ease}
+.vpanel-hd{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.vpanel-ttl{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--red2)}
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.vcard{background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:10px;padding:14px}
+.vc-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.vc-exam{font-size:11.5px;color:var(--muted);margin-bottom:6px}
+.vc-type{font-size:11.5px;color:var(--yellow);font-weight:600}
+.vc-time{font-size:11px;color:var(--muted);margin-top:3px}
+.vc-sev{display:inline-block;margin-top:6px;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:700}
+.vc-sev.high{background:rgba(255,68,68,.15);color:var(--red2)}
+.vc-sev.med{background:rgba(245,197,66,.15);color:var(--yellow)}
+.vc-sev.low{background:rgba(31,214,138,.12);color:var(--green)}
+
+/* BOTTOM GRID */
+.bottom-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:20px}
+.card-ttl{font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:14px}
+.stu-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.stu-item:last-child{border-bottom:none}
+.stu-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.stu-name{font-size:13px;font-weight:500;flex:1}
+.stu-score{font-size:12px;font-weight:700}
+
+/* STUDENT SECTIONS */
+.stu-sec{display:none}
+.stu-sec.active{display:block;animation:fadeUp .25s ease}
+.exam-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.exam-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:all .2s;animation:fadeUp .4s ease both}
+.exam-card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(74,127,255,.1)}
+.ec-sub{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase}
+.ec-name{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:6px}
+.ec-meta{display:flex;gap:12px;margin-top:12px}
+.ec-meta span{font-size:11px;color:var(--muted)}
+.ec-action{margin-top:14px;display:flex;gap:8px}
+.ec-btn{flex:1;padding:8px;border-radius:8px;border:none;font-family:var(--fb);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s}
+.ec-btn.start{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff}
+.ec-btn.view-btn{background:var(--s2);border:1px solid var(--border);color:var(--text2)}
+.ec-btn:hover{opacity:.85}
+
+/* PROFILE */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.info-item{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px}
+.info-lbl{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.3px;margin-bottom:4px;text-transform:uppercase}
+.info-val{font-size:13.5px;font-weight:600;color:var(--text)}
+
+/* SCHEDULE */
+.sday-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px}
+.sday-item{display:flex;align-items:center;gap:14px;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-bottom:8px;transition:all .15s}
+.sday-item:hover{border-color:var(--border2)}
+.sday-time{font-size:12px;font-weight:700;color:var(--accent);width:70px;flex-shrink:0}
+.sday-info{flex:1}
+.sday-name{font-size:13px;font-weight:600}
+.sday-meta{font-size:11.5px;color:var(--muted);margin-top:2px}
+
+/* STUDY MATERIAL */
+.mat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.mat-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s}
+.mat-card:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.mat-icon{font-size:24px;margin-bottom:10px}
+.mat-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.mat-meta{font-size:11.5px;color:var(--muted)}
+.mat-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;margin-top:8px;background:rgba(74,127,255,.12);color:var(--accent)}
+
+/* VIOLATION REPORT PAGE */
+.rep-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.r-stat{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
+.r-stat-v{font-family:var(--fh);font-size:24px;font-weight:800;margin-bottom:2px}
+.r-stat-l{font-size:12px;color:var(--muted)}
+.filter-bar{display:flex;gap:10px;margin-bottom:18px;align-items:center;flex-wrap:wrap}
+.filter-bar select,.filter-bar input{background:var(--s1);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-family:var(--fb);font-size:12.5px;outline:none}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--accent)}
+.sev-high{color:var(--red2);font-weight:700}
+.sev-med{color:var(--yellow);font-weight:700}
+.sev-low{color:var(--green);font-weight:700}
+.live-dot-blink{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;animation:pulsed 1.5s infinite;margin-right:4px}
+@keyframes pulsed{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+.modal-overlay.open{display:flex;animation:fadeIn .2s ease}
+.modal{background:var(--s1);border:1px solid var(--border2);border-radius:18px;padding:0;width:560px;max-width:95vw;box-shadow:0 32px 80px rgba(0,0,0,.7);overflow:hidden}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-head-ttl{font-family:var(--fh);font-size:16px;font-weight:800}
+.modal-x{width:28px;height:28px;border-radius:50%;background:var(--s2);border:1px solid var(--border);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s}
+.modal-x:hover{color:var(--text);border-color:var(--red)}
+.modal-body{padding:22px 24px}
+.m-row{display:flex;gap:10px;margin-bottom:11px;align-items:flex-start}
+.m-lbl{font-size:11px;color:var(--muted);font-weight:600;width:110px;flex-shrink:0;padding-top:1px;text-transform:uppercase;letter-spacing:.3px}
+.m-val{font-size:13px;font-weight:600;color:var(--text);flex:1}
+.m-div{height:1px;background:var(--border);margin:16px 0}
+.m-warn-box{background:rgba(255,68,68,.08);border:1px solid rgba(255,68,68,.2);border-radius:10px;padding:14px;font-size:12.5px;color:var(--text2);line-height:1.7;margin-bottom:18px}
+.m-warn-box strong{color:var(--red2)}
+.modal-foot{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+.mf-btn{padding:9px 20px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .18s}
+.mf-cancel{background:var(--s2);border:1px solid var(--border);color:var(--text2)}
+.mf-go{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff}
+.mf-go:hover{opacity:.88;transform:translateY(-1px)}
+.mf-warn{background:rgba(245,197,66,.15);color:var(--yellow);border:1px solid rgba(245,197,66,.3)}
+.mf-disq{background:rgba(255,68,68,.15);color:var(--red2);border:1px solid rgba(255,68,68,.3)}
+
+/* EXAM LIVE */
+.exam-live-hd{background:linear-gradient(135deg,var(--accent2),var(--accent));border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between}
+.el-title{font-family:var(--fh);font-size:15px;font-weight:800;color:#fff}
+.el-timer{font-family:var(--fh);font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px}
+.q-box{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+.q-num{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase}
+.q-text{font-size:14px;font-weight:600;margin-bottom:14px;line-height:1.5}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.q-opt{background:var(--s3);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;transition:all .15s;color:var(--text2)}
+.q-opt:hover{border-color:var(--accent);color:var(--text)}
+.q-opt.sel{background:rgba(74,127,255,.12);border-color:var(--accent);color:var(--text)}
+.q-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.q-dot{width:28px;height:28px;border-radius:6px;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+.q-dot.ans{background:rgba(31,214,138,.15);border-color:var(--green);color:var(--green)}
+.q-dot.cur{background:rgba(74,127,255,.15);border-color:var(--accent);color:var(--accent)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--s3);border:1px solid var(--border2);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.5);display:none;align-items:center;gap:8px}
+.toast.show{display:flex;animation:slideUp .3s ease}
+.toast.success{border-color:rgba(31,214,138,.4);color:var(--green)}
+.toast.warn{border-color:rgba(245,197,66,.4);color:var(--yellow)}
+.toast.error{border-color:rgba(255,68,68,.4);color:var(--red2)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.stat:nth-child(1){animation-delay:.05s}.stat:nth-child(2){animation-delay:.1s}.stat:nth-child(3){animation-delay:.15s}.stat:nth-child(4){animation-delay:.2s}
+.btn-print{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border);color:var(--text2);padding:8px 14px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:all .2s}
+.btn-print:hover{color:var(--text);border-color:var(--accent)}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     PAGE 1 — LOGIN / REGISTER
+════════════════════════════════════════ -->
+<div class="page active" id="pg-login">
+<div class="auth-root">
+  <div class="auth-bg"></div><div class="auth-grid"></div>
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="auth-brand-icon">🎓</div>
+      <div><div class="auth-brand-name">ExamFlow</div><div class="auth-brand-sub">KLH University · 2023–2026</div></div>
+    </div>
+    <div class="auth-headline">Smart Exams.<br><span>Smarter Monitoring.</span></div>
+    <div class="auth-desc">Secure online examination platform with real-time proctoring, AI-powered violation detection, and instant analytics for KLH University.</div>
+    <div class="role-pills">
+      <div class="role-pill sel"><span class="dot"></span>Teacher</div>
+      <div class="role-pill"><span class="dot"></span>Faculty</div>
+      <div class="role-pill"><span class="dot"></span>Student</div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <div class="auth-tab active" onclick="switchTab('login')">Sign In</div>
+        <div class="auth-tab" onclick="switchTab('register')">Register</div>
+      </div>
+      <!-- LOGIN -->
+      <div id="login-form">
+        <h2>Welcome back</h2><p>Sign in to your ExamFlow account</p>
+        <div id="login-err" class="error-msg">Invalid credentials. Please try again.</div>
+        <div class="field"><label>ROLE</label>
+          <select id="login-role">
+            <option value="teacher">👨‍🏫 Teacher</option>
+            <option value="faculty">🏛️ Faculty</option>
+            <option value="student">🎓 Student</option>
+          </select>
+        </div>
+        <div class="field"><label>USER ID / EMAIL</label><input type="text" id="login-id" placeholder="e.g. 2320520034 or teacher@klh.edu"/></div>
+        <div class="field"><label>PASSWORD</label><input type="password" id="login-pass" placeholder="Enter your password"/></div>
+        <button class="btn-primary" onclick="doLogin()">Sign In →</button>
+        <div class="auth-switch">Don't have an account? <a onclick="switchTab('register')">Register here</a></div>
+        <div class="demo-box"><strong>Demo:</strong><br>
+          Teacher: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="097d6c686a616c7b49626561276c6d7c">[email&#160;protected]</a> / pass123<br>
+          Faculty: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d8beb9bbadb4aca198b3b4b0f6bdbcad">[email&#160;protected]</a> / pass123<br>
+          Student: 2320520034 / pass123 <em style="color:var(--accent)">(Tankthireddy)</em>
+        </div>
+      </div>
+      <!-- REGISTER -->
+      <div id="reg-form" style="display:none">
+        <h2>Create Account</h2><p>Join ExamFlow at KLH University</p>
+        <div id="reg-ok" class="success-msg">Account created! Please sign in.</div>
+        <div id="reg-err" class="error-msg">Please fill all required fields.</div>
+        <div class="field"><label>REGISTER AS</label>
+          <select id="reg-role"><option value="student">🎓 Student</option><option value="teacher">👨‍🏫 Teacher</option><option value="faculty">🏛️ Faculty</option></select>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>FIRST NAME</label><input type="text" id="reg-fn" placeholder="First name"/></div>
+          <div class="field"><label>LAST NAME</label><input type="text" id="reg-ln" placeholder="Last name"/></div>
+        </div>
+        <div class="field"><label>ROLL / EMPLOYEE ID</label><input type="text" id="reg-uid" placeholder="e.g. 2320520034"/></div>
+        <div class="field"><label>EMAIL</label><input type="email" id="reg-email" placeholder="you@klh.edu"/></div>
+        <div class="field-row">
+          <div class="field"><label>DEPT</label><select id="reg-dept"><option>CSE</option><option>ECE</option><option>MECH</option><option>IT</option></select></div>
+          <div class="field"><label>YEAR</label><select id="reg-year"><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select></div>
+        </div>
+        <div class="field"><label>PASSWORD</label><input type="password" id="reg-pass" placeholder="Min 6 characters"/></div>
+        <button class="btn-primary" onclick="doRegister()">Create Account →</button>
+        <div class="auth-switch">Already have an account? <a onclick="switchTab('login')">Sign in</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 2 — TEACHER DASHBOARD
+════════════════════════════════════════ -->
+<div class="page" id="pg-teacher">
+<div class="dash-root">
+  <aside class="sidebar">
+    <div class="sb-logo"><div class="sb-logo-icon">🎓</div><span class="sb-logo-text">ExamFlow</span></div>
+    <div class="sb-nav">
+      <div class="sb-item active"><span class="ic">📊</span>Dashboard</div>
+      <div class="sb-item"><span class="ic">👥</span>My Students</div>
+      <div class="sb-item"><span class="ic">📝</span>My Exams</div>
+      <div class="sb-item"><span class="ic">📈</span>Results</div>
+      <div class="sb-item"><span class="ic">❓</span>Questions</div>
+      <div class="sb-lbl">Reports</div>
+      <div class="sb-item active-red" onclick="goPage('pg-violations')"><span class="ic">⚠️</span>Violations<span class="sb-badge">7</span></div>
+      <div class="sb-item"><span class="ic">📋</span>Analytics</div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="sb-av" id="t-av">VS</div>
+        <div><div class="sb-uname" id="t-name">Dr. Vikram Singh</div><div class="sb-urole">Teacher · KLH</div></div>
+      </div>
+      <div class="sb-logout" onclick="doLogout()">↩ Logout</div>
+    </div>
+  </aside>
+  <main class="main-area">
+    <div class="topbar">
+      <div><h1>Teacher Dashboard</h1><div class="sub">KLH University · 2023–2026 · K. V. Sharada, Faculty</div></div>
+      <div class="topbar-actions">
+        <div class="btn-warn" onclick="toggleVPanel()">⚠️ 3 Violations</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="stats-grid">
+        <div class="stat c1"><div class="stat-ico">👥</div><div class="stat-val">450</div><div class="stat-lbl">Students</div><div class="stat-sub">↑ 12 this semester</div></div>
+        <div class="stat c2"><div class="stat-ico">📝</div><div class="stat-val">8</div><div class="stat-lbl">My Exams</div><div class="stat-sub">3 active now</div></div>
+        <div class="stat c3"><div class="stat-ico">✅</div><div class="stat-val">2,340</div><div class="stat-lbl">Submissions</div><div class="stat-sub">↑ 8% this month</div></div>
+        <div class="stat c4"><div class="stat-ico">📊</div><div class="stat-val">78%</div><div class="stat-lbl">Pass Rate</div><div class="stat-sub">↑ 3% improvement</div></div>
+      </div>
+      <div class="vpanel" id="t-vpanel">
+        <div class="vpanel-hd">
+          <span style="font-size:17px">⚠️</span>
+          <span class="vpanel-ttl">Active Violation Log</span>
+          <span style="font-size:11px;color:var(--muted);margin-left:auto;cursor:pointer" onclick="goPage('pg-violations')">View Full Report →</span>
+        </div>
+        <div class="vgrid">
+          <div class="vcard"><div class="vc-name">Riya Sharma (21KLH042)</div><div class="vc-exam">Data Science Quiz</div><div class="vc-type">📋 Tab Switch Detected</div><div class="vc-time">Today, 10:23 AM · 2×</div><span class="vc-sev high">HIGH</span></div>
+          <div class="vcard"><div class="vc-name">Arjun Patel (21KLH089)</div><div class="vc-exam">JavaScript Test</div><div class="vc-type">📷 Face Not Visible</div><div class="vc-time">Today, 11:05 AM · 1×</div><span class="vc-sev med">MEDIUM</span></div>
+          <div class="vcard"><div class="vc-name">Meera Reddy (21KLH114)</div><div class="vc-exam">Data Science Quiz</div><div class="vc-type">🖱️ Copy-Paste Attempt</div><div class="vc-time">Yesterday 3:47 PM · 1×</div><span class="vc-sev low">LOW</span></div>
+        </div>
+      </div>
+      <div class="sec-hd"><span class="sec-ttl">📝 My Exams</span><button class="btn-create">+ Create Exam</button></div>
+      <div class="tabs"><div class="tab active">All</div><div class="tab">Active</div><div class="tab">Closed</div><div class="tab">Drafts</div></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Exam</th><th>Questions</th><th>Attempts</th><th>Avg Score</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Data Science Quiz</strong></td><td>50</td><td>340</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:82%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">82%</span></div></td><td><span class="badge active">Active</span></td><td><button class="btn">View</button><button class="btn">Edit</button></td></tr>
+            <tr><td><strong>JavaScript Test</strong></td><td>100</td><td>245</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-mid" style="width:71%"></div></div><span style="color:var(--yellow);font-weight:700;font-size:12px">71%</span></div></td><td><span class="badge active">Active</span></td><td><button class="btn">View</button><button class="btn">Edit</button></td></tr>
+            <tr><td><strong>Operating Systems</strong></td><td>75</td><td>189</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:76%"></div></div><span style="color:var(--accent);font-weight:700;font-size:12px">76%</span></div></td><td><span class="badge closed">Closed</span></td><td><button class="btn">View</button><button class="btn">Results</button></td></tr>
+            <tr><td><strong>Database Management</strong></td><td>60</td><td>211</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-mid" style="width:68%"></div></div><span style="color:var(--yellow);font-weight:700;font-size:12px">68%</span></div></td><td><span class="badge closed">Closed</span></td><td><button class="btn">View</button><button class="btn">Results</button></td></tr>
+            <tr><td><strong>Computer Networks</strong></td><td>80</td><td>—</td><td style="color:var(--muted);font-size:12px">Not started</td><td><span class="badge draft">Draft</span></td><td><button class="btn">Edit</button><button class="btn">Publish</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="bottom-grid">
+        <div class="card"><div class="card-ttl">🏆 Top Performers</div>
+          <div class="stu-item"><div class="stu-av">SP</div><div class="stu-name">Sai Priya Nair</div><div class="stu-score" style="color:var(--green)">96%</div></div>
+          <div class="stu-item"><div class="stu-av" style="background:linear-gradient(135deg,#f5c542,#f59342)">AR</div><div class="stu-name">Aditya Rao</div><div class="stu-score" style="color:var(--green)">94%</div></div>
+          <div class="stu-item"><div class="stu-av" style="background:linear-gradient(135deg,#1fd68a,#22d7c0)">NK</div><div class="stu-name">Neha Krishnan</div><div class="stu-score" style="color:var(--green)">91%</div></div>
+          <div class="stu-item"><div class="stu-av" style="background:linear-gradient(135deg,#ff4444,#ff8c42)">TK</div><div class="stu-name">Tankthireddy</div><div class="stu-score" style="color:var(--yellow)">88%</div></div>
+        </div>
+        <div class="card"><div class="card-ttl">📊 Score Distribution</div>
+          <svg width="100%" height="160" viewBox="0 0 260 160">
+            <g transform="translate(130,80)">
+              <circle r="60" fill="none" stroke="#1d2235" stroke-width="22"/>
+              <circle r="60" fill="none" stroke="#1fd68a" stroke-width="22" stroke-dasharray="293 84" stroke-dashoffset="94" stroke-linecap="round"/>
+              <circle r="60" fill="none" stroke="#4a7fff" stroke-width="22" stroke-dasharray="94 283" stroke-dashoffset="-199" stroke-linecap="round"/>
+              <circle r="60" fill="none" stroke="#ff4444" stroke-width="22" stroke-dasharray="64 313" stroke-dashoffset="-293" stroke-linecap="round"/>
+            </g>
+            <text x="130" y="76" text-anchor="middle" font-family="Syne,sans-serif" font-size="18" font-weight="800" fill="#eceef8">78%</text>
+            <text x="130" y="92" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#545c80">Pass Rate</text>
+            <circle cx="10" cy="120" r="5" fill="#1fd68a"/><text x="20" y="124" font-size="10" fill="#a8adc8" font-family="DM Sans,sans-serif">Pass 78%</text>
+            <circle cx="10" cy="138" r="5" fill="#4a7fff"/><text x="20" y="142" font-size="10" fill="#a8adc8" font-family="DM Sans,sans-serif">Merit 25%</text>
+            <circle cx="140" cy="120" r="5" fill="#ff4444"/><text x="150" y="124" font-size="10" fill="#a8adc8" font-family="DM Sans,sans-serif">Fail 22%</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 3 — FACULTY DASHBOARD
+════════════════════════════════════════ -->
+<div class="page" id="pg-faculty">
+<div class="dash-root">
+  <aside class="sidebar">
+    <div class="sb-logo"><div class="sb-logo-icon">🎓</div><span class="sb-logo-text">ExamFlow</span></div>
+    <div class="sb-nav">
+      <div class="sb-item active"><span class="ic">🏛️</span>Overview</div>
+      <div class="sb-item"><span class="ic">👨‍🏫</span>Teachers</div>
+      <div class="sb-item"><span class="ic">👥</span>All Students</div>
+      <div class="sb-item"><span class="ic">📝</span>All Exams</div>
+      <div class="sb-item"><span class="ic">📈</span>Analytics</div>
+      <div class="sb-lbl">Admin</div>
+      <div class="sb-item active-red" onclick="goPage('pg-violations')"><span class="ic">⚠️</span>Violations<span class="sb-badge">7</span></div>
+      <div class="sb-item"><span class="ic">🔒</span>Proctoring</div>
+      <div class="sb-item"><span class="ic">⚙️</span>Settings</div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="sb-av" style="background:linear-gradient(135deg,#1fd68a,#22d7c0)">KS</div>
+        <div><div class="sb-uname">K. V. Sharada</div><div class="sb-urole">Faculty · KLH</div></div>
+      </div>
+      <div class="sb-logout" onclick="doLogout()">↩ Logout</div>
+    </div>
+  </aside>
+  <main class="main-area">
+    <div class="topbar">
+      <div><h1>Faculty Admin Panel</h1><div class="sub">KLH University · Full administrative access</div></div>
+      <div class="topbar-actions">
+        <div class="btn-warn" onclick="goPage('pg-violations')">⚠️ 7 Violations Today</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="stats-grid">
+        <div class="stat c1"><div class="stat-ico">👥</div><div class="stat-val">1,240</div><div class="stat-lbl">Total Students</div><div class="stat-sub">All departments</div></div>
+        <div class="stat c2"><div class="stat-ico">👨‍🏫</div><div class="stat-val">34</div><div class="stat-lbl">Teachers</div><div class="stat-sub">8 active today</div></div>
+        <div class="stat c3"><div class="stat-ico">📝</div><div class="stat-val">42</div><div class="stat-lbl">Active Exams</div><div class="stat-sub">12 live right now</div></div>
+        <div class="stat c5"><div class="stat-ico">⚠️</div><div class="stat-val">7</div><div class="stat-lbl">Violations Today</div><div class="stat-sub" style="color:var(--red2)">↑ 3 new</div></div>
+      </div>
+      <div class="sec-hd"><span class="sec-ttl">🏛️ Department Overview</span><button class="btn-create">+ Add Department</button></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Department</th><th>Students</th><th>Teachers</th><th>Exams This Sem</th><th>Avg Pass Rate</th><th>Violations</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Computer Science (CSE)</strong></td><td>420</td><td>12</td><td>18</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:82%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">82%</span></div></td><td><span class="badge warn">3</span></td></tr>
+            <tr><td><strong>Electronics (ECE)</strong></td><td>310</td><td>9</td><td>14</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-mid" style="width:75%"></div></div><span style="color:var(--yellow);font-weight:700;font-size:12px">75%</span></div></td><td><span class="badge warn">2</span></td></tr>
+            <tr><td><strong>Information Tech (IT)</strong></td><td>280</td><td>8</td><td>12</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:79%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">79%</span></div></td><td><span class="badge active">1</span></td></tr>
+            <tr><td><strong>Mechanical (MECH)</strong></td><td>230</td><td>5</td><td>8</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-lo" style="width:68%"></div></div><span style="color:var(--yellow);font-weight:700;font-size:12px">68%</span></div></td><td><span class="badge danger">1</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sec-hd"><span class="sec-ttl">👨‍🏫 Active Teachers</span><button class="btn">View All</button></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Department</th><th>Exams</th><th>Students</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Dr. Vikram Singh</strong></td><td>CSE</td><td>8</td><td>450</td><td><span class="badge active">Online</span></td><td><button class="btn">View</button></td></tr>
+            <tr><td><strong>Prof. Anita Rao</strong></td><td>ECE</td><td>6</td><td>310</td><td><span class="badge active">Online</span></td><td><button class="btn">View</button></td></tr>
+            <tr><td><strong>Dr. Suresh Kumar</strong></td><td>IT</td><td>5</td><td>280</td><td><span class="badge closed">Offline</span></td><td><button class="btn">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 4 — STUDENT DASHBOARD (Tankthireddy)
+════════════════════════════════════════ -->
+<div class="page" id="pg-student">
+<div class="dash-root">
+  <aside class="sidebar">
+    <div class="sb-logo"><div class="sb-logo-icon">🎓</div><span class="sb-logo-text">ExamFlow</span></div>
+    <div class="sb-nav" id="stu-nav">
+      <div class="sb-item active" data-sec="home"><span class="ic">🏠</span>Home</div>
+      <div class="sb-item" data-sec="myexams"><span class="ic">📝</span>My Exams</div>
+      <div class="sb-item" data-sec="results"><span class="ic">📊</span>My Results</div>
+      <div class="sb-item" data-sec="schedule"><span class="ic">📅</span>Schedule</div>
+      <div class="sb-item" data-sec="study"><span class="ic">📚</span>Study Material</div>
+      <div class="sb-item" data-sec="profile"><span class="ic">👤</span>Profile</div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="sb-av" id="s-av" style="background:linear-gradient(135deg,#f5c542,#f59342)">TK</div>
+        <div><div class="sb-uname" id="s-name">Tankthireddy</div><div class="sb-urole" id="s-roll">2320520034 · CSE</div></div>
+      </div>
+      <div class="sb-logout" onclick="doLogout()">↩ Logout</div>
+    </div>
+  </aside>
+  <main class="main-area">
+    <div class="topbar">
+      <div><h1 id="s-pg-ttl">Student Portal</h1><div class="sub" id="s-sub">Roll: 2320520034 · CSE · 2nd Year · Tankthireddy</div></div>
+      <div class="topbar-actions"><div style="font-size:12px;color:var(--muted)">📅 Sun, 22 Mar 2026</div></div>
+    </div>
+    <div class="content">
+
+      <!-- HOME -->
+      <div class="stu-sec active" id="sec-home">
+        <div class="stats-grid">
+          <div class="stat c1"><div class="stat-ico">📝</div><div class="stat-val">5</div><div class="stat-lbl">Upcoming Exams</div><div class="stat-sub">Next: Today 3 PM</div></div>
+          <div class="stat c3"><div class="stat-ico">✅</div><div class="stat-val">12</div><div class="stat-lbl">Completed</div><div class="stat-sub">This semester</div></div>
+          <div class="stat c4"><div class="stat-ico">📊</div><div class="stat-val">88%</div><div class="stat-lbl">My Avg Score</div><div class="stat-sub">↑ 6% vs last sem</div></div>
+          <div class="stat c2"><div class="stat-ico">🏆</div><div class="stat-val">#4</div><div class="stat-lbl">Class Rank</div><div class="stat-sub">Out of 120 students</div></div>
+        </div>
+        <div class="sec-hd"><span class="sec-ttl">📝 Upcoming Exams</span><button class="btn" onclick="stuSec('myexams')">View All →</button></div>
+        <div class="exam-card-grid">
+          <div class="exam-card">
+            <div class="ec-sub">CSE · Data Science</div>
+            <div class="ec-name">Data Science Quiz</div>
+            <div style="font-size:11.5px;color:var(--muted)">Dr. Vikram Singh</div>
+            <div class="ec-meta"><span>⏱️ 60 min</span><span>❓ 50 Qs</span><span>📅 Today, 3 PM</span></div>
+            <div class="ec-action">
+              <button class="ec-btn start" onclick="openStartModal('Data Science Quiz','Dr. Vikram Singh','50','60')">▶ Start Exam</button>
+              <button class="ec-btn view-btn" onclick="openDetailsModal('Data Science Quiz','Dr. Vikram Singh','50','60 min','Today 3:00 PM','CSE – Data Science','MCQ + Short Answer','Open Book: No')">Details</button>
+            </div>
+          </div>
+          <div class="exam-card">
+            <div class="ec-sub">CSE · Web Tech</div>
+            <div class="ec-name">JavaScript Test</div>
+            <div style="font-size:11.5px;color:var(--muted)">Dr. Vikram Singh</div>
+            <div class="ec-meta"><span>⏱️ 90 min</span><span>❓ 100 Qs</span><span>📅 Mon, 23 Mar</span></div>
+            <div class="ec-action"><button class="ec-btn view-btn" style="flex:1" onclick="openDetailsModal('JavaScript Test','Dr. Vikram Singh','100','90 min','Mon 23 Mar, 10:00 AM','CSE – Web Tech','MCQ Only','Open Book: No')">View Details</button></div>
+          </div>
+          <div class="exam-card">
+            <div class="ec-sub">CSE · Systems</div>
+            <div class="ec-name">Operating Systems</div>
+            <div style="font-size:11.5px;color:var(--muted)">Prof. Kiran Babu</div>
+            <div class="ec-meta"><span>⏱️ 75 min</span><span>❓ 75 Qs</span><span>📅 Wed, 25 Mar</span></div>
+            <div class="ec-action"><button class="ec-btn view-btn" style="flex:1" onclick="openDetailsModal('Operating Systems','Prof. Kiran Babu','75','75 min','Wed 25 Mar, 2:00 PM','CSE – Systems','MCQ + T/F','Open Book: No')">View Details</button></div>
+          </div>
+        </div>
+        <div class="sec-hd"><span class="sec-ttl">📊 Recent Results</span><button class="btn" onclick="stuSec('results')">View All →</button></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Exam</th><th>Date</th><th>Score</th><th>Grade</th><th>Rank</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Database Management</strong></td><td>14 Mar 2026</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:92%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">92%</span></div></td><td style="color:var(--green);font-weight:700">A+</td><td>#4</td><td><span class="badge active">Passed</span></td><td><button class="btn" onclick="openResultModal('Database Management','92','A+','#4','14 Mar 2026')">View</button></td></tr>
+              <tr><td><strong>Computer Networks</strong></td><td>7 Mar 2026</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:87%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">87%</span></div></td><td style="color:var(--green);font-weight:700">A</td><td>#6</td><td><span class="badge active">Passed</span></td><td><button class="btn" onclick="openResultModal('Computer Networks','87','A','#6','7 Mar 2026')">View</button></td></tr>
+              <tr><td><strong>Software Engineering</strong></td><td>1 Mar 2026</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:89%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">89%</span></div></td><td style="color:var(--green);font-weight:700">A+</td><td>#3</td><td><span class="badge active">Passed</span></td><td><button class="btn" onclick="openResultModal('Software Engineering','89','A+','#3','1 Mar 2026')">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MY EXAMS -->
+      <div class="stu-sec" id="sec-myexams">
+        <div class="sec-hd"><span class="sec-ttl">📝 All My Exams</span></div>
+        <div class="tabs"><div class="tab active">Upcoming (5)</div><div class="tab">Completed (12)</div><div class="tab">Missed (0)</div></div>
+        <div class="exam-card-grid">
+          <div class="exam-card"><div class="ec-sub">CSE · Data Science</div><div class="ec-name">Data Science Quiz</div><div style="font-size:11.5px;color:var(--muted)">Dr. Vikram Singh</div><div class="ec-meta"><span>⏱️ 60 min</span><span>❓ 50 Qs</span><span>📅 Today</span></div><div class="ec-action"><button class="ec-btn start" onclick="openStartModal('Data Science Quiz','Dr. Vikram Singh','50','60')">▶ Start</button><button class="ec-btn view-btn" onclick="openDetailsModal('Data Science Quiz','Dr. Vikram Singh','50','60 min','Today 3 PM','CSE – Data Science','MCQ','Open Book: No')">Details</button></div></div>
+          <div class="exam-card"><div class="ec-sub">CSE · Web Tech</div><div class="ec-name">JavaScript Test</div><div style="font-size:11.5px;color:var(--muted)">Dr. Vikram Singh</div><div class="ec-meta"><span>⏱️ 90 min</span><span>❓ 100 Qs</span><span>📅 Mon 23 Mar</span></div><div class="ec-action"><button class="ec-btn view-btn" style="flex:1" onclick="openDetailsModal('JavaScript Test','Dr. Vikram Singh','100','90 min','Mon 23 Mar','CSE – Web Tech','MCQ','Open Book: No')">View Details</button></div></div>
+          <div class="exam-card"><div class="ec-sub">CSE · Systems</div><div class="ec-name">Operating Systems</div><div style="font-size:11.5px;color:var(--muted)">Prof. Kiran Babu</div><div class="ec-meta"><span>⏱️ 75 min</span><span>❓ 75 Qs</span><span>📅 Wed 25 Mar</span></div><div class="ec-action"><button class="ec-btn view-btn" style="flex:1" onclick="openDetailsModal('Operating Systems','Prof. Kiran Babu','75','75 min','Wed 25 Mar','CSE – Systems','MCQ + T/F','Open Book: No')">View Details</button></div></div>
+          <div class="exam-card"><div class="ec-sub">CSE · Networking</div><div class="ec-name">Network Security</div><div style="font-size:11.5px;color:var(--muted)">Dr. Priya Rao</div><div class="ec-meta"><span>⏱️ 60 min</span><span>❓ 60 Qs</span><span>📅 Fri 27 Mar</span></div><div class="ec-action"><button class="ec-btn view-btn" style="flex:1" onclick="openDetailsModal('Network Security','Dr. Priya Rao','60','60 min','Fri 27 Mar','CSE – Networking','MCQ','Open Book: No')">View Details</button></div></div>
+          <div class="exam-card"><div class="ec-sub">CSE · AI/ML</div><div class="ec-name">Machine Learning</div><div style="font-size:11.5px;color:var(--muted)">Dr. Suresh Kumar</div><div class="ec-meta"><span>⏱️ 45 min</span><span>❓ 40 Qs</span><span>📅 Sat 28 Mar</span></div><div class="ec-action"><button class="ec-btn view-btn" style="flex:1" onclick="openDetailsModal('Machine Learning','Dr. Suresh Kumar','40','45 min','Sat 28 Mar','CSE – AI/ML','MCQ','Open Book: No')">View Details</button></div></div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="stu-sec" id="sec-results">
+        <div class="sec-hd"><span class="sec-ttl">📊 My Results</span><button class="btn-create" onclick="toast('📄 Results downloaded!','success')">↓ Download Report</button></div>
+        <div class="stats-grid" style="margin-bottom:20px">
+          <div class="stat c3"><div class="stat-ico">📊</div><div class="stat-val">88%</div><div class="stat-lbl">Overall Average</div></div>
+          <div class="stat c2"><div class="stat-ico">🏆</div><div class="stat-val">#4</div><div class="stat-lbl">Class Rank</div></div>
+          <div class="stat c1"><div class="stat-ico">✅</div><div class="stat-val">12</div><div class="stat-lbl">Exams Passed</div></div>
+          <div class="stat c4"><div class="stat-ico">📈</div><div class="stat-val">A+</div><div class="stat-lbl">CGPA Grade</div></div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Exam</th><th>Subject</th><th>Date</th><th>Score</th><th>Grade</th><th>Rank</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Database Management</strong></td><td>DBMS</td><td>14 Mar 2026</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:92%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">92%</span></div></td><td style="color:var(--green);font-weight:700">A+</td><td>#4</td><td><span class="badge active">Passed</span></td><td><button class="btn" onclick="openResultModal('Database Management','92','A+','#4','14 Mar 2026')">View</button></td></tr>
+              <tr><td><strong>Computer Networks</strong></td><td>CN</td><td>7 Mar 2026</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:87%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">87%</span></div></td><td style="color:var(--green);font-weight:700">A</td><td>#6</td><td><span class="badge active">Passed</span></td><td><button class="btn" onclick="openResultModal('Computer Networks','87','A','#6','7 Mar 2026')">View</button></td></tr>
+              <tr><td><strong>Software Engineering</strong></td><td>SE</td><td>1 Mar 2026</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:89%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">89%</span></div></td><td style="color:var(--green);font-weight:700">A+</td><td>#3</td><td><span class="badge active">Passed</span></td><td><button class="btn" onclick="openResultModal('Software Engineering','89','A+','#3','1 Mar 2026')">View</button></td></tr>
+              <tr><td><strong>Data Structures</strong></td><td>DS</td><td>22 Feb 2026</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:85%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">85%</span></div></td><td style="color:var(--green);font-weight:700">A</td><td>#7</td><td><span class="badge active">Passed</span></td><td><button class="btn" onclick="openResultModal('Data Structures','85','A','#7','22 Feb 2026')">View</button></td></tr>
+              <tr><td><strong>Web Technologies</strong></td><td>WT</td><td>15 Feb 2026</td><td><div class="sbar-wrap"><div class="sbar"><div class="sbar-fill sf-hi" style="width:88%"></div></div><span style="color:var(--green);font-weight:700;font-size:12px">88%</span></div></td><td style="color:var(--green);font-weight:700">A+</td><td>#5</td><td><span class="badge active">Passed</span></td><td><button class="btn" onclick="openResultModal('Web Technologies','88','A+','#5','15 Feb 2026')">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div class="stu-sec" id="sec-schedule">
+        <div class="sec-hd"><span class="sec-ttl">📅 Exam Schedule</span><button class="btn" onclick="toast('📅 Added to calendar!','success')">+ Add to Calendar</button></div>
+        <div class="sday-lbl">Today — Sunday, 22 March 2026</div>
+        <div class="sday-item"><div class="sday-time">3:00 PM</div><div class="sday-info"><div class="sday-name">Data Science Quiz</div><div class="sday-meta">Dr. Vikram Singh · 60 min · 50 Questions</div></div><span class="badge active" style="margin-right:8px">Live Today</span><button class="btn" onclick="openStartModal('Data Science Quiz','Dr. Vikram Singh','50','60')">Start</button></div>
+        <div style="height:12px"></div>
+        <div class="sday-lbl">Monday, 23 March 2026</div>
+        <div class="sday-item"><div class="sday-time">10:00 AM</div><div class="sday-info"><div class="sday-name">JavaScript Test</div><div class="sday-meta">Dr. Vikram Singh · 90 min · 100 Questions</div></div><span class="badge draft">Upcoming</span></div>
+        <div style="height:12px"></div>
+        <div class="sday-lbl">Wednesday, 25 March 2026</div>
+        <div class="sday-item"><div class="sday-time">2:00 PM</div><div class="sday-info"><div class="sday-name">Operating Systems</div><div class="sday-meta">Prof. Kiran Babu · 75 min · 75 Questions</div></div><span class="badge draft">Upcoming</span></div>
+        <div style="height:12px"></div>
+        <div class="sday-lbl">Friday, 27 March 2026</div>
+        <div class="sday-item"><div class="sday-time">11:00 AM</div><div class="sday-info"><div class="sday-name">Network Security</div><div class="sday-meta">Dr. Priya Rao · 60 min · 60 Questions</div></div><span class="badge draft">Upcoming</span></div>
+        <div style="height:12px"></div>
+        <div class="sday-lbl">Saturday, 28 March 2026</div>
+        <div class="sday-item"><div class="sday-time">9:00 AM</div><div class="sday-info"><div class="sday-name">Machine Learning</div><div class="sday-meta">Dr. Suresh Kumar · 45 min · 40 Questions</div></div><span class="badge draft">Upcoming</span></div>
+      </div>
+
+      <!-- STUDY -->
+      <div class="stu-sec" id="sec-study">
+        <div class="sec-hd"><span class="sec-ttl">📚 Study Material</span></div>
+        <div class="mat-grid">
+          <div class="mat-card" onclick="toast('📄 Opening Data Science Notes...','success')"><div class="mat-icon">📊</div><div class="mat-name">Data Science Notes</div><div class="mat-meta">PDF · 42 pages · Dr. Vikram Singh</div><span class="mat-tag">Data Science</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening JS Practice Set...','success')"><div class="mat-icon">💻</div><div class="mat-name">JS Practice Problems</div><div class="mat-meta">PDF · 28 pages · Dr. Vikram Singh</div><span class="mat-tag">Web Tech</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening OS Slides...','success')"><div class="mat-icon">🖥️</div><div class="mat-name">OS Slides — Unit 3</div><div class="mat-meta">PPT · 56 slides · Prof. Kiran Babu</div><span class="mat-tag">Systems</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening DBMS Lab Manual...','success')"><div class="mat-icon">🗄️</div><div class="mat-name">DBMS Lab Manual</div><div class="mat-meta">PDF · 35 pages · Dr. Anand</div><span class="mat-tag">DBMS</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening Network Security Notes...','success')"><div class="mat-icon">🔐</div><div class="mat-name">Network Security Notes</div><div class="mat-meta">PDF · 30 pages · Dr. Priya Rao</div><span class="mat-tag">Networking</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening ML Cheat Sheet...','success')"><div class="mat-icon">🤖</div><div class="mat-name">ML Algorithms Cheat Sheet</div><div class="mat-meta">PDF · 8 pages · Dr. Suresh Kumar</div><span class="mat-tag">AI/ML</span></div>
+        </div>
+        <div class="sec-hd"><span class="sec-ttl">🎥 Video Lectures</span></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Title</th><th>Subject</th><th>Duration</th><th>Uploaded</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><strong>📹 Intro to Data Science</strong></td><td>Data Science</td><td>48 min</td><td>15 Mar 2026</td><td><button class="btn" onclick="toast('▶ Opening video...','success')">▶ Watch</button></td></tr>
+              <tr><td><strong>📹 JavaScript Async/Await</strong></td><td>Web Tech</td><td>35 min</td><td>18 Mar 2026</td><td><button class="btn" onclick="toast('▶ Opening video...','success')">▶ Watch</button></td></tr>
+              <tr><td><strong>📹 Process Scheduling (OS)</strong></td><td>OS</td><td>52 min</td><td>10 Mar 2026</td><td><button class="btn" onclick="toast('▶ Opening video...','success')">▶ Watch</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="stu-sec" id="sec-profile">
+        <div class="sec-hd"><span class="sec-ttl">👤 My Profile</span><button class="btn-create" onclick="toggleEditForm()">✏️ Edit Profile</button></div>
+        <div class="info-grid">
+          <div class="info-item"><div class="info-lbl">Roll Number</div><div class="info-val" id="prof-roll">2320520034</div></div>
+          <div class="info-item"><div class="info-lbl">Full Name</div><div class="info-val" id="prof-name">Tankthireddy</div></div>
+          <div class="info-item"><div class="info-lbl">Department</div><div class="info-val">Computer Science (CSE)</div></div>
+          <div class="info-item"><div class="info-lbl">Year / Section</div><div class="info-val">2nd Year · Section A</div></div>
+          <div class="info-item"><div class="info-lbl">Email</div><div class="info-val" id="prof-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cdfffefffdf8fffdfdfef98da6a1a5e3a8a9b8">[email&#160;protected]</a></div></div>
+          <div class="info-item"><div class="info-lbl">University</div><div class="info-val">KLH University</div></div>
+          <div class="info-item"><div class="info-lbl">Phone</div><div class="info-val" id="prof-phone">+91 98765 43210</div></div>
+          <div class="info-item"><div class="info-lbl">Batch</div><div class="info-val">2023 – 2027</div></div>
+        </div>
+        <div id="edit-form" style="display:none;margin-top:20px;background:var(--s1);border:1px solid var(--border2);border-radius:14px;padding:22px">
+          <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:16px">✏️ Edit Details</div>
+          <div class="field-row">
+            <div class="field"><label>PHONE</label><input type="text" id="edit-phone" value="+91 98765 43210"/></div>
+            <div class="field"><label>SECTION</label><select id="edit-sec"><option>Section A</option><option>Section B</option><option>Section C</option></select></div>
+          </div>
+          <div class="field"><label>PERSONAL EMAIL</label><input type="email" id="edit-email" placeholder="personal@gmail.com"/></div>
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <button class="btn-create" onclick="saveProfile()">💾 Save Changes</button>
+            <button style="background:var(--s2);border:1px solid var(--border);color:var(--text2);padding:9px 18px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer" onclick="toggleEditForm()">Cancel</button>
+          </div>
+        </div>
+        <div style="margin-top:20px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:20px">
+          <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:14px">🔐 Change Password</div>
+          <div class="field-row">
+            <div class="field"><label>CURRENT PASSWORD</label><input type="password" placeholder="Current password"/></div>
+            <div class="field"><label>NEW PASSWORD</label><input type="password" placeholder="New password"/></div>
+          </div>
+          <button class="btn-create" onclick="toast('🔐 Password updated!','success')">Update Password</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 5 — VIOLATION LOGGING
+════════════════════════════════════════ -->
+<div class="page" id="pg-violations">
+<div class="dash-root">
+  <aside class="sidebar">
+    <div class="sb-logo"><div class="sb-logo-icon">🎓</div><span class="sb-logo-text">ExamFlow</span></div>
+    <div class="sb-nav">
+      <div class="sb-item" onclick="goBack()"><span class="ic">◀</span>Back to Dashboard</div>
+      <div class="sb-lbl">Violation Report</div>
+      <div class="sb-item active-red"><span class="ic">⚠️</span>All Violations<span class="sb-badge" id="viol-count-badge">7</span></div>
+      <div class="sb-item"><span class="ic">📋</span>Tab Switches<span class="sb-badge">3</span></div>
+      <div class="sb-item"><span class="ic">📷</span>Face Violations<span class="sb-badge y">2</span></div>
+      <div class="sb-item"><span class="ic">🖱️</span>Copy Attempts<span class="sb-badge y">1</span></div>
+      <div class="sb-item"><span class="ic">📱</span>Device Violations<span class="sb-badge">1</span></div>
+      <div class="sb-item"><span class="ic">📊</span>Summary Charts</div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="sb-av" id="v-av">VS</div>
+        <div><div class="sb-uname" id="v-name">Dr. Vikram Singh</div><div class="sb-urole" id="v-role">Teacher · KLH</div></div>
+      </div>
+      <div class="sb-logout" onclick="doLogout()">↩ Logout</div>
+    </div>
+  </aside>
+  <main class="main-area">
+    <div class="topbar">
+      <div>
+        <h1><span class="live-dot-blink"></span>⚠️ Violation Logging</h1>
+        <div class="sub">Real-time proctoring violations · KLH University</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn" onclick="addLiveViol()">➕ Simulate</button>
+        <button class="btn-print" onclick="window.print()">🖨️ Print</button>
+        <button class="btn-create" onclick="exportCSV()">↓ Export CSV</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="rep-stats">
+        <div class="r-stat"><div class="r-stat-v" id="vs-today" style="color:var(--red2)">7</div><div class="r-stat-l">Total Today</div></div>
+        <div class="r-stat"><div class="r-stat-v" style="color:var(--yellow)">24</div><div class="r-stat-l">This Week</div></div>
+        <div class="r-stat"><div class="r-stat-v" id="vs-high" style="color:var(--orange)">3</div><div class="r-stat-l">High Severity</div></div>
+        <div class="r-stat"><div class="r-stat-v" style="color:var(--accent)">12</div><div class="r-stat-l">Students Flagged</div></div>
+      </div>
+      <div class="filter-bar">
+        <span style="font-size:12px;font-weight:600;color:var(--muted)">Filter:</span>
+        <select id="f-exam" onchange="filterViol()"><option value="">All Exams</option><option>Data Science Quiz</option><option>JavaScript Test</option><option>Operating Systems</option><option>Database Management</option></select>
+        <select id="f-type" onchange="filterViol()"><option value="">All Types</option><option>Tab Switch</option><option>Face Not Visible</option><option>Copy-Paste</option><option>Multiple Devices</option><option>Looking Away</option></select>
+        <select id="f-sev" onchange="filterViol()"><option value="">All Severity</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option></select>
+        <input type="text" id="v-search" placeholder="Search student / roll no..." oninput="filterViol()" style="background:var(--s1);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-family:var(--fb);font-size:12.5px;outline:none;min-width:200px"/>
+        <button class="btn" onclick="resetViolFilters()">↺ Reset</button>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Student</th><th>Roll No.</th><th>Exam</th>
+              <th>Violation Type</th><th>Date &amp; Time</th>
+              <th>Count</th><th>Severity</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="v-tbody"></tbody>
+        </table>
+        <div style="padding:11px 18px;background:var(--s2);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--muted)" id="v-tbl-count">Showing 7 violations</span>
+          <div style="display:flex;gap:4px">
+            <div style="width:28px;height:28px;border-radius:6px;background:var(--accent);border:1px solid var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11.5px;cursor:pointer">1</div>
+            <div style="width:28px;height:28px;border-radius:6px;background:var(--s1);border:1px solid var(--border);color:var(--text2);display:flex;align-items:center;justify-content:center;font-size:11.5px;cursor:pointer">2</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="card"><div class="card-ttl">📊 Violations by Type</div>
+          <svg width="100%" height="160" viewBox="0 0 300 160">
+            <text x="0" y="22" font-size="11" fill="#a8adc8" font-family="DM Sans,sans-serif">Tab Switch</text>
+            <rect x="100" y="10" width="126" height="14" rx="4" fill="url(#rg1)"/>
+            <text x="232" y="22" font-size="10" fill="#ff4444" font-family="DM Sans,sans-serif" font-weight="700">42%</text>
+            <text x="0" y="52" font-size="11" fill="#a8adc8" font-family="DM Sans,sans-serif">Face Violation</text>
+            <rect x="100" y="40" width="90" height="14" rx="4" fill="url(#rg2)"/>
+            <text x="196" y="52" font-size="10" fill="#f5c542" font-family="DM Sans,sans-serif" font-weight="700">30%</text>
+            <text x="0" y="82" font-size="11" fill="#a8adc8" font-family="DM Sans,sans-serif">Copy-Paste</text>
+            <rect x="100" y="70" width="54" height="14" rx="4" fill="url(#rg3)"/>
+            <text x="160" y="82" font-size="10" fill="#4a7fff" font-family="DM Sans,sans-serif" font-weight="700">18%</text>
+            <text x="0" y="112" font-size="11" fill="#a8adc8" font-family="DM Sans,sans-serif">Multi-Device</text>
+            <rect x="100" y="100" width="30" height="14" rx="4" fill="url(#rg4)"/>
+            <text x="136" y="112" font-size="10" fill="#ff8c42" font-family="DM Sans,sans-serif" font-weight="700">10%</text>
+            <defs>
+              <linearGradient id="rg1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ff4444"/><stop offset="100%" stop-color="#ff8c42"/></linearGradient>
+              <linearGradient id="rg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f5c542"/><stop offset="100%" stop-color="#f59342"/></linearGradient>
+              <linearGradient id="rg3" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#4a7fff"/><stop offset="100%" stop-color="#7c5cfc"/></linearGradient>
+              <linearGradient id="rg4" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ff8c42"/><stop offset="100%" stop-color="#f5c542"/></linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="card"><div class="card-ttl">🏫 Top Flagged Exams</div>
+          <div class="stu-item"><div class="stu-av" style="background:rgba(255,68,68,.15);color:var(--red2)">3</div><div class="stu-name">Data Science Quiz</div><div class="stu-score" style="color:var(--red2)">3 flags</div></div>
+          <div class="stu-item"><div class="stu-av" style="background:rgba(245,197,66,.15);color:var(--yellow)">2</div><div class="stu-name">JavaScript Test</div><div class="stu-score" style="color:var(--yellow)">2 flags</div></div>
+          <div class="stu-item"><div class="stu-av" style="background:rgba(255,140,66,.15);color:var(--orange)">1</div><div class="stu-name">Operating Systems</div><div class="stu-score" style="color:var(--orange)">1 flag</div></div>
+          <div class="stu-item"><div class="stu-av" style="background:rgba(255,68,68,.12);color:var(--red2)">1</div><div class="stu-name">Database Management</div><div class="stu-score" style="color:var(--red2)">1 flag</div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- ════ MODALS ════ -->
+<!-- Start Exam -->
+<div class="modal-overlay" id="m-start"><div class="modal">
+  <div class="modal-head"><div class="modal-head-ttl" id="ms-ttl">Data Science Quiz</div><div class="modal-x" onclick="closeM('m-start')">✕</div></div>
+  <div class="modal-body">
+    <div class="m-row"><span class="m-lbl">Instructor</span><span class="m-val" id="ms-teacher"></span></div>
+    <div class="m-row"><span class="m-lbl">Questions</span><span class="m-val" id="ms-qs"></span></div>
+    <div class="m-row"><span class="m-lbl">Duration</span><span class="m-val" id="ms-dur"></span></div>
+    <div class="m-row"><span class="m-lbl">Marks</span><span class="m-val">2 marks per question</span></div>
+    <div class="m-div"></div>
+    <div class="m-warn-box"><strong>⚠️ Rules:</strong><br>• Do NOT switch browser tabs — auto-detected<br>• Keep face visible to camera at all times<br>• Copy-paste is disabled during the exam<br>• Closing window will auto-submit answers</div>
+  </div>
+  <div class="modal-foot"><button class="mf-btn mf-cancel" onclick="closeM('m-start')">Cancel</button><button class="mf-btn mf-go" onclick="launchExam()">▶ Begin Exam</button></div>
+</div></div>
+
+<!-- Details -->
+<div class="modal-overlay" id="m-details"><div class="modal">
+  <div class="modal-head"><div class="modal-head-ttl" id="md-ttl">Exam Details</div><div class="modal-x" onclick="closeM('m-details')">✕</div></div>
+  <div class="modal-body">
+    <div class="m-row"><span class="m-lbl">Instructor</span><span class="m-val" id="md-teacher"></span></div>
+    <div class="m-row"><span class="m-lbl">Questions</span><span class="m-val" id="md-qs"></span></div>
+    <div class="m-row"><span class="m-lbl">Duration</span><span class="m-val" id="md-dur"></span></div>
+    <div class="m-row"><span class="m-lbl">Scheduled</span><span class="m-val" id="md-date"></span></div>
+    <div class="m-row"><span class="m-lbl">Subject</span><span class="m-val" id="md-sub"></span></div>
+    <div class="m-row"><span class="m-lbl">Type</span><span class="m-val" id="md-type"></span></div>
+    <div class="m-row"><span class="m-lbl">Notes</span><span class="m-val" id="md-notes"></span></div>
+  </div>
+  <div class="modal-foot"><button class="mf-btn mf-cancel" onclick="closeM('m-details')">Close</button></div>
+</div></div>
+
+<!-- Result -->
+<div class="modal-overlay" id="m-result"><div class="modal">
+  <div class="modal-head"><div class="modal-head-ttl" id="mr-ttl">Result Details</div><div class="modal-x" onclick="closeM('m-result')">✕</div></div>
+  <div class="modal-body">
+    <div id="mr-date" style="font-size:12px;color:var(--muted);margin-bottom:16px"></div>
+    <div style="text-align:center;padding:16px 0">
+      <div style="font-family:var(--fh);font-size:56px;font-weight:800;letter-spacing:-2px" id="mr-score"></div>
+      <div style="font-size:13px;color:var(--muted);margin-top:4px">Your Score</div>
+      <div style="margin-top:12px;display:flex;gap:20px;justify-content:center">
+        <div style="text-align:center"><div style="font-family:var(--fh);font-size:22px;font-weight:700" id="mr-grade"></div><div style="font-size:11px;color:var(--muted)">Grade</div></div>
+        <div style="text-align:center"><div style="font-family:var(--fh);font-size:22px;font-weight:700;color:var(--accent)" id="mr-rank"></div><div style="font-size:11px;color:var(--muted)">Rank</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-foot"><button class="mf-btn mf-cancel" onclick="closeM('m-result')">Close</button><button class="mf-btn mf-go" onclick="toast('📄 Result downloaded!','success');closeM('m-result')">↓ Download</button></div>
+</div></div>
+
+<!-- Live Exam -->
+<div class="modal-overlay" id="m-exam"><div class="modal" style="width:620px;max-height:90vh;overflow-y:auto">
+  <div class="exam-live-hd">
+    <div><div class="el-title" id="el-ttl">Exam</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px">Q <span id="el-qn">1</span> of <span id="el-qt">5</span></div></div>
+    <div><div class="el-timer" id="el-timer">60:00</div><div style="font-size:10px;color:rgba(255,255,255,.6);text-align:right">Time Left</div></div>
+  </div>
+  <div class="q-nav" id="el-nav"></div>
+  <div class="q-box">
+    <div class="q-num" id="el-qlbl">Question 1 of 5</div>
+    <div class="q-text" id="el-qtxt">Loading...</div>
+    <div class="q-opts" id="el-opts"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;gap:10px;margin-top:4px">
+    <button id="el-prev" style="background:var(--s2);border:1px solid var(--border);color:var(--text2);padding:9px 18px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer" onclick="examNav(-1)">◀ Prev</button>
+    <button style="background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);color:var(--red2);padding:9px 18px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer" onclick="submitExam()">Submit Exam</button>
+    <button id="el-next" class="mf-btn mf-go" onclick="examNav(1)">Next ▶</button>
+  </div>
+</div></div>
+
+<!-- Violation Detail -->
+<div class="modal-overlay" id="m-viol"><div class="modal">
+  <div class="modal-head"><div class="modal-head-ttl" id="mv-ttl">Violation Detail</div><div class="modal-x" onclick="closeM('m-viol')">✕</div></div>
+  <div class="modal-body">
+    <div class="m-row"><span class="m-lbl">Student</span><span class="m-val" id="mv-student"></span></div>
+    <div class="m-row"><span class="m-lbl">Roll No.</span><span class="m-val" id="mv-roll"></span></div>
+    <div class="m-row"><span class="m-lbl">Exam</span><span class="m-val" id="mv-exam"></span></div>
+    <div class="m-row"><span class="m-lbl">Violation</span><span class="m-val" id="mv-type"></span></div>
+    <div class="m-row"><span class="m-lbl">Date &amp; Time</span><span class="m-val" id="mv-time"></span></div>
+    <div class="m-row"><span class="m-lbl">Occurrences</span><span class="m-val" id="mv-occ"></span></div>
+    <div class="m-row"><span class="m-lbl">Severity</span><span class="m-val" id="mv-sev"></span></div>
+    <div class="m-div"></div>
+    <div class="m-warn-box" id="mv-evidence"></div>
+  </div>
+  <div class="modal-foot">
+    <button class="mf-btn mf-cancel" onclick="closeM('m-viol')">Close</button>
+    <button class="mf-btn mf-warn" onclick="warnV()">⚠️ Send Warning</button>
+    <button class="mf-btn mf-disq" onclick="disqV()">🚫 Disqualify</button>
+  </div>
+</div></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast-el"></div>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── STATE ──
+var currentPage = 'pg-login';
+var prevPage    = 'pg-login';
+var currentRole = null;
+var timerInt    = null;
+var timeLeft    = 0;
+var curQ        = 0;
+var answered    = {};
+var toastTimer  = null;
+var currentViol = null;
+var violId      = 8;
+
+var USERS = {
+  'teacher@klh.edu': {pass:'pass123',role:'teacher',name:'Dr. Vikram Singh',initials:'VS'},
+  'faculty@klh.edu': {pass:'pass123',role:'faculty',name:'K. V. Sharada',  initials:'KS'},
+  '2320520034':      {pass:'pass123',role:'student',name:'Tankthireddy',   initials:'TK',roll:'2320520034'},
+};
+
+var QUESTIONS = [
+  {q:'What is the primary purpose of a DataFrame in Data Science?',opts:['A) Store images','B) Tabular data structure','C) Neural network layer','D) File format']},
+  {q:'Which Python library is used for data manipulation?',opts:['A) NumPy','B) Matplotlib','C) Pandas','D) TensorFlow']},
+  {q:'What does "overfitting" mean in ML?',opts:['A) Model too simple','B) Model memorizes training data','C) Dataset too large','D) Loss is too high']},
+  {q:'Which is a supervised learning algorithm?',opts:['A) K-Means','B) PCA','C) Linear Regression','D) DBSCAN']},
+  {q:'Output of sigmoid activation function?',opts:['A) Any real number','B) Integer only','C) Value 0–1','D) Value -1 to 1']},
+];
+
+var VIOLS = [
+  {id:1,name:'Riya Sharma',   roll:'21KLH042',exam:'Data Science Quiz',  type:'Tab Switch',       icon:'📋',time:'21 Mar 2026, 10:23 AM',occ:2,sev:'HIGH',  col:'#ff4444'},
+  {id:2,name:'Arjun Patel',   roll:'21KLH089',exam:'JavaScript Test',    type:'Face Not Visible', icon:'📷',time:'21 Mar 2026, 11:05 AM',occ:1,sev:'MEDIUM',col:'#f5c542'},
+  {id:3,name:'Meera Reddy',   roll:'21KLH114',exam:'Data Science Quiz',  type:'Copy-Paste',       icon:'🖱️',time:'20 Mar 2026, 3:47 PM', occ:1,sev:'LOW',   col:'#1fd68a'},
+  {id:4,name:'Karan Mehta',   roll:'21KLH055',exam:'Operating Systems',  type:'Multiple Devices', icon:'📱',time:'19 Mar 2026, 9:15 AM', occ:3,sev:'HIGH',  col:'#ff4444'},
+  {id:5,name:'Priya Nair',    roll:'21KLH078',exam:'JavaScript Test',    type:'Looking Away',     icon:'👀',time:'21 Mar 2026, 11:30 AM',occ:2,sev:'MEDIUM',col:'#f5c542'},
+  {id:6,name:'Suraj Babu',    roll:'21KLH021',exam:'Data Science Quiz',  type:'Noise Detected',   icon:'🔊',time:'21 Mar 2026, 10:50 AM',occ:1,sev:'LOW',   col:'#1fd68a'},
+  {id:7,name:'Divya Lakshmi', roll:'21KLH099',exam:'Database Management',type:'Tab Switch',       icon:'📋',time:'19 Mar 2026, 2:20 PM', occ:4,sev:'HIGH',  col:'#ff4444'},
+];
+
+var EVID = {
+  'Tab Switch':       'Detected: Student switched to another browser tab or application. Tab-switch events are automatically flagged. IP logged: 192.168.1.42.',
+  'Face Not Visible': 'Detected: Webcam feed shows face was not visible for more than 10 seconds. Screenshot captured and stored.',
+  'Copy-Paste':       'Detected: Clipboard activity was detected. Student attempted to paste text into the answer field. Copy-paste is disabled during active exams.',
+  'Multiple Devices': 'Detected: Multiple device sign-ins from same account. A second session opened from IP 10.0.0.87. Original session flagged and paused.',
+  'Looking Away':     'Detected: Eye-tracking AI flagged sustained gaze deviation from screen (>5 seconds). 2 instances captured.',
+  'Noise Detected':   'Detected: Ambient audio flagged human speech in background. Could indicate third-party assistance. Snippet retained.',
+};
+
+var newNames  = ['Ananya Sharma','Rohan Verma','Sai Kiran','Preethi Raj','Arjun Das'];
+var newExams  = ['Data Science Quiz','JavaScript Test','Operating Systems','Database Management'];
+var newTypes  = [
+  {type:'Tab Switch',icon:'📋',sev:'HIGH'},
+  {type:'Face Not Visible',icon:'📷',sev:'MEDIUM'},
+  {type:'Copy-Paste',icon:'🖱️',sev:'LOW'},
+  {type:'Looking Away',icon:'👀',sev:'MEDIUM'},
+];
+
+var STU_SECS = {home:'Student Portal',myexams:'My Exams',results:'My Results',schedule:'Exam Schedule',study:'Study Material',profile:'My Profile'};
+
+// ── HELPERS ──
+function g(id){return document.getElementById(id);}
+function setText(id,v){var e=g(id);if(e)e.textContent=v;}
+
+// ── PAGES ──
+function goPage(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  var pg=g(id);if(pg)pg.classList.add('active');
+  if(id!=='pg-login')prevPage=id;
+  currentPage=id;
+  window.scrollTo(0,0);
+  if(id==='pg-violations')renderViolTable(VIOLS);
+}
+function goBack(){goPage(prevPage);}
+
+// ── AUTH ──
+function switchTab(t){
+  g('login-form').style.display=t==='login'?'block':'none';
+  g('reg-form').style.display=t==='register'?'block':'none';
+  document.querySelectorAll('.auth-tab').forEach(function(el,i){
+    el.classList.toggle('active',(t==='login'&&i===0)||(t==='register'&&i===1));
+  });
+}
+
+function doLogin(){
+  var id=g('login-id').value.trim();
+  var pw=g('login-pass').value;
+  var role=g('login-role').value;
+  var errEl=g('login-err');
+  var user=USERS[id];
+  if(!user||user.pass!==pw||user.role!==role){
+    errEl.style.display='block';
+    setTimeout(function(){errEl.style.display='none';},3000);
+    return;
+  }
+  errEl.style.display='none';
+  currentRole=role;
+  if(role==='teacher'){
+    setText('t-av',user.initials);setText('t-name',user.name);
+    setText('v-av',user.initials);setText('v-name',user.name);setText('v-role','Teacher · KLH');
+    prevPage='pg-teacher';goPage('pg-teacher');
+  } else if(role==='faculty'){
+    setText('v-av',user.initials);setText('v-name',user.name);setText('v-role','Faculty · KLH');
+    prevPage='pg-faculty';goPage('pg-faculty');
+  } else {
+    var roll=user.roll||id;
+    setText('s-av',user.initials);setText('s-name',user.name);
+    setText('s-roll',roll+' · CSE');
+    setText('s-sub','Roll: '+roll+' · CSE · 2nd Year · '+user.name);
+    setText('prof-roll',roll);setText('prof-name',user.name);setText('prof-email',roll+'@klh.edu');
+    setText('v-av',user.initials);setText('v-name',user.name);setText('v-role','Student · KLH');
+    stuSec('home');prevPage='pg-student';goPage('pg-student');
+  }
+}
+
+function doRegister(){
+  var fn=g('reg-fn').value.trim(),ln=g('reg-ln').value.trim();
+  var uid=g('reg-uid').value.trim(),email=g('reg-email').value.trim();
+  var pw=g('reg-pass').value,role=g('reg-role').value;
+  var errEl=g('reg-err'),okEl=g('reg-ok');
+  if(!fn||!ln||!uid||!email||!pw){errEl.style.display='block';setTimeout(function(){errEl.style.display='none';},3000);return;}
+  var key=role==='student'?uid:email;
+  var ini=(fn[0]+(ln[0]||'')).toUpperCase();
+  USERS[key]={pass:pw,role:role,name:fn+' '+ln,initials:ini,roll:uid};
+  errEl.style.display='none';okEl.style.display='block';
+  setTimeout(function(){okEl.style.display='none';switchTab('login');g('login-role').value=role;g('login-id').value=key;},2000);
+}
+
+function doLogout(){
+  currentRole=null;stopTimer();closeAllM();
+  g('login-id').value='';g('login-pass').value='';
+  goPage('pg-login');
+}
+
+// ── STUDENT SECTIONS ──
+function stuSec(sec){
+  document.querySelectorAll('.stu-sec').forEach(function(s){s.classList.remove('active');});
+  var el=g('sec-'+sec);if(el)el.classList.add('active');
+  setText('s-pg-ttl',STU_SECS[sec]||'Student Portal');
+  var nav=g('stu-nav');
+  if(nav)nav.querySelectorAll('.sb-item').forEach(function(it){
+    it.classList.toggle('active',it.getAttribute('data-sec')===sec);
+  });
+}
+
+// ── VIOLATION PANEL (teacher) ──
+function toggleVPanel(){var p=g('t-vpanel');if(p)p.classList.toggle('open');}
+
+// ── MODALS ──
+function openM(id){var m=g(id);if(m)m.classList.add('open');}
+function closeM(id){var m=g(id);if(m)m.classList.remove('open');}
+function closeAllM(){document.querySelectorAll('.modal-overlay').forEach(function(m){m.classList.remove('open');});}
+
+function openStartModal(name,teacher,qs,dur){
+  setText('ms-ttl',name);setText('ms-teacher',teacher);
+  setText('ms-qs',qs+' Questions');setText('ms-dur',dur+' minutes');
+  openM('m-start');
+}
+function openDetailsModal(name,teacher,qs,dur,date,sub,type,notes){
+  setText('md-ttl',name);setText('md-teacher',teacher);setText('md-qs',qs+' Questions');
+  setText('md-dur',dur);setText('md-date',date);setText('md-sub',sub);
+  setText('md-type',type);setText('md-notes',notes);
+  openM('m-details');
+}
+function openResultModal(name,score,grade,rank,date){
+  setText('mr-ttl',name);setText('mr-date','Exam date: '+date);
+  var sc=g('mr-score');if(sc){sc.textContent=score+'%';sc.style.color=score>=80?'var(--green)':score>=60?'var(--yellow)':'var(--red2)';}
+  var gr=g('mr-grade');if(gr){gr.textContent=grade;gr.style.color=score>=80?'var(--green)':'var(--yellow)';}
+  setText('mr-rank',rank);openM('m-result');
+}
+
+// ── EXAM ENGINE ──
+function launchExam(){
+  closeM('m-start');
+  var name=g('ms-ttl')?g('ms-ttl').textContent:'Exam';
+  var durTxt=g('ms-dur')?g('ms-dur').textContent:'60 minutes';
+  var dur=parseInt(durTxt)||60;
+  curQ=0;answered={};timeLeft=dur*60;
+  setText('el-ttl',name);setText('el-qt',QUESTIONS.length);
+  renderNav();renderQ();openM('m-exam');startTimer();
+}
+function renderQ(){
+  var q=QUESTIONS[curQ];if(!q)return;
+  setText('el-qn',curQ+1);
+  setText('el-qlbl','Question '+(curQ+1)+' of '+QUESTIONS.length);
+  setText('el-qtxt',q.q);
+  var opts=g('el-opts');if(!opts)return;
+  opts.innerHTML='';
+  q.opts.forEach(function(o,i){
+    var d=document.createElement('div');
+    d.className='q-opt'+(answered[curQ]===i?' sel':'');
+    d.textContent=o;
+    d.onclick=(function(idx){return function(){answered[curQ]=idx;renderQ();renderNav();};})(i);
+    opts.appendChild(d);
+  });
+  var prev=g('el-prev');if(prev)prev.style.opacity=curQ===0?'0.4':'1';
+  var nxt=g('el-next');if(nxt)nxt.textContent=curQ===QUESTIONS.length-1?'Finish →':'Next ▶';
+}
+function renderNav(){
+  var nav=g('el-nav');if(!nav)return;
+  nav.innerHTML='';
+  QUESTIONS.forEach(function(_,i){
+    var d=document.createElement('div');
+    d.className='q-dot'+(i===curQ?' cur':'')+(answered[i]!==undefined?' ans':'');
+    d.textContent=i+1;
+    d.onclick=(function(idx){return function(){curQ=idx;renderQ();renderNav();};})(i);
+    nav.appendChild(d);
+  });
+}
+function examNav(dir){
+  var n=curQ+dir;
+  if(n<0)return;
+  if(n>=QUESTIONS.length){toast('⚠️ Last question. Click Submit to finish.','warn');return;}
+  curQ=n;renderQ();renderNav();
+}
+function submitExam(){
+  toast('⚠️ Submitting...','warn');
+  setTimeout(function(){stopTimer();closeM('m-exam');toast('✅ Submitted! Score: 88%','success');},1500);
+}
+function startTimer(){
+  stopTimer();
+  timerInt=setInterval(function(){
+    timeLeft--;
+    if(timeLeft<=0){stopTimer();closeM('m-exam');toast('⏱️ Time up! Auto-submitted. Score: 88%','warn');return;}
+    var m=String(Math.floor(timeLeft/60)).padStart(2,'0');
+    var s=String(timeLeft%60).padStart(2,'0');
+    var el=g('el-timer');if(el){el.textContent=m+':'+s;if(timeLeft<=300)el.style.color='#ff4444';}
+  },1000);
+}
+function stopTimer(){if(timerInt){clearInterval(timerInt);timerInt=null;}}
+
+// ── PROFILE ──
+function toggleEditForm(){var f=g('edit-form');if(f)f.style.display=f.style.display==='none'||f.style.display===''?'block':'none';}
+function saveProfile(){
+  var ph=g('edit-phone');if(ph&&ph.value)setText('prof-phone',ph.value);
+  toggleEditForm();toast('✅ Profile updated!','success');
+}
+
+// ── VIOLATION TABLE ──
+function sevCls(s){return s==='HIGH'?'high':s==='MEDIUM'?'med':'low';}
+function sevCol(s){return s==='HIGH'?'var(--red2)':s==='MEDIUM'?'var(--yellow)':'var(--green)';}
+
+function renderViolTable(data){
+  var body=g('v-tbody');if(!body)return;
+  body.innerHTML='';
+  data.forEach(function(v){
+    var tr=document.createElement('tr');
+    tr.style.cursor='pointer';
+    tr.onclick=function(){openViolModal(v.id);};
+    tr.innerHTML=
+      '<td style="color:var(--muted);font-family:monospace;font-size:11px">'+String(v.id).padStart(3,'0')+'</td>'+
+      '<td><div style="display:flex;align-items:center;gap:8px">'+
+        '<div style="width:26px;height:26px;border-radius:50%;background:rgba(255,68,68,.12);display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:'+v.col+'">'+v.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2)+'</div>'+
+        '<strong>'+v.name+'</strong></div></td>'+
+      '<td style="font-family:monospace;color:var(--accent);font-size:12px">'+v.roll+'</td>'+
+      '<td>'+v.exam+'</td>'+
+      '<td><span style="display:inline-flex;align-items:center;gap:5px;background:var(--s3);border:1px solid var(--border);padding:3px 9px;border-radius:8px;font-size:11px">'+v.icon+' '+v.type+'</span></td>'+
+      '<td style="color:var(--text2)">'+v.time+'</td>'+
+      '<td><div style="width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:Syne,sans-serif;background:rgba(255,68,68,.1);color:'+sevCol(v.sev)+'">'+v.occ+'</div></td>'+
+      '<td><span style="font-weight:700;color:'+sevCol(v.sev)+'">● '+v.sev+'</span></td>'+
+      '<td><div style="display:flex;gap:4px">'+
+        '<button style="font-size:10.5px;padding:4px 9px;border-radius:6px;background:rgba(74,127,255,.1);color:var(--accent);border:none;cursor:pointer;font-family:var(--fb);font-weight:600" onclick="openViolModal('+v.id+');event.stopPropagation()">Review</button>'+
+        (v.sev==='HIGH'?'<button style="font-size:10.5px;padding:4px 9px;border-radius:6px;background:rgba(255,68,68,.1);color:var(--red2);border:none;cursor:pointer;font-family:var(--fb);font-weight:600" onclick="disqById('+v.id+');event.stopPropagation()">Disqualify</button>':
+         '<button style="font-size:10.5px;padding:4px 9px;border-radius:6px;background:rgba(245,197,66,.1);color:var(--yellow);border:none;cursor:pointer;font-family:var(--fb);font-weight:600" onclick="warnById('+v.id+');event.stopPropagation()">Warn</button>')+
+        '<button style="font-size:10.5px;padding:4px 9px;border-radius:6px;background:rgba(84,92,128,.15);color:var(--muted);border:none;cursor:pointer;font-family:var(--fb);font-weight:600" onclick="dismissById('+v.id+');event.stopPropagation()">Dismiss</button>'+
+      '</div></td>';
+    body.appendChild(tr);
+  });
+  var cnt=g('v-tbl-count');if(cnt)cnt.textContent='Showing '+data.length+' violations';
+  updateViolStats();
+}
+
+function filterViol(){
+  var q=(g('v-search').value||'').toLowerCase();
+  var ex=g('f-exam').value,tp=g('f-type').value,sv=g('f-sev').value;
+  var filtered=VIOLS.filter(function(v){
+    return(!q||v.name.toLowerCase().includes(q)||v.roll.toLowerCase().includes(q)||v.exam.toLowerCase().includes(q))&&
+           (!ex||v.exam===ex)&&(!tp||v.type===tp)&&(!sv||v.sev===sv);
+  });
+  renderViolTable(filtered);
+}
+function resetViolFilters(){
+  ['f-exam','f-type','f-sev'].forEach(function(id){g(id).value='';});
+  g('v-search').value='';renderViolTable(VIOLS);
+}
+
+function openViolModal(id){
+  var v=VIOLS.find(function(x){return x.id===id;});if(!v)return;
+  currentViol=v;
+  setText('mv-ttl','⚠️ Violation #'+String(v.id).padStart(3,'0'));
+  setText('mv-student',v.name);setText('mv-roll',v.roll);
+  setText('mv-exam',v.exam);setText('mv-type',v.icon+' '+v.type);
+  setText('mv-time',v.time);setText('mv-occ',v.occ+' occurrence'+(v.occ!==1?'s':''));
+  var se=g('mv-sev');if(se)se.innerHTML='<span style="font-weight:800;color:'+sevCol(v.sev)+'">'+v.sev+'</span>';
+  var ev=g('mv-evidence');if(ev)ev.innerHTML='<strong>Evidence:</strong> '+(EVID[v.type]||'Recorded by proctoring system.');
+  openM('m-viol');
+}
+function warnV(){if(!currentViol)return;toast('⚠️ Warning sent to '+currentViol.name,'warn');closeM('m-viol');}
+function disqV(){
+  if(!currentViol)return;
+  toast('🚫 '+currentViol.name+' disqualified.','error');
+  VIOLS=VIOLS.filter(function(v){return v.id!==currentViol.id;});
+  closeM('m-viol');renderViolTable(VIOLS);
+}
+function warnById(id){var v=VIOLS.find(function(x){return x.id===id;});if(v)toast('⚠️ Warning sent to '+v.name,'warn');}
+function disqById(id){
+  var v=VIOLS.find(function(x){return x.id===id;});if(!v)return;
+  toast('🚫 '+v.name+' disqualified.','error');
+  VIOLS=VIOLS.filter(function(x){return x.id!==id;});renderViolTable(VIOLS);
+}
+function dismissById(id){
+  VIOLS=VIOLS.filter(function(v){return v.id!==id;});
+  toast('✅ Violation dismissed.','success');renderViolTable(VIOLS);
+}
+
+function updateViolStats(){
+  var t=g('vs-today');if(t)t.textContent=VIOLS.length;
+  var h=g('vs-high');if(h)h.textContent=VIOLS.filter(function(v){return v.sev==='HIGH';}).length;
+  var b=g('viol-count-badge');if(b)b.textContent=VIOLS.length;
+}
+
+function addLiveViol(){
+  var name=newNames[Math.floor(Math.random()*newNames.length)];
+  var roll='21KLH'+String(Math.floor(Math.random()*900)+100);
+  var exam=newExams[Math.floor(Math.random()*newExams.length)];
+  var tv=newTypes[Math.floor(Math.random()*newTypes.length)];
+  var now=new Date();
+  var tstr=now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+', '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  var occ=Math.floor(Math.random()*3)+1;
+  var col=tv.sev==='HIGH'?'#ff4444':tv.sev==='MEDIUM'?'#f5c542':'#1fd68a';
+  VIOLS.unshift({id:violId++,name:name,roll:roll,exam:exam,type:tv.type,icon:tv.icon,time:tstr,occ:occ,sev:tv.sev,col:col});
+  renderViolTable(VIOLS);
+  toast('🚨 New violation: '+name+' — '+tv.type,'error');
+}
+
+function exportCSV(){
+  var rows=[['#','Student','Roll','Exam','Type','DateTime','Occurrences','Severity']];
+  VIOLS.forEach(function(v){rows.push([v.id,v.name,v.roll,v.exam,v.type,v.time,v.occ,v.sev]);});
+  var csv=rows.map(function(r){return r.join(',');}).join('\n');
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='violation_log_klh.csv';a.click();
+  toast('📄 CSV exported!','success');
+}
+
+// ── TOAST ──
+function toast(msg,type){
+  type=type||'success';
+  var t=g('toast-el');if(!t)return;
+  t.textContent=msg;t.className='toast show '+type;
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){t.classList.remove('show');},3500);
+}
+
+// ── INIT EVENTS ──
+(function(){
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(function(ov){
+    ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('open');});
+  });
+
+  // Student sidebar nav
+  var nav=g('stu-nav');
+  if(nav)nav.querySelectorAll('.sb-item[data-sec]').forEach(function(it){
+    it.addEventListener('click',function(){stuSec(it.getAttribute('data-sec'));});
+  });
+
+  // Tabs
+  document.querySelectorAll('.tabs').forEach(function(tg){
+    tg.querySelectorAll('.tab').forEach(function(tab){
+      tab.addEventListener('click',function(){
+        tg.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+        tab.classList.add('active');
+      });
+    });
+  });
+
+  // Sidebar non-student
+  document.querySelectorAll('.sb-item:not([data-sec])').forEach(function(it){
+    it.addEventListener('click',function(){
+      var parent=it.closest('.sb-nav');
+      if(parent){p

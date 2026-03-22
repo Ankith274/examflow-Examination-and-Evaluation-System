@@ -1,0 +1,69 @@
+name: 🚀 ExamFlow — Auto Deploy to AWS S3
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+env:
+  AWS_REGION: ap-south-1
+  S3_BUCKET: examflow-klh-university-2026
+  # Add CLOUDFRONT_ID to secrets for cache invalidation
+
+jobs:
+  deploy:
+    name: Deploy ExamFlow to AWS S3
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Get the code ──
+      - name: 📥 Checkout Repository
+        uses: ankithreddy274@gmail.com
+
+      # ── 2. Configure AWS Credentials ──
+      - name: 🔐 Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:            ${{ env.AWS_REGION }}
+
+      # ── 3. List files being deployed ──
+      - name: 📋 List Files
+        run: |
+          echo "Deploying ExamFlow files:"
+          ls -la *.html *.sh 2>/dev/null || ls -la
+
+      # ── 4. Deploy to S3 ──
+      - name: 📤 Deploy to S3
+        run: |
+          aws s3 sync . s3://${{ env.S3_BUCKET }}/ \
+            --delete \
+            --exclude ".git/*" \
+            --exclude "*.sh" \
+            --exclude "*.md" \
+            --exclude ".github/*" \
+            --exclude "*.DS_Store"
+          echo "✅ Files uploaded to S3!"
+
+      # ── 5. Invalidate CloudFront (if configured) ──
+      - name: 🔄 Invalidate CloudFront Cache
+        if: ${{ secrets.CF_DISTRIBUTION_ID != '' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} \
+            --paths "/*"
+          echo "✅ CloudFront cache cleared!"
+        continue-on-error: true
+
+      # ── 6. Output URL ──
+      - name: 🌐 Deployment Summary
+        run: |
+          echo ""
+          echo "════════════════════════════════════════"
+          echo "✅ ExamFlow Deployed Successfully!"
+          echo ""
+          echo "🌐 Live URL:"
+          echo "   http://${{ env.S3_BUCKET }}.s3-website.${{ env.AWS_REGION }}.amazonaws.com"
+          echo "════════════════════════════════════════"

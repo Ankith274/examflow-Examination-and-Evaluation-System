@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>MoonLMS — Smart Learning System | KLH University</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Fraunces:ital,wght@0,700;0,800;1,700;1,800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#07101e;--s1:#0b1526;--s2:#101d32;--s3:#162540;--s4:#1c2e4e;
+  --b1:#1e3158;--b2:#2a4278;--b3:#3a5898;
+  --g1:#4d8fff;--g2:#74b0ff;--g3:#1a73e8;--g4:#0d47a1;
+  --gr:#34a853;--ye:#fbbc04;--re:#ea4335;--or:#f97316;--pu:#9c27b0;--cy:#00bcd4;--pk:#e91e63;
+  --t:#e8f0fe;--t2:#94a8cc;--t3:#546080;
+  --fh:'Fraunces',serif;--fb:'Plus Jakarta Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--t);font-family:var(--fb);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+
+/* ── PAGE SYSTEM ── */
+.view{display:none;min-height:100vh}
+.view.show{display:flex}
+
+/* ══════════════════════════════════════════
+   LOGIN PAGE
+══════════════════════════════════════════ */
+#view-login{flex-direction:row;position:relative;overflow:hidden}
+
+/* Stars */
+.stars-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) ease-in-out infinite var(--dl,0s)}
+@keyframes twinkle{0%,100%{opacity:var(--op,.3);transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+
+/* Left Panel */
+.login-left{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  padding:60px 70px;position:relative;z-index:2;
+  background:linear-gradient(135deg,rgba(7,16,30,.95),rgba(11,21,38,.85));
+}
+.ll-top{display:flex;align-items:center;gap:12px;margin-bottom:52px}
+.ll-ico{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--g3),var(--g1));display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 20px rgba(26,115,232,.5)}
+.ll-brand{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:-.3px}
+.ll-brand span{color:var(--g2)}
+.ll-h{font-family:var(--fh);font-size:42px;font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:18px}
+.ll-h em{font-style:italic;color:var(--g2)}
+.ll-p{font-size:15px;color:var(--t2);line-height:1.8;max-width:420px;margin-bottom:40px}
+.ll-feats{display:flex;flex-direction:column;gap:14px}
+.ll-feat{display:flex;align-items:center;gap:14px;font-size:13.5px;color:var(--t2);line-height:1.5}
+.ll-feat-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.lfi-b{background:rgba(26,115,232,.15)}.lfi-g{background:rgba(52,168,83,.12)}
+.lfi-y{background:rgba(251,188,4,.1)}.lfi-p{background:rgba(156,39,176,.12)}
+.lfi-r{background:rgba(234,67,53,.1)}
+
+/* Right Panel */
+.login-right{
+  width:500px;display:flex;align-items:center;justify-content:center;
+  padding:40px;position:relative;z-index:2;
+  border-left:1px solid rgba(30,49,88,.8);
+  background:rgba(11,21,38,.6);backdrop-filter:blur(20px);
+}
+.auth-card{
+  width:100%;background:var(--s1);border:1px solid var(--b1);
+  border-radius:24px;padding:38px;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+.atabs{display:flex;background:var(--s2);border-radius:12px;padding:4px;margin-bottom:30px}
+.atab{flex:1;text-align:center;padding:10px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;color:var(--t3);transition:all .2s}
+.atab.on{background:var(--s3);color:var(--t);box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.auth-card h2{font-family:var(--fh);font-size:23px;font-weight:800;margin-bottom:6px;letter-spacing:-.3px}
+.auth-card > p{font-size:13px;color:var(--t2);margin-bottom:24px}
+.g-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:12px;border-radius:22px;border:1px solid var(--b1);
+  background:transparent;color:var(--t);font-family:var(--fb);font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;margin-bottom:18px;
+}
+.g-btn:hover{background:var(--s2);border-color:var(--b2)}
+.divider{display:flex;align-items:center;gap:10px;margin-bottom:18px;font-size:12px;color:var(--t3)}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--b1)}
+.fd{margin-bottom:15px}
+.fd label{display:block;font-size:10.5px;font-weight:700;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.fd input,.fd select{
+  width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--t);
+  padding:11px 14px;border-radius:10px;font-family:var(--fb);font-size:13.5px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.fd input:focus,.fd select:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(26,115,232,.12)}
+.fd select option{background:var(--s2)}
+.fd-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-login{
+  width:100%;padding:13px;border-radius:22px;border:none;
+  background:var(--g3);color:#fff;font-family:var(--fb);font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .2s;box-shadow:0 3px 16px rgba(26,115,232,.4);
+}
+.btn-login:hover{background:#1557b0;box-shadow:0 6px 24px rgba(26,115,232,.55);transform:translateY(-1px)}
+.auth-sw{text-align:center;margin-top:14px;font-size:12.5px;color:var(--t3)}
+.auth-sw a{color:var(--g2);cursor:pointer;font-weight:600}
+.err-box{background:rgba(234,67,53,.09);border:1px solid rgba(234,67,53,.3);
+  color:#f28b82;padding:10px 14px;border-radius:9px;font-size:12.5px;
+  margin-bottom:14px;display:none}
+.ok-box{background:rgba(52,168,83,.09);border:1px solid rgba(52,168,83,.3);
+  color:#81c995;padding:10px 14px;border-radius:9px;font-size:12.5px;
+  margin-bottom:14px;display:none}
+.demo-creds{margin-top:16px;padding:12px 14px;background:var(--s2);
+  border-radius:10px;font-size:11.5px;color:var(--t3);line-height:2;border:1px solid var(--b1)}
+.demo-creds strong{color:var(--t2)}
+
+/* ══════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════ */
+#view-dash{flex-direction:row}
+
+/* Sidebar */
+.sb{
+  width:252px;background:var(--s1);border-right:1px solid var(--b1);
+  display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.sb::-webkit-scrollbar{width:3px}
+.sb-head{padding:16px 16px 14px;border-bottom:1px solid var(--b1)}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sb-logo-ico{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--g3),var(--g1));display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 12px rgba(26,115,232,.4)}
+.sb-logo-nm{font-family:var(--fh);font-size:17px;font-weight:800}
+.sb-logo-nm span{color:var(--g2)}
+.sb-search{display:flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:7px 11px}
+.sb-search input{background:none;border:none;outline:none;color:var(--t);font-family:var(--fb);font-size:12px;width:100%}
+.sb-search input::placeholder{color:var(--t3)}
+.sb-nav{padding:8px 0;flex:1}
+.sb-sec{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--t3);text-transform:uppercase;padding:10px 16px 6px}
+.si{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 14px;font-size:13px;font-weight:500;color:var(--t3);
+  cursor:pointer;transition:all .15s;border-left:2px solid transparent;margin:1px 0;
+}
+.si:hover{background:rgba(77,143,255,.07);color:var(--t);border-left-color:rgba(77,143,255,.3)}
+.si.on{background:linear-gradient(90deg,rgba(26,115,232,.18),rgba(26,115,232,.04));color:var(--g2);border-left-color:var(--g3)}
+.si.danger{color:var(--re)}
+.si.danger:hover,.si.danger.on{background:rgba(234,67,53,.1);border-left-color:var(--re);color:#f28b82}
+.si .ic{font-size:15px;width:20px;text-align:center}
+.si-bx{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.si-bx.r{background:rgba(234,67,53,.15);color:#f28b82}
+.si-bx.g{background:rgba(52,168,83,.12);color:#81c995}
+.si-bx.b{background:rgba(77,143,255,.12);color:var(--g2)}
+.si-bx.y{background:rgba(251,188,4,.12);color:var(--ye)}
+.sb-foot{padding:12px 14px 16px;border-top:1px solid var(--b1)}
+.sb-user{display:flex;align-items:center;gap:10px}
+.sb-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.sb-un{font-size:12.5px;font-weight:700}
+.sb-ur{font-size:11px;color:var(--t3)}
+.sb-logout{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--t3);cursor:pointer;margin-top:9px;padding:6px 8px;border-radius:7px;transition:all .15s}
+.sb-logout:hover{color:var(--re);background:rgba(234,67,53,.08)}
+
+/* Main area */
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:100vh}
+
+/* Topbar */
+.topbar{
+  height:58px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 26px;background:var(--s1);border-bottom:1px solid var(--b1);
+  position:sticky;top:0;z-index:60;flex-shrink:0;
+}
+.topbar h1{font-family:var(--fh);font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px;letter-spacing:-.3px}
+.topbar-sub{font-size:11px;color:var(--t3);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-notif{width:34px;height:34px;border-radius:50%;background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;position:relative;transition:all .15s}
+.tb-notif:hover{border-color:var(--b2)}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--re);border:2px solid var(--s1)}
+/* Role switcher */
+.role-tabs{display:flex;background:var(--s2);border-radius:10px;padding:3px;gap:1px}
+.rtab{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:var(--t3);transition:all .15s;white-space:nowrap}
+.rtab.on{background:var(--g3);color:#fff;box-shadow:0 2px 10px rgba(26,115,232,.3)}
+.topbar-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:var(--fb);transition:all .2s;border:none}
+.topbar-btn.p{background:var(--g3);color:#fff;box-shadow:0 2px 12px rgba(26,115,232,.35)}
+.topbar-btn.p:hover{background:#1557b0}
+.topbar-btn.s{background:var(--s2);border:1px solid var(--b1);color:var(--t2)}
+.topbar-btn.s:hover{color:var(--t);border-color:var(--b2)}
+
+/* Content */
+.dash-ct{flex:1;overflow-y:auto;padding:24px 26px}
+.dash-ct::-webkit-scrollbar{width:4px}
+
+/* Page sections */
+.pg{display:none}.pg.on{display:block;animation:fadeUp .28s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Stats grid */
+.sg{display:grid;gap:13px;margin-bottom:20px}
+.sg-4{grid-template-columns:repeat(4,1fr)}
+.sg-5{grid-template-columns:repeat(5,1fr)}
+.sg-3{grid-template-columns:repeat(3,1fr)}
+.sc{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:18px;position:relative;overflow:hidden;transition:all .2s;animation:fadeUp .4s ease both}
+.sc:hover{border-color:var(--b2);transform:translateY(-2px)}
+.sc::after{content:'';position:absolute;top:-18px;right:-18px;width:60px;height:60px;border-radius:50%;opacity:.08}
+.sc.a::after{background:var(--g1)}.sc.b::after{background:var(--gr)}.sc.c::after{background:var(--ye)}.sc.d::after{background:var(--re)}.sc.e::after{background:var(--pu)}
+.sc:nth-child(1){animation-delay:.05s}.sc:nth-child(2){animation-delay:.1s}.sc:nth-child(3){animation-delay:.15s}.sc:nth-child(4){animation-delay:.2s}.sc:nth-child(5){animation-delay:.25s}
+.sc-ico{font-size:18px;margin-bottom:10px}
+.sc-v{font-family:var(--fh);font-size:28px;font-weight:800;letter-spacing:-1px}
+.sc.a .sc-v{color:var(--g1)}.sc.b .sc-v{color:var(--gr)}.sc.c .sc-v{color:var(--ye)}.sc.d .sc-v{color:var(--re)}.sc.e .sc-v{color:var(--pu)}
+.sc-l{font-size:12px;color:var(--t3);margin-top:3px}
+.sc-n{font-size:11px;color:var(--gr);margin-top:8px}
+
+/* Section headers */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.st{font-family:var(--fh);font-size:15px;font-weight:700}
+
+/* Tables */
+.tw{background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden;margin-bottom:18px}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);background:var(--s2);border-bottom:1px solid var(--b1)}
+tbody tr{transition:background .14s;cursor:pointer}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tbody tr:not(:last-child) td{border-bottom:1px solid var(--b1)}
+tbody td{padding:11px 14px;font-size:13px}
+
+/* Badges */
+.bx{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.bx::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.bx.ac{background:rgba(52,168,83,.1);color:#81c995;border:1px solid rgba(52,168,83,.2)}
+.bx.cl{background:rgba(84,96,128,.15);color:var(--t3);border:1px solid rgba(84,96,128,.2)}
+.bx.dr{background:rgba(77,143,255,.1);color:var(--g2);border:1px solid rgba(77,143,255,.2)}
+.bx.wn{background:rgba(251,188,4,.1);color:var(--ye);border:1px solid rgba(251,188,4,.2)}
+.bx.dg{background:rgba(234,67,53,.1);color:#f28b82;border:1px solid rgba(234,67,53,.2)}
+.bx.li{background:rgba(0,188,212,.1);color:var(--cy);border:1px solid rgba(0,188,212,.2)}
+
+/* Score bars */
+.sbw{display:flex;align-items:center;gap:8px}
+.sbr{height:5px;width:70px;background:var(--b1);border-radius:3px;overflow:hidden}
+.sf{height:100%;border-radius:3px}
+.sf.h{background:linear-gradient(90deg,var(--gr),#1de9b6)}
+.sf.m{background:linear-gradient(90deg,var(--ye),var(--or))}
+.sf.l{background:linear-gradient(90deg,var(--re),var(--or))}
+
+/* Buttons */
+.btn{background:var(--s2);border:1px solid var(--b1);color:var(--t3);padding:5px 10px;border-radius:7px;font-size:11.5px;cursor:pointer;font-family:var(--fb);transition:all .15s}
+.btn:hover{color:var(--t);border-color:var(--b2)}
+.bc{display:inline-flex;align-items:center;gap:6px;background:var(--g3);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:var(--fb);transition:all .2s}
+.bc:hover{background:#1557b0;transform:translateY(-1px)}
+.bp{display:inline-flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--b1);color:var(--t2);padding:7px 14px;border-radius:18px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:all .2s}
+.bp:hover{color:var(--t);border-color:var(--b2)}
+
+/* Two/three col grids */
+.bg2{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+.bg3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.bg22{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.crd{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:18px}
+.ct2{font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:13px}
+.li-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1)}
+.li-item:last-child{border-bottom:none}
+.li-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.li-nm{font-size:13px;font-weight:500;flex:1}
+.li-sc{font-size:12.5px;font-weight:700}
+
+/* Course cards */
+.ccg{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.ccg3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.cc{background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .22s}
+.cc:hover{border-color:var(--b2);transform:translateY(-4px);box-shadow:0 14px 36px rgba(0,0,0,.45)}
+.cc-head{height:80px;display:flex;align-items:center;justify-content:center;font-size:30px}
+.cc-body{padding:13px}
+.cc-code{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--t3);margin-bottom:4px}
+.cc-name{font-family:var(--fh);font-size:13.5px;font-weight:700;margin-bottom:4px;line-height:1.3}
+.cc-teacher{font-size:11.5px;color:var(--t3);margin-bottom:8px}
+.cc-meta{display:flex;gap:8px;font-size:11px;color:var(--t3)}
+.cc-prog{height:3px;background:var(--b1);border-radius:2px;margin-top:10px;overflow:hidden}
+.cc-pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--g3),var(--g1))}
+
+/* Assignments */
+.ag{display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.ac{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:all .2s}
+.ac:hover{border-color:var(--b2)}
+.ac-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ac-nm{font-size:13.5px;font-weight:700;margin-bottom:3px}
+.ac-mt{font-size:11.5px;color:var(--t3)}
+.ac-due{font-size:12px;font-weight:600;white-space:nowrap}
+.due-ov{color:var(--re)}.due-sn{color:var(--ye)}.due-ok{color:var(--gr)}
+
+/* Live class card */
+.live-c{
+  background:linear-gradient(135deg,rgba(26,115,232,.18),rgba(77,143,255,.08));
+  border:1px solid rgba(26,115,232,.3);border-radius:14px;
+  padding:16px 20px;display:flex;align-items:center;gap:15px;
+  margin-bottom:16px;cursor:pointer;transition:all .2s;
+}
+.live-c:hover{border-color:rgba(77,143,255,.5);box-shadow:0 6px 24px rgba(26,115,232,.18)}
+.live-pulse{width:12px;height:12px;border-radius:50%;background:var(--re);flex-shrink:0;animation:lpulse 1.2s infinite}
+@keyframes lpulse{0%,100%{box-shadow:0 0 0 0 rgba(234,67,53,.5)}50%{box-shadow:0 0 0 8px rgba(234,67,53,0)}}
+.live-info{flex:1}
+.live-title{font-weight:700;font-size:14px;margin-bottom:3px}
+.live-meta{font-size:12px;color:var(--t2)}
+.join-btn{background:var(--g3);color:#fff;border:none;padding:9px 20px;border-radius:18px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:var(--fb);transition:all .2s}
+.join-btn:hover{background:#1557b0}
+
+/* Discussion */
+.dq{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.dq:hover{border-color:var(--b2)}
+.dq-top{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.dq-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.dq-user{font-size:12.5px;font-weight:600}
+.dq-time{font-size:11px;color:var(--t3);margin-left:auto}
+.dq-text{font-size:13px;color:var(--t2);line-height:1.65}
+.dq-meta{display:flex;gap:12px;margin-top:8px;font-size:11.5px;color:var(--t3)}
+
+/* Tabs */
+.tabs{display:flex;background:var(--s2);border-radius:10px;padding:3px;width:fit-content;margin-bottom:14px}
+.tab{padding:6px 16px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--t3);transition:all .15s}
+.tab.on{background:var(--s3);color:var(--t);box-shadow:0 1px 6px rgba(0,0,0,.3)}
+
+/* Info grids */
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ii{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:12px}
+.il{font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
+.iv{font-size:13.5px;font-weight:600}
+
+/* Progress bars */
+.prog-wrap{margin-bottom:12px}
+.prog-hd{display:flex;justify-content:space-between;margin-bottom:5px;font-size:12.5px;font-weight:600}
+.prog-bar{height:6px;background:var(--b1);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width .8s ease}
+
+/* Grade book */
+.gbk{background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden;margin-bottom:18px}
+.gbk-head{display:flex;background:var(--s2);border-bottom:1px solid var(--b1)}
+.gbk-h{padding:10px 14px;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;border-right:1px solid var(--b1);white-space:nowrap}
+.gbk-h:last-child{border-right:none}
+.gbk-row{display:flex;border-bottom:1px solid var(--b1)}
+.gbk-row:last-child{border-bottom:none}
+.gbk-c{padding:11px 14px;font-size:12.5px;border-right:1px solid var(--b1);white-space:nowrap}
+.gbk-c:last-child{border-right:none}
+.go{color:var(--gr);font-weight:700}.ga{color:var(--g1);font-weight:700}.gy{color:var(--ye);font-weight:600}
+
+/* Forms */
+.form-crd{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:22px}
+.fd2{margin-bottom:14px}
+.fd2 label{display:block;font-size:10.5px;font-weight:700;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.fd2 input,.fd2 select,.fd2 textarea{width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--t);padding:10px 13px;border-radius:9px;font-family:var(--fb);font-size:13px;outline:none;transition:border-color .18s}
+.fd2 input:focus,.fd2 select:focus,.fd2 textarea:focus{border-color:var(--g3);box-shadow:0 0 0 2px rgba(26,115,232,.1)}
+.fd2-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fd2 textarea{resize:vertical;min-height:80px}
+.fd2 select option{background:var(--s2)}
+
+/* Announcements */
+.ann-card{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:15px;margin-bottom:10px}
+.ann-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ann-ico{font-size:18px;width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ann-title{font-size:13.5px;font-weight:700}
+.ann-time{font-size:11px;color:var(--t3);margin-left:auto}
+.ann-body{font-size:13px;color:var(--t2);line-height:1.7}
+
+/* Schedule items */
+.sch-item{display:flex;align-items:center;gap:13px;background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:12px 15px;margin-bottom:8px;transition:all .15s}
+.sch-item:hover{border-color:var(--b2)}
+.sch-time{font-size:12px;font-weight:700;color:var(--g1);width:64px;flex-shrink:0}
+.sch-info{flex:1}
+.sch-nm{font-size:13px;font-weight:600}
+.sch-mt{font-size:11.5px;color:var(--t3);margin-top:2px}
+
+/* Material cards */
+.mat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.mat-card{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:15px;cursor:pointer;transition:all .2s}
+.mat-card:hover{border-color:var(--b2);transform:translateY(-2px)}
+.mat-ico{font-size:24px;margin-bottom:9px}
+.mat-nm{font-size:13px;font-weight:700;margin-bottom:3px}
+.mat-mt{font-size:11.5px;color:var(--t3)}
+.mat-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;margin-top:7px;background:rgba(77,143,255,.12);color:var(--g2)}
+
+/* Modals */
+.mo{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);align-items:center;justify-content:center}
+.mo.op{display:flex;animation:fIn .2s ease}
+@keyframes fIn{from{opacity:0}to{opacity:1}}
+.md{background:var(--s1);border:1px solid var(--b2);border-radius:20px;width:560px;max-width:95vw;overflow:hidden;box-shadow:0 32px 90px rgba(0,0,0,.7)}
+.md.lg{width:640px;max-height:88vh;overflow-y:auto}
+.mh{padding:20px 24px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.mht{font-family:var(--fh);font-size:17px;font-weight:800}
+.mx{width:28px;height:28px;border-radius:50%;background:var(--s2);border:1px solid var(--b1);color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s}
+.mx:hover{color:var(--t);border-color:var(--re)}
+.mb{padding:22px 24px}
+.mf{padding:16px 24px;border-top:1px solid var(--b1);display:flex;gap:10px;justify-content:flex-end}
+.mfc{background:var(--s2);border:1px solid var(--b1);color:var(--t2);padding:9px 18px;border-radius:18px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.mfc:hover{color:var(--t)}
+.mfg{background:var(--g3);color:#fff;border:none;padding:9px 22px;border-radius:18px;font-family:var(--fb);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.mfg:hover{background:#1557b0}
+
+/* AI Chat */
+.ai-wrap{display:flex;flex-direction:column;height:420px}
+.ai-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.ai-msg{max-width:85%;padding:12px 15px;border-radius:14px;font-size:13px;line-height:1.65}
+.ai-msg.user{background:var(--g3);color:#fff;align-self:flex-end;border-radius:14px 14px 4px 14px}
+.ai-msg.bot{background:var(--s2);border:1px solid var(--b1);color:var(--t2);align-self:flex-start;border-radius:14px 14px 14px 4px}
+.ai-inp{display:flex;gap:8px;padding:12px;border-top:1px solid var(--b1);background:var(--s2)}
+.ai-inp input{flex:1;background:var(--s1);border:1px solid var(--b1);color:var(--t);padding:10px 14px;border-radius:20px;font-family:var(--fb);font-size:13px;outline:none}
+.ai-inp input:focus{border-color:var(--g3)}
+.ai-send{background:var(--g3);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;transition:all .2s;flex-shrink:0}
+.ai-send:hover{background:#1557b0}
+
+/* Quiz Engine */
+.quiz-q{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:18px;margin-bottom:13px}
+.quiz-num{font-size:11px;font-weight:700;color:var(--g2);letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase}
+.quiz-text{font-size:14px;font-weight:600;margin-bottom:13px;line-height:1.5}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.quiz-opt{background:var(--s3);border:1px solid var(--b1);border-radius:8px;padding:10px 13px;font-size:13px;cursor:pointer;transition:all .15s;color:var(--t2)}
+.quiz-opt:hover{border-color:var(--g3);color:var(--t)}
+.quiz-opt.picked{background:rgba(26,115,232,.12);border-color:var(--g3);color:var(--t)}
+.quiz-opt.correct{background:rgba(52,168,83,.1);border-color:var(--gr);color:#81c995}
+.quiz-opt.wrong{background:rgba(234,67,53,.1);border-color:var(--re);color:#f28b82}
+.quiz-nav-dots{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}
+.qd{width:28px;height:28px;border-radius:6px;background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .15s}
+.qd.done{background:rgba(52,168,83,.15);border-color:var(--gr);color:var(--gr)}
+.qd.cur{background:rgba(26,115,232,.15);border-color:var(--g3);color:var(--g2)}
+.quiz-timer{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:-.5px;color:#fff}
+.quiz-timer.warn{color:var(--re)}
+
+/* Toast */
+.toast-el{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--s2);border:1px solid var(--b2);border-radius:12px;padding:11px 18px;font-size:13px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.5);display:none;align-items:center;gap:8px;animation:su .28s ease}
+.toast-el.on{display:flex}
+.toast-el.ok{border-color:rgba(52,168,83,.4);color:#81c995}
+.toast-el.wn{border-color:rgba(251,188,4,.4);color:var(--ye)}
+.toast-el.er{border-color:rgba(234,67,53,.4);color:#f28b82}
+@keyframes su{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Progress ring */
+.progress-ring{animation:fadeUp .4s ease both}
+
+@media(max-width:800px){
+  .sb{display:none}
+  .sg-4,.sg-5,.sg-3{grid-template-columns:1fr 1fr}
+  .bg2,.bg3,.bg22{grid-template-columns:1fr}
+  .ccg,.ccg3,.mat-grid{grid-template-columns:1fr 1fr}
+  .login-left{display:none}
+  .login-right{width:100%;border:none}
+}
+@media(max-width:480px){
+  .ccg,.ccg3,.mat-grid,.ig{grid-template-columns:1fr}
+  .quiz-opts{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ████████████████████████████████████████
+     STARS BACKGROUND
+████████████████████████████████████████ -->
+<div class="stars-wrap" id="stars-bg"></div>
+
+<!-- ████████████████████████████████████████
+     PAGE 1: LOGIN
+████████████████████████████████████████ -->
+<div class="view show" id="view-login">
+
+  <!-- LEFT -->
+  <div class="login-left">
+    <div class="ll-top">
+      <div class="ll-ico">🌙</div>
+      <span class="ll-brand">Moon<span>LMS</span></span>
+    </div>
+    <h1 class="ll-h">Your Classroom<br>Under the <em>Moonlit Sky</em></h1>
+    <p class="ll-p">Join 12,000+ students and 280+ teachers at KLH University on MoonLMS — the Google-inspired smart learning platform for BCA and beyond.</p>
+    <div class="ll-feats">
+      <div class="ll-feat"><div class="ll-feat-ico lfi-b">📚</div>8 BCA Final Year Courses with video lectures &amp; PDF notes</div>
+      <div class="ll-feat"><div class="ll-feat-ico lfi-g">📊</div>Real-time grade tracking, progress analytics &amp; leaderboards</div>
+      <div class="ll-feat"><div class="ll-feat-ico lfi-y">📝</div>Assignment submission, AI grading assistance &amp; feedback</div>
+      <div class="ll-feat"><div class="ll-feat-ico lfi-p">🤖</div>AI Study Assistant available 24/7 for doubt clearing</div>
+      <div class="ll-feat"><div class="ll-feat-ico lfi-r">🔗</div>Integrated with ExamFlow for proctored examinations</div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="login-right">
+    <div class="auth-card">
+      <div class="atabs">
+        <div class="atab on" onclick="switchAuthTab('login')">Sign In</div>
+        <div class="atab" onclick="switchAuthTab('register')">Register</div>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="login-form">
+        <h2>Welcome back 👋</h2>
+        <p>Sign in to your MoonLMS account</p>
+        <div id="login-err" class="err-box">❌ Invalid credentials. Please try again.</div>
+        <button class="g-btn" onclick="toast('Google sign-in coming soon!','wn')">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.909-2.259c-.806.54-1.837.86-3.047.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+        <div class="divider">or sign in with email</div>
+        <div class="fd">
+          <label>Role</label>
+          <select id="l-role">
+            <option value="student">🎓 Student</option>
+            <option value="teacher">👨‍🏫 Teacher / HOD</option>
+            <option value="admin">🏛️ Faculty Admin</option>
+          </select>
+        </div>
+        <div class="fd"><label>Roll No. / Email</label><input type="text" id="l-id" placeholder="2320520034 or teacher@klh.edu"/></div>
+        <div class="fd"><label>Password</label><input type="password" id="l-pw" placeholder="Enter password"/></div>
+        <button class="btn-login" onclick="doLogin()">Sign In to MoonLMS →</button>
+        <div class="auth-sw">No account? <a onclick="switchAuthTab('register')">Register here</a></div>
+        <div class="demo-creds">
+          <strong>Demo Accounts:</strong><br>
+          🎓 Student: 2320520034 / pass123<br>
+          👨‍🏫 Teacher: teacher@klh.edu / pass123<br>
+          🏛️ Admin: faculty@klh.edu / pass123
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="reg-form" style="display:none">
+        <h2>Create Account</h2>
+        <p>Join MoonLMS — KLH University</p>
+        <div id="reg-ok" class="ok-box">✅ Account created! Signing you in...</div>
+        <div id="reg-err" class="err-box">❌ Please fill all required fields.</div>
+        <div class="fd"><label>Register As</label><select id="r-role"><option value="student">🎓 Student</option><option value="teacher">👨‍🏫 Teacher</option></select></div>
+        <div class="fd-row">
+          <div class="fd"><label>First Name</label><input type="text" id="r-fn" placeholder="First name"/></div>
+          <div class="fd"><label>Last Name</label><input type="text" id="r-ln" placeholder="Last name"/></div>
+        </div>
+        <div class="fd"><label>Roll No / Employee ID</label><input type="text" id="r-id" placeholder="e.g. 2320520099"/></div>
+        <div class="fd"><label>KLH Email</label><input type="email" id="r-em" placeholder="roll@klh.edu"/></div>
+        <div class="fd-row">
+          <div class="fd"><label>Semester</label><select><option>Sem 6 (Final)</option><option>Sem 5</option></select></div>
+          <div class="fd"><label>Section</label><select><option>BCA-A</option><option>BCA-B</option><option>BCA-C</option></select></div>
+        </div>
+        <div class="fd"><label>Password</label><input type="password" id="r-pw" placeholder="Min 6 characters"/></div>
+        <button class="btn-login" onclick="doRegister()">Create Account →</button>
+        <div class="auth-sw">Have account? <a onclick="switchAuthTab('login')">Sign in</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ████████████████████████████████████████
+     PAGE 2: DASHBOARD
+████████████████████████████████████████ -->
+<div class="view" id="view-dash">
+
+  <!-- SIDEBAR -->
+  <aside class="sb">
+    <div class="sb-head">
+      <div class="sb-logo">
+        <div class="sb-logo-ico">🌙</div>
+        <span class="sb-logo-nm">Moon<span>LMS</span></span>
+      </div>
+      <div class="sb-search">
+        <span style="color:var(--t3);font-size:12px">🔍</span>
+        <input type="text" placeholder="Search..."/>
+      </div>
+    </div>
+    <div class="sb-nav" id="sb-nav"><!-- Rendered by JS --></div>
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="sb-av" id="sb-av">TK</div>
+        <div><div class="sb-un" id="sb-un">Tankthireddy</div><div class="sb-ur" id="sb-ur">BCA-A · Student</div></div>
+      </div>
+      <div class="sb-logout" onclick="doLogout()">↩ Logout</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <h1 id="tb-title">🌙 Dashboard</h1>
+        <div class="topbar-sub" id="tb-sub">KLH University · BCA Final Year</div>
+      </div>
+      <div class="topbar-right">
+        <div class="role-tabs">
+          <div class="rtab on" onclick="setRole('student')">🎓 Student</div>
+          <div class="rtab" onclick="setRole('teacher')">👨‍🏫 Teacher</div>
+          <div class="rtab" onclick="setRole('admin')">🏛️ Admin</div>
+        </div>
+        <div class="tb-notif" onclick="openM('m-notif')">🔔<div class="notif-dot"></div></div>
+        <button class="topbar-btn p" id="tb-cta" onclick="openM('m-new-course')">+ New</button>
+      </div>
+    </div>
+
+    <!-- CONTENT PAGES -->
+    <div class="dash-ct">
+
+      <!-- ═══════════════════════════════
+           STUDENT: HOME
+      ═══════════════════════════════ -->
+      <div class="pg on" id="pg-s-home">
+        <div class="sg sg-4">
+          <div class="sc a"><div class="sc-ico">📚</div><div class="sc-v">8</div><div class="sc-l">Active Courses</div><div class="sc-n">↑ 2 new this sem</div></div>
+          <div class="sc b"><div class="sc-ico">📊</div><div class="sc-v">94%</div><div class="sc-l">Avg Grade</div><div class="sc-n">↑ 6% improvement</div></div>
+          <div class="sc c"><div class="sc-ico">📝</div><div class="sc-v">4</div><div class="sc-l">Pending Tasks</div><div class="sc-n">1 overdue!</div></div>
+          <div class="sc d"><div class="sc-ico">🏆</div><div class="sc-v">#1</div><div class="sc-l">Section Rank</div><div class="sc-n">BCA-A / 84</div></div>
+        </div>
+        <!-- Live Class Alert -->
+        <div class="live-c" onclick="openM('m-live')">
+          <div class="live-pulse"></div>
+          <div class="live-info">
+            <div class="live-title">🔴 LIVE NOW — Advanced DBMS · SQL Transactions &amp; Triggers</div>
+            <div class="live-meta">Dr. Vikram Singh · Started 12 min ago · 38 students present · Google Meet</div>
+          </div>
+          <button class="join-btn" onclick="event.stopPropagation();toast('🎥 Joining live class...','ok')">Join Now</button>
+        </div>
+        <div class="bg2">
+          <div>
+            <div class="sh"><span class="st">📚 Continue Learning</span><button class="bp" onclick="switchPage('pg-s-courses')">View All →</button></div>
+            <div class="ccg3">
+              <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#0d47a1,#1a73e8)">🗄️</div><div class="cc-body"><div class="cc-code">BCA-601</div><div class="cc-name">Advanced DBMS</div><div class="cc-teacher">Dr. Vikram Singh</div><div class="cc-meta"><span>Lesson 7/9</span><span>·</span><span>78%</span></div><div class="cc-prog"><div class="cc-pf" style="width:78%"></div></div></div></div>
+              <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#e65100,#f97316)">🌐</div><div class="cc-body"><div class="cc-code">BCA-603</div><div class="cc-name">Web Development</div><div class="cc-teacher">Dr. Priya Rao</div><div class="cc-meta"><span>Lesson 9/10</span><span>·</span><span>91%</span></div><div class="cc-prog"><div class="cc-pf" style="width:91%;background:linear-gradient(90deg,#f97316,#fbbc04)"></div></div></div></div>
+              <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#1a237e,#3f51b5)">🤖</div><div class="cc-body"><div class="cc-code">BCA-607</div><div class="cc-name">AI &amp; ML</div><div class="cc-teacher">Dr. Suresh Kumar</div><div class="cc-meta"><span>Module 4/10</span><span>·</span><span>40%</span></div><div class="cc-prog"><div class="cc-pf" style="width:40%;background:linear-gradient(90deg,#9c27b0,#e040fb)"></div></div></div></div>
+            </div>
+
+            <div class="sh"><span class="st">📝 Pending Assignments</span><button class="bp" onclick="switchPage('pg-s-assignments')">View All →</button></div>
+            <div class="ag">
+              <div class="ac" onclick="openM('m-submit')"><div class="ac-ico" style="background:rgba(234,67,53,.12)">📋</div><div style="flex:1"><div class="ac-nm">DBMS Lab Report — ER Diagram</div><div class="ac-mt">Advanced DBMS · Dr. Vikram Singh · 100 marks</div></div><div class="ac-due due-ov">⚠️ Overdue!</div></div>
+              <div class="ac" onclick="openM('m-submit')"><div class="ac-ico" style="background:rgba(251,188,4,.1)">🖊️</div><div style="flex:1"><div class="ac-nm">SE Essay: Agile vs Waterfall</div><div class="ac-mt">Software Engineering · Prof. Anita Rao · 50 marks</div></div><div class="ac-due due-sn">⏰ Tonight 11 PM</div></div>
+              <div class="ac" onclick="openM('m-submit')"><div class="ac-ico" style="background:rgba(52,168,83,.1)">💻</div><div style="flex:1"><div class="ac-nm">React Portfolio Website Project</div><div class="ac-mt">Web Development · Dr. Priya Rao · 100 marks</div></div><div class="ac-due due-ok">✓ 25 Mar 2026</div></div>
+              <div class="ac" onclick="openM('m-submit')"><div class="ac-ico" style="background:rgba(156,39,176,.1)">📊</div><div style="flex:1"><div class="ac-nm">AI Quiz: Neural Networks</div><div class="ac-mt">AI &amp; ML · Dr. Suresh Kumar · 30 marks</div></div><div class="ac-due due-ok">✓ 27 Mar 2026</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="crd" style="margin-bottom:14px">
+              <div class="ct2">📅 Today's Schedule</div>
+              <div class="sch-item"><div class="sch-time" style="color:var(--re)">9:00 AM</div><div class="sch-info"><div class="sch-nm">Advanced DBMS</div><div class="sch-mt">🔴 Live Now · Room A204</div></div></div>
+              <div class="sch-item"><div class="sch-time">11:00 AM</div><div class="sch-info"><div class="sch-nm">Software Engineering</div><div class="sch-mt">Recorded · Module 6</div></div></div>
+              <div class="sch-item"><div class="sch-time">2:00 PM</div><div class="sch-info"><div class="sch-nm">Web Dev Lab</div><div class="sch-mt">Practical · Lab B102</div></div></div>
+              <div class="sch-item" style="border:1px solid rgba(251,188,4,.3);background:rgba(251,188,4,.04)"><div class="sch-time" style="color:var(--ye)">4:00 PM</div><div class="sch-info"><div class="sch-nm">ExamFlow: DBMS Exam</div><div class="sch-mt" style="color:var(--re)">📝 Proctored · 90 min</div></div></div>
+            </div>
+            <div class="crd">
+              <div class="ct2">🏆 Section Leaderboard</div>
+              <div class="li-item"><div style="font-size:14px;font-weight:800;color:var(--ye);width:22px">1</div><div class="li-av" style="background:linear-gradient(135deg,#f59e0b,#f97316)">TK</div><div class="li-nm">Tankthireddy</div><div class="li-sc" style="color:var(--gr)">94%</div></div>
+              <div class="li-item"><div style="font-size:13px;font-weight:700;color:var(--t2);width:22px">2</div><div class="li-av" style="background:linear-gradient(135deg,#34a853,#1de9b6)">PR</div><div class="li-nm">Priya Reddy</div><div class="li-sc" style="color:var(--gr)">92%</div></div>
+              <div class="li-item"><div style="font-size:13px;font-weight:700;color:var(--t3);width:22px">3</div><div class="li-av">RS</div><div class="li-nm">Ravi Shankar</div><div class="li-sc" style="color:var(--gr)">90%</div></div>
+              <div class="li-item"><div style="font-size:13px;font-weight:700;color:var(--t3);width:22px">4</div><div class="li-av" style="background:linear-gradient(135deg,#818cf8,#a5b4fc)">AK</div><div class="li-nm">Ananya Kumar</div><div class="li-sc" style="color:var(--ye)">88%</div></div>
+              <div class="li-item"><div style="font-size:13px;font-weight:700;color:var(--t3);width:22px">5</div><div class="li-av" style="background:linear-gradient(135deg,#38bdf8,#06b6d4)">VR</div><div class="li-nm">Vikram Rao</div><div class="li-sc" style="color:var(--ye)">87%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           STUDENT: COURSES
+      ═══════════════════════════════ -->
+      <div class="pg" id="pg-s-courses">
+        <div class="sh"><span class="st">📚 My Enrolled Courses (8)</span><button class="bc" onclick="openM('m-join-course')">+ Join Course</button></div>
+        <div class="tabs"><div class="tab on" onclick="tabSwitch(this,'.tabs')">All (8)</div><div class="tab" onclick="tabSwitch(this,'.tabs')">In Progress (5)</div><div class="tab" onclick="tabSwitch(this,'.tabs')">Completed (3)</div></div>
+        <div class="ccg">
+          <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#0d47a1,#1a73e8)">🗄️</div><div class="cc-body"><div class="cc-code">BCA-601</div><div class="cc-name">Advanced DBMS</div><div class="cc-teacher">Dr. Vikram Singh</div><div class="cc-meta"><span>60 lessons</span><span>·</span><span>78%</span></div><div class="cc-prog"><div class="cc-pf" style="width:78%"></div></div></div></div>
+          <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#1b5e20,#34a853)">⚙️</div><div class="cc-body"><div class="cc-code">BCA-602</div><div class="cc-name">Software Engineering</div><div class="cc-teacher">Prof. Anita Rao</div><div class="cc-meta"><span>72 lessons</span><span>·</span><span>62%</span></div><div class="cc-prog"><div class="cc-pf" style="width:62%;background:linear-gradient(90deg,#34a853,#1de9b6)"></div></div></div></div>
+          <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#e65100,#f97316)">🌐</div><div class="cc-body"><div class="cc-code">BCA-603</div><div class="cc-name">Web Development</div><div class="cc-teacher">Dr. Priya Rao</div><div class="cc-meta"><span>88 lessons</span><span>·</span><span>91%</span></div><div class="cc-prog"><div class="cc-pf" style="width:91%;background:linear-gradient(90deg,#f97316,#fbbc04)"></div></div></div></div>
+          <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#4a148c,#7b1fa2)">🔗</div><div class="cc-body"><div class="cc-code">BCA-604</div><div class="cc-name">Computer Networks</div><div class="cc-teacher">Dr. Suresh Kumar</div><div class="cc-meta"><span>64 lessons</span><span>·</span><span>55%</span></div><div class="cc-prog"><div class="cc-pf" style="width:55%;background:linear-gradient(90deg,#7b1fa2,#ba68c8)"></div></div></div></div>
+          <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#006064,#00bcd4)">🐍</div><div class="cc-body"><div class="cc-code">BCA-606</div><div class="cc-name">Python Programming</div><div class="cc-teacher">Prof. Kiran Babu</div><div class="cc-meta"><span>✅ Complete</span><span>·</span><span>100%</span></div><div class="cc-prog"><div class="cc-pf" style="width:100%;background:linear-gradient(90deg,var(--gr),#1de9b6)"></div></div></div></div>
+          <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#bf360c,#f97316)">🖥️</div><div class="cc-body"><div class="cc-code">BCA-605</div><div class="cc-name">Operating Systems</div><div class="cc-teacher">Dr. Vikram Singh</div><div class="cc-meta"><span>✅ Complete</span><span>·</span><span>100%</span></div><div class="cc-prog"><div class="cc-pf" style="width:100%;background:linear-gradient(90deg,var(--gr),#1de9b6)"></div></div></div></div>
+          <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#1a237e,#3f51b5)">🤖</div><div class="cc-body"><div class="cc-code">BCA-607</div><div class="cc-name">AI &amp; ML Fundamentals</div><div class="cc-teacher">Dr. Suresh Kumar</div><div class="cc-meta"><span>55 lessons</span><span>·</span><span>40%</span></div><div class="cc-prog"><div class="cc-pf" style="width:40%;background:linear-gradient(90deg,#9c27b0,#e040fb)"></div></div></div></div>
+          <div class="cc" onclick="openM('m-course-detail')"><div class="cc-head" style="background:linear-gradient(135deg,#01579b,#0277bd)">☁️</div><div class="cc-body"><div class="cc-code">BCA-608</div><div class="cc-name">Cloud Computing</div><div class="cc-teacher">Prof. Kiran Babu</div><div class="cc-meta"><span>48 lessons</span><span>·</span><span>25%</span></div><div class="cc-prog"><div class="cc-pf" style="width:25%;background:linear-gradient(90deg,#01579b,#4f8eff)"></div></div></div></div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           STUDENT: GRADES
+      ═══════════════════════════════ -->
+      <div class="pg" id="pg-s-grades">
+        <div class="sh"><span class="st">🏆 My Grade Book — BCA Sem 6</span><button class="bc" onclick="toast('📄 Marksheet downloaded!','ok')">↓ Download PDF</button></div>
+        <div class="sg sg-4" style="margin-bottom:16px">
+          <div class="sc b"><div class="sc-ico">📊</div><div class="sc-v">94%</div><div class="sc-l">Overall Average</div></div>
+          <div class="sc a"><div class="sc-ico">🏆</div><div class="sc-v">#1</div><div class="sc-l">Section Rank</div></div>
+          <div class="sc c"><div class="sc-ico">✅</div><div class="sc-v">6/8</div><div class="sc-l">Subjects Cleared</div></div>
+          <div class="sc e"><div class="sc-ico">🎓</div><div class="sc-v">9.4</div><div class="sc-l">CGPA</div></div>
+        </div>
+        <div class="gbk">
+          <div class="gbk-head">
+            <div class="gbk-h" style="flex:2.2">Subject</div>
+            <div class="gbk-h" style="flex:1">Code</div>
+            <div class="gbk-h" style="flex:1">Assignments</div>
+            <div class="gbk-h" style="flex:1">Mid-Term</div>
+            <div class="gbk-h" style="flex:1">Final</div>
+            <div class="gbk-h" style="flex:1">Total</div>
+            <div class="gbk-h" style="flex:.7">Grade</div>
+            <div class="gbk-h" style="flex:.7">Rank</div>
+          </div>
+          <div class="gbk-row"><div class="gbk-c" style="flex:2.2;font-weight:700">Advanced DBMS</div><div class="gbk-c" style="flex:1;color:var(--g2);font-size:11px;font-family:monospace">BCA-601</div><div class="gbk-c" style="flex:1">24/25</div><div class="gbk-c" style="flex:1">46/50</div><div class="gbk-c" style="flex:1;color:var(--t3)">Pending</div><div class="gbk-c" style="flex:1">70/75</div><div class="gbk-c go" style="flex:.7">O</div><div class="gbk-c" style="flex:.7">#1</div></div>
+          <div class="gbk-row"><div class="gbk-c" style="flex:2.2;font-weight:700">Software Engineering</div><div class="gbk-c" style="flex:1;color:var(--g2);font-size:11px;font-family:monospace">BCA-602</div><div class="gbk-c" style="flex:1">22/25</div><div class="gbk-c" style="flex:1">42/50</div><div class="gbk-c" style="flex:1;color:var(--t3)">Pending</div><div class="gbk-c" style="flex:1">64/75</div><div class="gbk-c ga" style="flex:.7">A+</div><div class="gbk-c" style="flex:.7">#2</div></div>
+          <div class="gbk-row"><div class="gbk-c" style="flex:2.2;font-weight:700">Web Development</div><div class="gbk-c" style="flex:1;color:var(--g2);font-size:11px;font-family:monospace">BCA-603</div><div class="gbk-c" style="flex:1">25/25</div><div class="gbk-c" style="flex:1">49/50</div><div class="gbk-c" style="flex:1;color:var(--t3)">Pending</div><div class="gbk-c" style="flex:1">74/75</div><div class="gbk-c go" style="flex:.7">O</div><div class="gbk-c" style="flex:.7">#1</div></div>
+          <div class="gbk-row"><div class="gbk-c" style="flex:2.2;font-weight:700">Python Programming</div><div class="gbk-c" style="flex:1;color:var(--g2);font-size:11px;font-family:monospace">BCA-606</div><div class="gbk-c" style="flex:1">25/25</div><div class="gbk-c" style="flex:1">48/50</div><div class="gbk-c" style="flex:1">96/100</div><div class="gbk-c" style="flex:1">169/175</div><div class="gbk-c go" style="flex:.7">O</div><div class="gbk-c" style="flex:.7">#1</div></div>
+          <div class="gbk-row"><div class="gbk-c" style="flex:2.2;font-weight:700">Operating Systems</div><div class="gbk-c" style="flex:1;color:var(--g2);font-size:11px;font-family:monospace">BCA-605</div><div class="gbk-c" style="flex:1">23/25</div><div class="gbk-c" style="flex:1">45/50</div><div class="gbk-c" style="flex:1">91/100</div><div class="gbk-c" style="flex:1">159/175</div><div class="gbk-c ga" style="flex:.7">A+</div><div class="gbk-c" style="flex:.7">#2</div></div>
+          <div class="gbk-row"><div class="gbk-c" style="flex:2.2;font-weight:700">Computer Networks</div><div class="gbk-c" style="flex:1;color:var(--g2);font-size:11px;font-family:monospace">BCA-604</div><div class="gbk-c" style="flex:1">21/25</div><div class="gbk-c" style="flex:1">43/50</div><div class="gbk-c" style="flex:1">88/100</div><div class="gbk-c" style="flex:1">152/175</div><div class="gbk-c ga" style="flex:.7">A+</div><div class="gbk-c" style="flex:.7">#3</div></div>
+        </div>
+        <div class="crd">
+          <div class="ct2">📈 My Subject Progress</div>
+          <div class="prog-wrap"><div class="prog-hd"><span>Python Programming</span><span style="color:var(--gr)">100% · O</span></div><div class="prog-bar"><div class="prog-fill" style="width:100%;background:linear-gradient(90deg,var(--gr),#1de9b6)"></div></div></div>
+          <div class="prog-wrap"><div class="prog-hd"><span>Web Development</span><span style="color:var(--gr)">91% · O</span></div><div class="prog-bar"><div class="prog-fill" style="width:91%;background:linear-gradient(90deg,#f97316,#fbbc04)"></div></div></div>
+          <div class="prog-wrap"><div class="prog-hd"><span>Advanced DBMS</span><span style="color:var(--g1)">78% · A+</span></div><div class="prog-bar"><div class="prog-fill" style="width:78%;background:linear-gradient(90deg,var(--g3),var(--g1))"></div></div></div>
+          <div class="prog-wrap"><div class="prog-hd"><span>Software Engineering</span><span style="color:var(--ye)">62% · A</span></div><div class="prog-bar"><div class="prog-fill" style="width:62%;background:linear-gradient(90deg,var(--ye),var(--or))"></div></div></div>
+          <div class="prog-wrap"><div class="prog-hd"><span>AI &amp; ML Fundamentals</span><span style="color:var(--pu)">40% · In Progress</span></div><div class="prog-bar"><div class="prog-fill" style="width:40%;background:linear-gradient(90deg,#9c27b0,#e040fb)"></div></div></div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           STUDENT: ASSIGNMENTS
+      ═══════════════════════════════ -->
+      <div class="pg" id="pg-s-assignments">
+        <div class="sh"><span class="st">📝 Assignments &amp; Submissions</span></div>
+        <div class="tabs"><div class="tab on" onclick="tabSwitch(this,'.tabs')">Pending (4)</div><div class="tab" onclick="tabSwitch(this,'.tabs')">Submitted (12)</div><div class="tab" onclick="tabSwitch(this,'.tabs')">Graded (10)</div><div class="tab" onclick="tabSwitch(this,'.tabs')">Overdue (1)</div></div>
+        <div class="ag">
+          <div class="ac" onclick="openM('m-submit')"><div class="ac-ico" style="background:rgba(234,67,53,.12)">📋</div><div style="flex:1"><div class="ac-nm">DBMS Lab Report — ER Diagram &amp; Normalization</div><div class="ac-mt">Advanced DBMS · Dr. Vikram Singh · 100 marks</div></div><div class="ac-due due-ov">⚠️ Overdue 2 days</div></div>
+          <div class="ac" onclick="openM('m-submit')"><div class="ac-ico" style="background:rgba(251,188,4,.1)">🖊️</div><div style="flex:1"><div class="ac-nm">SE Essay: Agile vs Waterfall Methodology</div><div class="ac-mt">Software Engineering · Prof. Anita Rao · 50 marks</div></div><div class="ac-due due-sn">⏰ Tonight 11:59 PM</div></div>
+          <div class="ac" onclick="openM('m-submit')"><div class="ac-ico" style="background:rgba(52,168,83,.1)">💻</div><div style="flex:1"><div class="ac-nm">React Portfolio Website — 5 Projects Required</div><div class="ac-mt">Web Development · Dr. Priya Rao · 100 marks</div></div><div class="ac-due due-ok">✓ 25 Mar 2026</div></div>
+          <div class="ac" onclick="openM('m-submit')"><div class="ac-ico" style="background:rgba(156,39,176,.1)">📊</div><div style="flex:1"><div class="ac-nm">AI Quiz: Neural Networks &amp; Deep Learning</div><div class="ac-mt">AI &amp; ML · Dr. Suresh Kumar · 30 marks</div></div><div class="ac-due due-ok">✓ 27 Mar 2026</div></div>
+          <div class="ac" onclick="openM('m-submit')"><div class="ac-ico" style="background:rgba(26,115,232,.1)">☁️</div><div style="flex:1"><div class="ac-nm">Cloud Computing: AWS Architecture Case Study</div><div class="ac-mt">Cloud Computing · Prof. Kiran Babu · 75 marks</div></div><div class="ac-due due-ok">✓ 29 Mar 2026</div></div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           STUDENT: STUDY MATERIAL
+      ═══════════════════════════════ -->
+      <div class="pg" id="pg-s-material">
+        <div class="sh"><span class="st">📖 Study Materials — BCA Final Year</span><button class="bc" onclick="toast('📁 All materials zipped for download!','ok')">↓ Download All</button></div>
+        <div class="mat-grid">
+          <div class="mat-card" onclick="toast('📄 Opening Advanced DBMS Notes...','ok')"><div class="mat-ico">🗄️</div><div class="mat-nm">Advanced DBMS Notes</div><div class="mat-mt">PDF · 68 pages · Dr. Vikram Singh</div><span class="mat-tag">BCA-601</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening SE Slides...','ok')"><div class="mat-ico">⚙️</div><div class="mat-nm">Software Engineering Slides</div><div class="mat-mt">PPT · 84 slides · Prof. Anita Rao</div><span class="mat-tag">BCA-602</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening Web Dev Notes...','ok')"><div class="mat-ico">🌐</div><div class="mat-nm">Web Development Notes</div><div class="mat-mt">PDF · 72 pages · Dr. Priya Rao</div><span class="mat-tag">BCA-603</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening CN Notes...','ok')"><div class="mat-ico">🔗</div><div class="mat-nm">Computer Networks Notes</div><div class="mat-mt">PDF · 56 pages · Dr. Suresh Kumar</div><span class="mat-tag">BCA-604</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening OS Notes...','ok')"><div class="mat-ico">🖥️</div><div class="mat-nm">Operating Systems Notes</div><div class="mat-mt">PDF · 62 pages · Dr. Vikram Singh</div><span class="mat-tag">BCA-605</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening Python Notes...','ok')"><div class="mat-ico">🐍</div><div class="mat-nm">Python Programming Notes</div><div class="mat-mt">PDF · 48 pages · Prof. Kiran Babu</div><span class="mat-tag">BCA-606</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening AI/ML Notes...','ok')"><div class="mat-ico">🤖</div><div class="mat-nm">AI &amp; ML Fundamentals</div><div class="mat-mt">PDF · 55 pages · Dr. Suresh Kumar</div><span class="mat-tag">BCA-607</span></div>
+          <div class="mat-card" onclick="toast('📄 Opening Cloud Notes...','ok')"><div class="mat-ico">☁️</div><div class="mat-nm">Cloud Computing Notes</div><div class="mat-mt">PDF · 44 pages · Prof. Kiran Babu</div><span class="mat-tag">BCA-608</span></div>
+          <div class="mat-card" onclick="toast('📋 Opening PYQ Papers...','ok')"><div class="mat-ico">📋</div><div class="mat-nm">Previous Year Questions</div><div class="mat-mt">PDF · 2019–2025 · All Subjects</div><span class="mat-tag">All</span></div>
+        </div>
+        <div class="sh"><span class="st">🎥 Video Lectures</span></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Title</th><th>Subject</th><th>Duration</th><th>Instructor</th><th>Uploaded</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr onclick="toast('▶ Opening video...','ok')"><td><strong>📹 SQL Transactions &amp; Triggers</strong></td><td>Advanced DBMS</td><td>52 min</td><td>Dr. Vikram Singh</td><td>18 Mar</td><td><button class="btn" onclick="event.stopPropagation()">▶ Watch</button></td></tr>
+              <tr onclick="toast('▶ Opening video...','ok')"><td><strong>📹 Agile &amp; Scrum Deep Dive</strong></td><td>Software Engineering</td><td>45 min</td><td>Prof. Anita Rao</td><td>17 Mar</td><td><button class="btn" onclick="event.stopPropagation()">▶ Watch</button></td></tr>
+              <tr onclick="toast('▶ Opening video...','ok')"><td><strong>📹 React.js Full Crash Course</strong></td><td>Web Development</td><td>96 min</td><td>Dr. Priya Rao</td><td>16 Mar</td><td><button class="btn" onclick="event.stopPropagation()">▶ Watch</button></td></tr>
+              <tr onclick="toast('▶ Opening video...','ok')"><td><strong>📹 Neural Networks Introduction</strong></td><td>AI &amp; ML</td><td>65 min</td><td>Dr. Suresh Kumar</td><td>14 Mar</td><td><button class="btn" onclick="event.stopPropagation()">▶ Watch</button></td></tr>
+              <tr onclick="toast('▶ Opening video...','ok')"><td><strong>📹 AWS Cloud Fundamentals</strong></td><td>Cloud Computing</td><td>72 min</td><td>Prof. Kiran Babu</td><td>13 Mar</td><td><button class="btn" onclick="event.stopPropagation()">▶ Watch</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           STUDENT: AI ASSISTANT
+      ═══════════════════════════════ -->
+      <div class="pg" id="pg-s-ai">
+        <div class="sh"><span class="st">🤖 AI Study Assistant — MoonBot</span></div>
+        <div class="bg2">
+          <div class="crd">
+            <div class="ct2">💬 Chat with MoonBot</div>
+            <div class="ai-wrap">
+              <div class="ai-messages" id="ai-msgs">
+                <div class="ai-msg bot">👋 Hi Tankthireddy! I'm MoonBot, your AI study assistant. Ask me anything about your BCA subjects — DBMS, Web Dev, Python, AI/ML, Networks, or anything else!</div>
+                <div class="ai-msg bot">📚 I can help you: explain concepts, solve doubts, summarize chapters, generate practice questions, or review your answers. What do you need help with today?</div>
+              </div>
+              <div class="ai-inp">
+                <input type="text" id="ai-input" placeholder="Ask MoonBot anything... e.g. Explain 2NF normalization" onkeydown="if(event.key==='Enter')sendAI()"/>
+                <button class="ai-send" onclick="sendAI()">➤</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="crd" style="margin-bottom:14px">
+              <div class="ct2">💡 Quick Ask Topics</div>
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <button class="bp" style="justify-content:flex-start;font-size:12px" onclick="askAI('Explain the difference between 2NF and 3NF with examples')">🗄️ Explain 2NF vs 3NF</button>
+                <button class="bp" style="justify-content:flex-start;font-size:12px" onclick="askAI('What are the key concepts in React.js I should know for exams?')">🌐 React.js Key Concepts</button>
+                <button class="bp" style="justify-content:flex-start;font-size:12px" onclick="askAI('Explain neural networks in simple terms with an example')">🤖 Neural Networks Simplified</button>
+                <button class="bp" style="justify-content:flex-start;font-size:12px" onclick="askAI('What is the OSI model? Explain each layer briefly')">🔗 OSI Model Layers</button>
+                <button class="bp" style="justify-content:flex-start;font-size:12px" onclick="askAI('Give me 5 practice MCQ questions for Advanced DBMS')">📝 Generate DBMS Practice MCQs</button>
+                <button class="bp" style="justify-content:flex-start;font-size:12px" onclick="askAI('Summarize the Agile software development methodology')">⚙️ Agile Methodology Summary</button>
+              </div>
+            </div>
+            <div class="crd">
+              <div class="ct2">📊 Study Stats</div>
+              <div class="li-item"><div class="li-nm">Questions Asked</div><div class="li-sc" style="color:var(--g1)">48</div></div>
+              <div class="li-item"><div class="li-nm">Concepts Explained</div><div class="li-sc" style="color:var(--gr)">31</div></div>
+              <div class="li-item"><div class="li-nm">Practice MCQs</div><div class="li-sc" style="color:var(--ye)">120</div></div>
+              <div class="li-item"><div class="li-nm">Avg Session Time</div><div class="li-sc" style="color:var(--t2)">22 min</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           STUDENT: FORUM
+      ═══════════════════════════════ -->
+      <div class="pg" id="pg-s-forum">
+        <div class="sh"><span class="st">💬 Discussion Forum</span><button class="bc" onclick="openM('m-new-post')">+ New Post</button></div>
+        <div class="tabs"><div class="tab on" onclick="tabSwitch(this,'.tabs')">All</div><div class="tab" onclick="tabSwitch(this,'.tabs')">DBMS</div><div class="tab" onclick="tabSwitch(this,'.tabs')">Web Dev</div><div class="tab" onclick="tabSwitch(this,'.tabs')">AI &amp; ML</div></div>
+        <div class="dq"><div class="dq-top"><div class="dq-av" style="background:linear-gradient(135deg,#f59e0b,#f97316)">TK</div><span class="dq-user">Tankthireddy</span><span class="dq-time">2 hours ago</span></div><div class="dq-text">Can anyone explain the difference between 2NF and 3NF with a practical example? Getting confused with transitive dependencies in the DBMS assignment.</div><div class="dq-meta"><span>📚 Advanced DBMS</span><span>💬 8 replies</span><span>👍 14 likes</span></div></div>
+        <div class="dq"><div class="dq-top"><div class="dq-av" style="background:linear-gradient(135deg,#34a853,#1de9b6)">PR</div><span class="dq-user">Priya Reddy</span><span class="dq-time">5 hours ago</span></div><div class="dq-text">React useEffect vs useCallback — when do I use which? Dr. Priya's lecture was a bit fast on this topic. Can someone explain with code examples?</div><div class="dq-meta"><span>🌐 Web Development</span><span>💬 12 replies</span><span>👍 22 likes</span></div></div>
+        <div class="dq"><div class="dq-top"><div class="dq-av" style="background:linear-gradient(135deg,#4f8eff,#818cf8)">RS</div><span class="dq-user">Ravi Shankar</span><span class="dq-time">Yesterday</span></div><div class="dq-text">Supervised vs unsupervised learning in simple terms? I need this for the AI &amp; ML assignment due this week. Please help!</div><div class="dq-meta"><span>🤖 AI &amp; ML</span><span>💬 18 replies</span><span>👍 34 likes</span></div></div>
+        <div class="dq"><div class="dq-top"><div class="dq-av" style="background:linear-gradient(135deg,#1a73e8,#4f8eff)">AK</div><span class="dq-user">Ananya Kumar</span><span class="dq-time">2 days ago</span></div><div class="dq-text">OSI model — Is the Presentation Layer always required in modern networking? I can't find a clear answer anywhere. Need help!</div><div class="dq-meta"><span>🔗 Computer Networks</span><span>💬 6 replies</span><span>👍 9 likes</span></div></div>
+        <div class="dq"><div class="dq-top"><div class="dq-av" style="background:linear-gradient(135deg,#7c4dff,#e040fb)">MK</div><span class="dq-user">Meera Kumar</span><span class="dq-time">3 days ago</span></div><div class="dq-text">Does anyone have notes for the Python Flask section? Missed the live class due to connectivity issues. Would appreciate if someone shares!</div><div class="dq-meta"><span>🐍 Python</span><span>💬 4 replies</span><span>👍 7 likes</span></div></div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           STUDENT: SCHEDULE
+      ═══════════════════════════════ -->
+      <div class="pg" id="pg-s-schedule">
+        <div class="sh"><span class="st">📅 Full Exam &amp; Class Schedule</span><button class="bc" onclick="toast('📅 Added all to Google Calendar!','ok')">+ Add to Calendar</button></div>
+        <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">TODAY — SUN 22 MARCH 2026</div>
+        <div class="sch-item" style="border-color:rgba(234,67,53,.3);background:rgba(234,67,53,.04)"><div class="sch-time" style="color:var(--re)">9:00 AM</div><div class="sch-info"><div class="sch-nm">Advanced DBMS — SQL Transactions</div><div class="sch-mt">Dr. Vikram Singh · 🔴 Live Now · Google Meet · 38/84 joined</div></div><span class="bx li">Live</span></div>
+        <div class="sch-item"><div class="sch-time">11:00 AM</div><div class="sch-info"><div class="sch-nm">Software Engineering — Agile Module</div><div class="sch-mt">Prof. Anita Rao · Recorded Lecture · Module 6</div></div><span class="bx dr">Recorded</span></div>
+        <div class="sch-item"><div class="sch-time">2:00 PM</div><div class="sch-info"><div class="sch-nm">Web Development Practical Lab</div><div class="sch-mt">Dr. Priya Rao · Lab B102 · React.js Session</div></div><span class="bx dr">Lab</span></div>
+        <div class="sch-item" style="border-color:rgba(251,188,4,.3);background:rgba(251,188,4,.03)"><div class="sch-time" style="color:var(--ye)">4:00 PM</div><div class="sch-info"><div class="sch-nm">ExamFlow: Advanced DBMS Final Exam</div><div class="sch-mt">Dr. Vikram Singh · 90 min · 60 Qs · Proctored Online</div></div><span class="bx wn">Exam</span></div>
+        <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px">MON 23 — FRI 27 MARCH 2026</div>
+        <div class="sch-item"><div class="sch-time">10:00 AM</div><div class="sch-info"><div class="sch-nm">Software Engineering Exam (BCA-602)</div><div class="sch-mt">Prof. Anita Rao · 120 min · 80 Qs · Mon 23 Mar</div></div><span class="bx dr">Upcoming</span></div>
+        <div class="sch-item"><div class="sch-time">11:00 AM</div><div class="sch-info"><div class="sch-nm">Web Development Exam (BCA-603)</div><div class="sch-mt">Dr. Priya Rao · 90 min · 70 Qs · Tue 24 Mar</div></div><span class="bx dr">Upcoming</span></div>
+        <div class="sch-item"><div class="sch-time">10:00 AM</div><div class="sch-info"><div class="sch-nm">Computer Networks Exam (BCA-604)</div><div class="sch-mt">Dr. Suresh Kumar · 90 min · 75 Qs · Wed 25 Mar</div></div><span class="bx dr">Upcoming</span></div>
+        <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px">FINAL EVENTS — 28-29 MARCH 2026</div>
+        <div class="sch-item" style="border-color:rgba(156,39,176,.3)"><div class="sch-time" style="color:var(--pu)">10:00 AM</div><div class="sch-info"><div class="sch-nm">Final Year Project Viva (BCA-PROJ)</div><div class="sch-mt">All Faculty Panel · 30 min · Demo + Q&amp;A · Sat 28 Mar</div></div><span class="bx" style="background:rgba(156,39,176,.1);color:#ce93d8;border:1px solid rgba(156,39,176,.2)">Viva</span></div>
+        <div class="sch-item" style="border-color:rgba(156,39,176,.3)"><div class="sch-time" style="color:var(--pu)">9:00 AM</div><div class="sch-info"><div class="sch-nm">Programming Lab Final (BCA-PRAC)</div><div class="sch-mt">Prof. Kiran Babu · 180 min · Hands-on Coding · Sun 29 Mar</div></div><span class="bx" style="background:rgba(156,39,176,.1);color:#ce93d8;border:1px solid rgba(156,39,176,.2)">Lab Exam</span></div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           STUDENT: PROFILE
+      ═══════════════════════════════ -->
+      <div class="pg" id="pg-s-profile">
+        <div class="sh"><span class="st">👤 My Profile</span><button class="bc" onclick="toast('✅ Profile saved!','ok')">💾 Save</button></div>
+        <div class="bg2">
+          <div class="ig">
+            <div class="ii"><div class="il">Roll Number</div><div class="iv">2320520034</div></div>
+            <div class="ii"><div class="il">Full Name</div><div class="iv">Tankthireddy</div></div>
+            <div class="ii"><div class="il">Programme</div><div class="iv">BCA Final Year</div></div>
+            <div class="ii"><div class="il">Semester</div><div class="iv">Sem 6 (Final)</div></div>
+            <div class="ii"><div class="il">Section</div><div class="iv">BCA-A</div></div>
+            <div class="ii"><div class="il">Email</div><div class="iv">2320520034@klh.edu</div></div>
+            <div class="ii"><div class="il">Phone</div><div class="iv">+91 98765 43210</div></div>
+            <div class="ii"><div class="il">University</div><div class="iv">KLH University, Hyderabad</div></div>
+            <div class="ii"><div class="il">Batch</div><div class="iv">2023 – 2026</div></div>
+            <div class="ii"><div class="il">Guide</div><div class="iv">Dr. Srinivas (HOD, BCA)</div></div>
+            <div class="ii"><div class="il">CGPA</div><div class="iv" style="color:var(--gr);font-weight:700">9.4 / 10.0</div></div>
+            <div class="ii"><div class="il">Attendance</div><div class="iv" style="color:var(--gr);font-weight:700">96.2%</div></div>
+          </div>
+          <div>
+            <div class="crd" style="margin-bottom:14px">
+              <div class="ct2">📈 Course Progress</div>
+              <div class="prog-wrap"><div class="prog-hd"><span>Python Programming</span><span style="color:var(--gr)">100%</span></div><div class="prog-bar"><div class="prog-fill" style="width:100%;background:linear-gradient(90deg,var(--gr),#1de9b6)"></div></div></div>
+              <div class="prog-wrap"><div class="prog-hd"><span>Web Development</span><span style="color:var(--gr)">91%</span></div><div class="prog-bar"><div class="prog-fill" style="width:91%;background:linear-gradient(90deg,#f97316,#fbbc04)"></div></div></div>
+              <div class="prog-wrap"><div class="prog-hd"><span>Advanced DBMS</span><span style="color:var(--g1)">78%</span></div><div class="prog-bar"><div class="prog-fill" style="width:78%;background:linear-gradient(90deg,var(--g3),var(--g1))"></div></div></div>
+              <div class="prog-wrap"><div class="prog-hd"><span>Software Engineering</span><span style="color:var(--ye)">62%</span></div><div class="prog-bar"><div class="prog-fill" style="width:62%;background:linear-gradient(90deg,var(--ye),var(--or))"></div></div></div>
+              <div class="prog-wrap"><div class="prog-hd"><span>AI &amp; ML Fundamentals</span><span style="color:var(--pu)">40%</span></div><div class="prog-bar"><div class="prog-fill" style="width:40%;background:linear-gradient(90deg,#9c27b0,#e040fb)"></div></div></div>
+              <div class="prog-wrap"><div class="prog-hd"><span>Cloud Computing</span><span style="color:var(--t3)">25%</span></div><div class="prog-bar"><div class="prog-fill" style="width:25%;background:linear-gradient(90deg,#01579b,var(--g1))"></div></div></div>
+            </div>
+            <div class="crd">
+              <div class="ct2">🔐 Change Password</div>
+              <div class="fd2"><label>Current Password</label><input type="password" placeholder="Current password"/></div>
+              <div class="fd2"><label>New Password</label><input type="password" placeholder="New password (min 6 chars)"/></div>
+              <button class="bc" onclick="toast('🔐 Password updated!','ok')">Update Password</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           TEACHER: DASHBOARD
+      ═══════════════════════════════ -->
+      <div class="pg" id="pg-t-home">
+        <div class="sg sg-4">
+          <div class="sc a"><div class="sc-ico">👥</div><div class="sc-v">248</div><div class="sc-l">My Students</div><div class="sc-n">3 Sections</div></div>
+          <div class="sc b"><div class="sc-ico">📚</div><div class="sc-v">6</div><div class="sc-l">Active Courses</div><div class="sc-n">↑ 1 new this week</div></div>
+          <div class="sc c"><div class="sc-ico">📝</div><div class="sc-v">18</div><div class="sc-l">Pending Reviews</div><div class="sc-n">Need grading</div></div>
+          <div class="sc d"><div class="sc-ico">📊</div><div class="sc-v">81%</div><div class="sc-l">Class Avg Score</div><div class="sc-n">↑ 4% this month</div></div>
+        </div>
+        <div class="sh"><span class="st">📚 My Courses</span><button class="bc" onclick="openM('m-new-course')">+ Create Course</button></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Course</th><th>Code</th><th>Section</th><th>Students</th><th>Completion</th><th>Avg Grade</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr onclick="toast('Opening DBMS course editor...','ok')"><td><strong>Advanced DBMS</strong></td><td style="color:var(--g2);font-family:monospace;font-size:12px">BCA-601</td><td>BCA-A</td><td>84</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:78%"></div></div><span style="color:var(--gr);font-weight:700;font-size:12px">78%</span></div></td><td style="color:var(--gr);font-weight:700">82%</td><td><span class="bx ac">Active</span></td><td><button class="btn" onclick="event.stopPropagation()">Manage</button></td></tr>
+              <tr onclick="toast('Opening SE course editor...','ok')"><td><strong>Software Engineering</strong></td><td style="color:var(--g2);font-family:monospace;font-size:12px">BCA-602</td><td>BCA-B</td><td>82</td><td><div class="sbw"><div class="sbr"><div class="sf m" style="width:62%"></div></div><span style="color:var(--ye);font-weight:700;font-size:12px">62%</span></div></td><td style="color:var(--ye);font-weight:700">74%</td><td><span class="bx ac">Active</span></td><td><button class="btn" onclick="event.stopPropagation()">Manage</button></td></tr>
+              <tr onclick="toast('Opening Web Dev course editor...','ok')"><td><strong>Web Development</strong></td><td style="color:var(--g2);font-family:monospace;font-size:12px">BCA-603</td><td>BCA-C</td><td>82</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:91%"></div></div><span style="color:var(--gr);font-weight:700;font-size:12px">91%</span></div></td><td style="color:var(--gr);font-weight:700">88%</td><td><span class="bx ac">Active</span></td><td><button class="btn" onclick="event.stopPropagation()">Manage</button></td></tr>
+              <tr onclick="toast('Opening Python course...','ok')"><td><strong>Python Programming</strong></td><td style="color:var(--g2);font-family:monospace;font-size:12px">BCA-606</td><td>All</td><td>248</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:100%"></div></div><span style="color:var(--gr);font-weight:700;font-size:12px">100%</span></div></td><td style="color:var(--gr);font-weight:700">85%</td><td><span class="bx cl">Closed</span></td><td><button class="btn" onclick="event.stopPropagation()">Results</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="sh"><span class="st">📝 Recent Submissions — Pending Grade</span></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Student</th><th>Assignment</th><th>Course</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Tankthireddy</strong></td><td>React Portfolio Project</td><td>Web Dev</td><td>22 Mar 2026</td><td><span class="bx wn">Pending</span></td><td><button class="btn" onclick="openM('m-grade')">Grade</button></td></tr>
+              <tr><td><strong>Priya Reddy</strong></td><td>React Portfolio Project</td><td>Web Dev</td><td>21 Mar 2026</td><td><span class="bx wn">Pending</span></td><td><button class="btn" onclick="openM('m-grade')">Grade</button></td></tr>
+              <tr><td><strong>Ravi Shankar</strong></td><td>SE Essay: Agile vs Waterfall</td><td>SE</td><td>20 Mar 2026</td><td><span class="bx ac">Graded · 87%</span></td><td><button class="btn">View</button></td></tr>
+              <tr><td><strong>Ananya Kumar</strong></td><td>DBMS ER Diagram</td><td>DBMS</td><td>19 Mar 2026</td><td><span class="bx ac">Graded · 92%</span></td><td><button class="btn">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="bg2">
+          <div class="crd">
+            <div class="ct2">🏆 Top Performing Students</div>
+            <div class="li-item"><div style="width:22px;font-weight:800;color:var(--ye)">1</div><div class="li-av" style="background:linear-gradient(135deg,#f59e0b,#f97316)">TK</div><div class="li-nm">Tankthireddy (2320520034)</div><div class="li-sc" style="color:var(--gr)">94%</div></div>
+            <div class="li-item"><div style="width:22px;font-weight:700;color:var(--t2)">2</div><div class="li-av" style="background:linear-gradient(135deg,#34a853,#1de9b6)">PR</div><div class="li-nm">Priya Reddy (2320520036)</div><div class="li-sc" style="color:var(--gr)">92%</div></div>
+            <div class="li-item"><div style="width:22px;font-weight:700;color:var(--t3)">3</div><div class="li-av">RS</div><div class="li-nm">Ravi Shankar (2320520035)</div><div class="li-sc" style="color:var(--gr)">90%</div></div>
+            <div class="li-item"><div style="width:22px;font-weight:700;color:var(--t3)">4</div><div class="li-av" style="background:linear-gradient(135deg,#818cf8,#a5b4fc)">AK</div><div class="li-nm">Ananya Kumar (21BCA020)</div><div class="li-sc" style="color:var(--ye)">88%</div></div>
+          </div>
+          <div class="crd">
+            <div class="ct2">📢 Post Announcement</div>
+            <div class="fd2"><label>Target</label><select><option>All Students</option><option>BCA-A only</option><option>Specific Course</option></select></div>
+            <div class="fd2"><label>Message</label><textarea placeholder="Write your announcement..." style="min-height:70px"></textarea></div>
+            <button class="bc" onclick="toast('📢 Announcement posted!','ok')">Post Announcement</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           ADMIN: DASHBOARD
+      ═══════════════════════════════ -->
+      <div class="pg" id="pg-a-home">
+        <div class="sg sg-5">
+          <div class="sc a"><div class="sc-ico">👥</div><div class="sc-v">248</div><div class="sc-l">Students</div></div>
+          <div class="sc b"><div class="sc-ico">👨‍🏫</div><div class="sc-v">18</div><div class="sc-l">Faculty</div></div>
+          <div class="sc c"><div class="sc-ico">📚</div><div class="sc-v">32</div><div class="sc-l">Courses</div></div>
+          <div class="sc d"><div class="sc-ico">📊</div><div class="sc-v">81%</div><div class="sc-l">Avg Pass Rate</div></div>
+          <div class="sc e"><div class="sc-ico">⚠️</div><div class="sc-v">7</div><div class="sc-l">Violations</div></div>
+        </div>
+        <div class="sh"><span class="st">🏛️ Section Performance Overview</span><button class="bc" onclick="toast('📄 Report exported!','ok')">↓ Export</button></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Section</th><th>Students</th><th>Class Teacher</th><th>Avg Grade</th><th>Completion</th><th>Violations</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><strong>BCA-A (Sem 6)</strong></td><td>84</td><td>Dr. Vikram Singh</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:83%"></div></div><span style="color:var(--gr);font-weight:700;font-size:12px">83%</span></div></td><td>6/8 subjects</td><td><span class="bx wn">3</span></td><td><span class="bx ac">Active</span></td></tr>
+              <tr><td><strong>BCA-B (Sem 6)</strong></td><td>82</td><td>Prof. Anita Rao</td><td><div class="sbw"><div class="sbr"><div class="sf m" style="width:78%"></div></div><span style="color:var(--ye);font-weight:700;font-size:12px">78%</span></div></td><td>6/8 subjects</td><td><span class="bx wn">2</span></td><td><span class="bx ac">Active</span></td></tr>
+              <tr><td><strong>BCA-C (Sem 6)</strong></td><td>82</td><td>Dr. Suresh Kumar</td><td><div class="sbw"><div class="sbr"><div class="sf h" style="width:81%"></div></div><span style="color:var(--gr);font-weight:700;font-size:12px">81%</span></div></td><td>5/8 subjects</td><td><span class="bx ac">1</span></td><td><span class="bx ac">Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="bg2">
+          <div>
+            <div class="sh"><span class="st">👨‍🏫 Faculty Members</span><button class="bc" onclick="toast('+ Faculty added!','ok')">+ Add</button></div>
+            <div class="tw">
+              <table>
+                <thead><tr><th>Name</th><th>Subjects</th><th>Students</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Dr. Vikram Singh</strong> <span style="font-size:10px;color:var(--ye)">(HOD)</span></td><td>DBMS, OS</td><td>84</td><td><span class="bx ac">Online</span></td></tr>
+                  <tr><td><strong>Prof. Anita Rao</strong></td><td>Software Engineering</td><td>82</td><td><span class="bx ac">Online</span></td></tr>
+                  <tr><td><strong>Dr. Priya Rao</strong></td><td>Web Development</td><td>82</td><td><span class="bx ac">Online</span></td></tr>
+                  <tr><td><strong>Dr. Suresh Kumar</strong></td><td>CN, AI &amp; ML</td><td>82</td><td><span class="bx cl">Offline</span></td></tr>
+                  <tr><td><strong>Prof. Kiran Babu</strong></td><td>Python, Cloud</td><td>84</td><td><span class="bx cl">Offline</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <div class="crd">
+              <div class="ct2">📊 LMS Analytics</div>
+              <svg width="100%" height="160" viewBox="0 0 260 160">
+                <defs><linearGradient id="alg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a73e8" stop-opacity=".35"/><stop offset="100%" stop-color="#1a73e8" stop-opacity="0"/></linearGradient></defs>
+                <polyline points="10,130 50,110 90,85 130,65 170,42 210,28 250,18" fill="none" stroke="#1a73e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <polygon points="10,130 50,110 90,85 130,65 170,42 210,28 250,18 250,150 10,150" fill="url(#alg)"/>
+                <circle cx="250" cy="18" r="5" fill="#34a853" stroke="#fff" stroke-width="2"/>
+                <text x="238" y="14" font-size="9" fill="#34a853" font-family="Plus Jakarta Sans,sans-serif">12K</text>
+                <text x="2" y="148" font-size="8.5" fill="#546080" font-family="Plus Jakarta Sans,sans-serif">Jan</text>
+                <text x="82" y="148" font-size="8.5" fill="#546080" font-family="Plus Jakarta Sans,sans-serif">Feb</text>
+                <text x="162" y="148" font-size="8.5" fill="#546080" font-family="Plus Jakarta Sans,sans-serif">Mar</text>
+                <text x="5" y="148" font-size="8" fill="#546080" font-family="Plus Jakarta Sans,sans-serif"></text>
+              </svg>
+              <div style="text-align:center;font-size:11.5px;color:var(--t3)">Active Learners Over Time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end dash-ct -->
+  </div><!-- end main-area -->
+</div><!-- end view-dash -->
+
+<!-- ████████████████████████████████████████
+     MODALS
+████████████████████████████████████████ -->
+
+<!-- Join Course -->
+<div class="mo" id="m-join-course"><div class="md">
+  <div class="mh"><div class="mht">🔑 Join a Course</div><div class="mx" onclick="closeM('m-join-course')">✕</div></div>
+  <div class="mb">
+    <div class="fd2"><label>Course Class Code</label><input type="text" placeholder="Enter 6-char code e.g. BCA601"/></div>
+    <div style="background:rgba(26,115,232,.08);border:1px solid rgba(77,143,255,.2);border-radius:10px;padding:12px;font-size:12.5px;color:var(--t2);line-height:1.7">💡 Ask your teacher for the class code. Once joined, you get instant access to all materials, lessons, and assignments.</div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-join-course')">Cancel</button><button class="mfg" onclick="toast('✅ Joined course successfully!','ok');closeM('m-join-course')">Join Course →</button></div>
+</div></div>
+
+<!-- Course Detail -->
+<div class="mo" id="m-course-detail"><div class="md lg">
+  <div class="mh"><div class="mht">📚 Advanced DBMS — BCA-601</div><div class="mx" onclick="closeM('m-course-detail')">✕</div></div>
+  <div class="mb">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:12px;text-align:center"><div style="font-family:var(--fh);font-size:20px;font-weight:800;color:var(--g1)">60</div><div style="font-size:11px;color:var(--t3)">Lessons</div></div>
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:12px;text-align:center"><div style="font-family:var(--fh);font-size:20px;font-weight:800;color:var(--gr)">78%</div><div style="font-size:11px;color:var(--t3)">Progress</div></div>
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:12px;text-align:center"><div style="font-family:var(--fh);font-size:20px;font-weight:800;color:var(--ye)">#1</div><div style="font-size:11px;color:var(--t3)">Class Rank</div></div>
+    </div>
+    <div style="font-size:12.5px;font-weight:700;color:var(--t2);margin-bottom:10px">📋 Modules</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="background:var(--s2);border:1px solid var(--gr);border-radius:9px;padding:11px;display:flex;align-items:center;gap:10px"><span style="color:var(--gr)">✅</span><span style="font-size:13px;flex:1">Module 1: Introduction to DBMS &amp; RDBMS</span><span style="font-size:11px;color:var(--gr)">Done</span></div>
+      <div style="background:var(--s2);border:1px solid var(--gr);border-radius:9px;padding:11px;display:flex;align-items:center;gap:10px"><span style="color:var(--gr)">✅</span><span style="font-size:13px;flex:1">Module 2: ER Diagrams &amp; Normalization (1NF-BCNF)</span><span style="font-size:11px;color:var(--gr)">Done</span></div>
+      <div style="background:var(--s2);border:1px solid var(--gr);border-radius:9px;padding:11px;display:flex;align-items:center;gap:10px"><span style="color:var(--gr)">✅</span><span style="font-size:13px;flex:1">Module 3–6: SQL Queries, Joins, Indexing, Views</span><span style="font-size:11px;color:var(--gr)">Done</span></div>
+      <div style="background:var(--s2);border:1px solid var(--g3);border-radius:9px;padding:11px;display:flex;align-items:center;gap:10px"><span style="color:var(--g1)">▶</span><span style="font-size:13px;flex:1;font-weight:600">Module 7: SQL Transactions &amp; Triggers</span><span style="font-size:11px;color:var(--g2)">In Progress</span></div>
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:11px;display:flex;align-items:center;gap:10px"><span style="color:var(--t3)">○</span><span style="font-size:13px;flex:1;color:var(--t3)">Module 8: NoSQL Databases (MongoDB, Redis)</span><span style="font-size:11px;color:var(--t3)">Locked</span></div>
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:11px;display:flex;align-items:center;gap:10px"><span style="color:var(--t3)">○</span><span style="font-size:13px;flex:1;color:var(--t3)">Module 9: Advanced Queries &amp; Optimization</span><span style="font-size:11px;color:var(--t3)">Locked</span></div>
+    </div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-course-detail')">Close</button><button class="mfg" onclick="toast('▶ Continuing Module 7...','ok');closeM('m-course-detail')">Continue →</button></div>
+</div></div>
+
+<!-- Submit Assignment -->
+<div class="mo" id="m-submit"><div class="md">
+  <div class="mh"><div class="mht">📤 Submit Assignment</div><div class="mx" onclick="closeM('m-submit')">✕</div></div>
+  <div class="mb">
+    <div style="font-size:14px;font-weight:700;margin-bottom:5px">DBMS Lab Report — ER Diagram &amp; Normalization</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:14px">Dr. Vikram Singh · Advanced DBMS · 100 marks</div>
+    <div style="background:rgba(234,67,53,.08);border:1px solid rgba(234,67,53,.2);border-radius:9px;padding:10px;font-size:12.5px;color:#f28b82;margin-bottom:14px">⚠️ This assignment is overdue. Late penalty of −10 marks may apply.</div>
+    <div class="fd2"><label>Your Answer / Notes</label><textarea placeholder="Paste your answer or explain your approach..." style="min-height:90px"></textarea></div>
+    <div class="fd2"><label>Attach File (PDF, ZIP, DOCX)</label><input type="file"/></div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-submit')">Cancel</button><button class="mfg" onclick="toast('📤 Assignment submitted successfully!','ok');closeM('m-submit')">Submit →</button></div>
+</div></div>
+
+<!-- New Post -->
+<div class="mo" id="m-new-post"><div class="md">
+  <div class="mh"><div class="mht">💬 New Discussion Post</div><div class="mx" onclick="closeM('m-new-post')">✕</div></div>
+  <div class="mb">
+    <div class="fd2"><label>Course</label><select><option>Advanced DBMS</option><option>Web Development</option><option>AI &amp; ML</option><option>Software Engineering</option><option>General</option></select></div>
+    <div class="fd2"><label>Your Question / Topic</label><textarea placeholder="Ask a doubt, share a resource, or start a discussion..." style="min-height:90px"></textarea></div>
+    <div class="fd2"><label>Tags (optional)</label><input type="text" placeholder="e.g. SQL, Normalization, Exam tip"/></div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-new-post')">Cancel</button><button class="mfg" onclick="toast('💬 Post published!','ok');closeM('m-new-post')">Post →</button></div>
+</div></div>
+
+<!-- Live Class -->
+<div class="mo" id="m-live"><div class="md">
+  <div class="mh"><div class="mht">🔴 Live Class</div><div class="mx" onclick="closeM('m-live')">✕</div></div>
+  <div class="mb">
+    <div style="text-align:center;padding:18px 0">
+      <div style="font-size:48px;margin-bottom:14px;animation:lpulse 1.2s infinite">🔴</div>
+      <div style="font-family:var(--fh);font-size:18px;font-weight:800;margin-bottom:6px">Advanced DBMS — SQL Transactions</div>
+      <div style="font-size:13px;color:var(--t2);margin-bottom:4px">Dr. Vikram Singh · Started 12 min ago</div>
+      <div style="font-size:12px;color:var(--t3);margin-bottom:20px">38 students currently in class</div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button class="join-btn" style="font-size:14px;padding:11px 26px" onclick="toast('🎥 Joining Google Meet...','ok');closeM('m-live')">🎥 Join Google Meet</button>
+        <button class="bp" onclick="closeM('m-live')">Watch Recording</button>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- Create Course -->
+<div class="mo" id="m-new-course"><div class="md lg">
+  <div class="mh"><div class="mht">📚 Create New Course</div><div class="mx" onclick="closeM('m-new-course')">✕</div></div>
+  <div class="mb">
+    <div class="fd2-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fd2"><label>Course Name</label><input type="text" placeholder="e.g. Advanced DBMS"/></div>
+      <div class="fd2"><label>Course Code</label><input type="text" placeholder="e.g. BCA-601"/></div>
+    </div>
+    <div class="fd2"><label>Description</label><textarea placeholder="What will students learn in this course?"></textarea></div>
+    <div class="fd2-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fd2"><label>Section</label><select><option>BCA-A</option><option>BCA-B</option><option>BCA-C</option><option>All Sections</option></select></div>
+      <div class="fd2"><label>Total Lessons</label><input type="number" placeholder="e.g. 60"/></div>
+    </div>
+    <div class="fd2"><label>Course Icon (Emoji)</label><input type="text" placeholder="e.g. 🗄️ or 🌐"/></div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-new-course')">Cancel</button><button class="mfg" onclick="toast('✅ Course created!','ok');closeM('m-new-course')">Create Course →</button></div>
+</div></div>
+
+<!-- Grade -->
+<div class="mo" id="m-grade"><div class="md">
+  <div class="mh"><div class="mht">✏️ Grade Assignment</div><div class="mx" onclick="closeM('m-grade')">✕</div></div>
+  <div class="mb">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px">React Portfolio Project — Tankthireddy</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:14px">Web Development · BCA-603 · 100 marks · Submitted 22 Mar</div>
+    <div style="background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:12px;font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.7">Student submitted a full React portfolio with 5 projects: weather app, todo list, movie search, quiz app, and BCA project showcase. Clean code, good use of hooks and state management.</div>
+    <div class="fd2-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fd2"><label>Score (out of 100)</label><input type="number" value="94" min="0" max="100"/></div>
+      <div class="fd2"><label>Grade</label><select><option>O (Outstanding)</option><option>A+</option><option>A</option><option>B+</option><option>B</option></select></div>
+    </div>
+    <div class="fd2"><label>Feedback to Student</label><textarea>Excellent work! React components are clean and well-structured. Strong understanding of hooks, state management, and lifecycle. Minor: Add better error handling in API calls and improve mobile responsiveness.</textarea></div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-grade')">Cancel</button><button class="mfg" onclick="toast('✅ Grade saved & student notified!','ok');closeM('m-grade')">Save Grade →</button></div>
+</div></div>
+
+<!-- Notifications -->
+<div class="mo" id="m-notif"><div class="md">
+  <div class="mh"><div class="mht">🔔 Notifications</div><div class="mx" onclick="closeM('m-notif')">✕</div></div>
+  <div class="mb" style="padding:14px 22px">
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div class="li-item"><div style="font-size:18px;width:36px;flex-shrink:0">🔴</div><div style="flex:1"><div style="font-size:13px;font-weight:700">DBMS Live Class has started!</div><div style="font-size:11.5px;color:var(--t3)">Dr. Vikram Singh · 2 min ago</div></div></div>
+      <div class="li-item"><div style="font-size:18px;width:36px;flex-shrink:0">⚠️</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Assignment overdue: DBMS Lab Report</div><div style="font-size:11.5px;color:var(--re)">Overdue by 2 days · Action needed</div></div></div>
+      <div class="li-item"><div style="font-size:18px;width:36px;flex-shrink:0">✅</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Grade posted: Python Programming Final</div><div style="font-size:11.5px;color:var(--gr)">Score: 96% · Grade: O · Rank #1</div></div></div>
+      <div class="li-item"><div style="font-size:18px;width:36px;flex-shrink:0">💬</div><div style="flex:1"><div style="font-size:13px;font-weight:700">New reply to your forum post</div><div style="font-size:11.5px;color:var(--t3)">Priya Reddy replied to your DBMS question</div></div></div>
+      <div class="li-item"><div style="font-size:18px;width:36px;flex-shrink:0">📅</div><div style="flex:1"><div style="font-size:13px;font-weight:700">ExamFlow Exam: Advanced DBMS today at 4 PM</div><div style="font-size:11.5px;color:var(--ye)">90 minutes · 60 questions · Proctored</div></div></div>
+    </div>
+  </div>
+  <div class="mf"><button class="mfc" onclick="closeM('m-notif')">Close</button><button class="mfg" onclick="toast('✅ All marked as read','ok');closeM('m-notif')">Mark All Read</button></div>
+</div></div>
+
+<!-- TOAST -->
+<div class="toast-el" id="toast-el"></div>
+
+<!-- ████████████████████████████████████████
+     JAVASCRIPT
+████████████████████████████████████████ -->
+<script>
+// ── USERS DB ──
+var USERS = {
+  '2320520034': {pw:'pass123',role:'student',nm:'Tankthireddy',av:'TK',roll:'2320520034',sec:'BCA-A',avbg:'linear-gradient(135deg,#f59e0b,#f97316)'},
+  '2320520035': {pw:'pass123',role:'student',nm:'Ravi Shankar',av:'RS',roll:'2320520035',sec:'BCA-A',avbg:'linear-gradient(135deg,#4f8eff,#818cf8)'},
+  '2320520036': {pw:'pass123',role:'student',nm:'Priya Reddy',av:'PR',roll:'2320520036',sec:'BCA-B',avbg:'linear-gradient(135deg,#34a853,#1de9b6)'},
+  'teacher@klh.edu': {pw:'pass123',role:'teacher',nm:'Dr. Vikram Singh',av:'VS',roll:'teacher@klh.edu',sec:'HOD · BCA',avbg:'linear-gradient(135deg,#1a73e8,#4f8eff)'},
+  'faculty@klh.edu': {pw:'pass123',role:'admin',nm:'K. V. Sharada',av:'KS',roll:'faculty@klh.edu',sec:'Faculty Admin',avbg:'linear-gradient(135deg,#34a853,#1de9b6)'},
+};
+
+// ── NAV CONFIGS ──
+var NAV_CONFIGS = {
+  student: {
+    title:'🌙 My Dashboard',sub:'BCA Final Year · Sem 6 · Section A',cta:'+ Join Course',ctaAct:"openM('m-join-course')",
+    groups:[
+      {items:[
+        {ic:'🏠',lbl:'Dashboard',pg:'pg-s-home'},
+        {ic:'📚',lbl:'My Courses',pg:'pg-s-courses'},
+        {ic:'📝',lbl:'Assignments',pg:'pg-s-assignments',bx:'4',bc:'r'},
+        {ic:'🏆',lbl:'My Grades',pg:'pg-s-grades'},
+        {ic:'💬',lbl:'Forum',pg:'pg-s-forum',bx:'New',bc:'b'},
+      ]},
+      {sec:'Learning Tools',items:[
+        {ic:'📅',lbl:'Schedule',pg:'pg-s-schedule'},
+        {ic:'📖',lbl:'Study Materials',pg:'pg-s-material'},
+        {ic:'🤖',lbl:'AI Assistant',pg:'pg-s-ai',bx:'Live',bc:'g'},
+        {ic:'🎥',lbl:'Live Classes',pg:'pg-s-home'},
+      ]},
+      {sec:'Account',items:[
+        {ic:'👤',lbl:'My Profile',pg:'pg-s-profile'},
+        {ic:'🔗',lbl:'ExamFlow →',ext:'bca_examflow.html'},
+      ]},
+    ]
+  },
+  teacher: {
+    title:'👨‍🏫 Teacher Dashboard',sub:'BCA Final Year · 3 Sections · 248 Students',cta:'+ Create Course',ctaAct:"openM('m-new-course')",
+    groups:[
+      {items:[
+        {ic:'🏠',lbl:'Dashboard',pg:'pg-t-home'},
+        {ic:'📚',lbl:'My Courses',pg:'pg-t-home'},
+        {ic:'📝',lbl:'Assignments',pg:'pg-t-home',bx:'18',bc:'r'},
+        {ic:'📊',lbl:'Analytics',pg:'pg-t-home'},
+        {ic:'👥',lbl:'My Students',pg:'pg-t-home'},
+      ]},
+      {sec:'Teaching',items:[
+        {ic:'🎥',lbl:'Live Class',pg:'pg-t-home'},
+        {ic:'❓',lbl:'Question Bank',pg:'pg-t-home'},
+        {ic:'📅',lbl:'Schedule',pg:'pg-t-home'},
+        {ic:'📢',lbl:'Announcements',pg:'pg-t-home'},
+      ]},
+      {sec:'Exam',items:[
+        {ic:'⚠️',lbl:'ExamFlow',ext:'bca_examflow.html',bx:'7',bc:'r'},
+      ]},
+    ]
+  },
+  admin: {
+    title:'🏛️ Admin Dashboard',sub:'KLH University · BCA Dept · Full Access',cta:'+ Add Faculty',ctaAct:"toast('+ Faculty added!','ok')",
+    groups:[
+      {items:[
+        {ic:'🏛️',lbl:'Overview',pg:'pg-a-home'},
+        {ic:'👨‍🏫',lbl:'All Teachers',pg:'pg-a-home'},
+        {ic:'👥',lbl:'All Students',pg:'pg-a-home'},
+        {ic:'📚',lbl:'All Courses',pg:'pg-a-home'},
+        {ic:'📊',lbl:'Analytics',pg:'pg-a-home'},
+      ]},
+      {sec:'Admin Tools',items:[
+        {ic:'⚠️',lbl:'Violations',ext:'bca_examflow.html',bx:'7',bc:'r'},
+        {ic:'⚙️',lbl:'Settings',pg:'pg-a-home'},
+        {ic:'📄',lbl:'Reports',pg:'pg-a-home'},
+        {ic:'🔒',lbl:'Security',pg:'pg-a-home'},
+      ]},
+    ]
+  }
+};
+
+var currentRole = 'student';
+var currentPage = 'pg-s-home';
+var toastTimer = null;
+
+// ── STARS ──
+(function(){
+  var sb = document.getElementById('stars-bg');
+  for(var i = 0; i < 140; i++){
+    var s = document.createElement('div');
+    s.className = 'star';
+    var sz = Math.random()*2.5+0.5;
+    s.style.cssText = 'width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;--op:'+(Math.random()*.5+.1)+';--d:'+(Math.random()*4+2)+'s;--dl:'+(Math.random()*5)+'s';
+    sb.appendChild(s);
+  }
+})();
+
+// ── AUTH ──
+function switchAuthTab(t){
+  document.getElementById('login-form').style.display = t==='login' ? 'block' : 'none';
+  document.getElementById('reg-form').style.display = t==='register' ? 'block' : 'none';
+  document.querySelectorAll('.atab').forEach(function(el,i){
+    el.classList.toggle('on',(t==='login'&&i===0)||(t==='register'&&i===1));
+  });
+}
+
+function doLogin(){
+  var id = document.getElementById('l-id').value.trim();
+  var pw = document.getElementById('l-pw').value;
+  var role = document.getElementById('l-role').value;
+  var errEl = document.getElementById('login-err');
+  var u = USERS[id];
+  if(!u || u.pw!==pw || u.role!==role){
+    errEl.style.display='block';
+    setTimeout(function(){errEl.style.display='none';},3000);
+    return;
+  }
+  // Setup user info in dash
+  var sbAv = document.getElementById('sb-av');
+  if(sbAv){ sbAv.textContent=u.av; sbAv.style.background=u.avbg; }
+  document.getElementById('sb-un').textContent = u.nm;
+  document.getElementById('sb-ur').textContent = u.roll+' · '+(u.sec||role);
+  // Show dashboard
+  document.getElementById('view-login').classList.remove('show');
+  document.getElementById('view-dash').classList.add('show');
+  setRole(role);
+}
+
+function doRegister(){
+  var fn = document.getElementById('r-fn').value.trim();
+  var ln = document.getElementById('r-ln').value.trim();
+  var id = document.getElementById('r-id').value.trim();
+  var em = document.getElementById('r-em').value.trim();
+  var pw = document.getElementById('r-pw').value;
+  var role = document.getElementById('r-role').value;
+  var errEl = document.getElementById('reg-err');
+  var okEl = document.getElementById('reg-ok');
+  if(!fn||!ln||!id||!em||!pw){errEl.style.display='block';setTimeout(function(){errEl.style.display='none';},3000);return;}
+  var nm = fn+' '+ln;
+  var ini = (fn[0]+(ln[0]||'')).toUpperCase();
+  USERS[id] = {pw:pw,role:role,nm:nm,av:ini,roll:id,sec:'BCA-A',avbg:'linear-gradient(135deg,#1a73e8,#4f8eff)'};
+  okEl.style.display='block';
+  setTimeout(function(){
+    okEl.style.display='none';
+    switchAuthTab('login');
+    document.getElementById('l-id').value=id;
+    document.getElementById('l-role').value=role;
+  },1800);
+}
+
+function doLogout(){
+  document.getElementById('view-dash').classList.remove('show');
+  document.getElementById('view-login').classList.add('show');
+  document.getElementById('l-pw').value='';
+}
+
+// ── ROLE SWITCHING ──
+function setRole(role){
+  currentRole = role;
+  var cfg = NAV_CONFIGS[role];
+  document.getElementById('tb-title').textContent = cfg.title;
+  document.getElementById('tb-sub').textContent = cfg.sub;
+  var ctaBtn = document.getElementById('tb-cta');
+  ctaBtn.textContent = cfg.cta;
+  ctaBtn.setAttribute('onclick', cfg.ctaAct);
+  // Role tab highlights
+  document.querySelectorAll('.rtab').forEach(function(t,i){
+    t.classList.toggle('on',['student','teacher','admin'][i]===role);
+  });
+  renderSidebar(role, cfg);
+  // Show first page
+  var firstPg = cfg.groups[0].items[0].pg;
+  if(firstPg) switchPage(firstPg);
+}
+
+function renderSidebar(role, cfg){
+  var nav = document.getElementById('sb-nav');
+  if(!nav) return;
+  nav.innerHTML = '';
+  cfg.groups.forEach(function(grp){
+    if(grp.sec){
+      var sec = document.createElement('div');
+      sec.className = 'sb-sec';
+      sec.textContent = grp.sec;
+      nav.appendChild(sec);
+    }
+    grp.items.forEach(function(item){
+      var d = document.createElement('div');
+      d.className = 'si' + (item.pg===currentPage?' on':'') + (item.ext&&item.lbl.includes('ExamFlow')?' danger':'');
+      d.innerHTML = '<span class="ic">'+item.ic+'</span>'+item.lbl+
+        (item.bx?'<span class="si-bx '+(item.bc||'')+'">'+item.bx+'</span>':'');
+      d.onclick = function(){
+        if(item.ext){ window.open(item.ext,'_blank'); return; }
+        if(item.pg){
+          switchPage(item.pg);
+          nav.querySelectorAll('.si').forEach(function(x){x.classList.remove('on');});
+          d.classList.add('on');
+        }
+      };
+      nav.appendChild(d);
+    });
+  });
+}
+
+function switchPage(id){
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+  var pg = document.getElementById(id);
+  if(pg) pg.classList.add('on');
+  currentPage = id;
+}
+
+// ── MODALS ──
+function openM(id){ var m=document.getElementById(id); if(m)m.classList.add('op'); }
+function closeM(id){ var m=document.getElementById(id); if(m)m.classList.remove('op'); }
+document.querySelectorAll('.mo').forEach(function(ov){
+  ov.addEventListener('click',function(e){ if(e.target===ov) ov.classList.remove('op'); });
+});
+
+// ── TABS ──
+function tabSwitch(el, parentSel){
+  var parent = el.closest('.tabs');
+  if(!parent) return;
+  parent.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+  el.classList.add('on');
+}
+
+// ── TOAST ──
+function toast(msg, type){
+  type = type || 'ok';
+  var t = document.getElementById('toast-el');
+  if(!t) return;
+  t.textContent = msg;
+  t.className = 'toast-el on ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('on'); }, 3500);
+}
+
+// ── AI ASSISTANT ──
+var AI_RESPONSES = {
+  'dbms':'Great question! In DBMS normalization: **2NF** requires that every non-key attribute is fully dependent on the primary key (no partial dependency). **3NF** additionally requires no transitive dependencies — non-key attributes should not depend on other non-key attributes. Example: if StudentID → DeptID → DeptName, that transitive dependency violates 3NF and DeptName must be moved to a Department table.',
+  'react':'Key React.js concepts for exams: (1) JSX — JavaScript XML syntax. (2) Components — functional and class-based. (3) Props — read-only data passed to components. (4) State — mutable data with useState hook. (5) useEffect — for side effects and lifecycle. (6) Virtual DOM — React efficiency mechanism. (7) Event handling with synthetic events.',
+  'neural':'Neural networks are computing systems inspired by the human brain! They consist of: Input Layer (receives data), Hidden Layers (process information through weighted connections), and Output Layer (produces results). Each connection has a weight that gets adjusted during training. Common types: Feedforward, CNN (images), RNN (sequences), Transformer (NLP).',
+  'osi':'The OSI Model has 7 layers (remember: "Please Do Not Throw Sausage Pizza Away"): (7) Application — HTTP, FTP, DNS. (6) Presentation — encryption, compression. (5) Session — session management. (4) Transport — TCP, UDP. (3) Network — IP routing. (2) Data Link — MAC addresses. (1) Physical — cables, signals.',
+  'agile':'Agile is an iterative software development methodology! Key principles: (1) Customer collaboration over contract negotiation. (2) Responding to change over following a plan. (3) Working software over comprehensive documentation. Scrum is the most popular Agile framework with Sprints (2-4 week iterations), Daily Standups, Sprint Planning, and Retrospectives.',
+  'default':'Great question! Based on your BCA curriculum, I will approach this topic by breaking it into core concepts. Let me give you a structured explanation... The key idea here is to understand both the theoretical foundation and practical application. Would you like me to generate practice MCQs on this topic, or explain a specific part in more detail?'
+};
+
+function sendAI(){
+  var inp = document.getElementById('ai-input');
+  var msgs = document.getElementById('ai-msgs');
+  if(!inp||!msgs) return;
+  var q = inp.value.trim();
+  if(!q) return;
+  // Add user message
+  var um = document.createElement('div');
+  um.className = 'ai-msg user';
+  um.textContent = q;
+  msgs.appendChild(um);
+  inp.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  // Determine response
+  var ql = q.toLowerCase();
+  var resp = AI_RESPONSES.default;
+  if(ql.includes('2nf')||ql.includes('3nf')||ql.includes('normali')||ql.includes('dbms')) resp = AI_RESPONSES.dbms;
+  else if(ql.includes('react')||ql.includes('web')) resp = AI_RESPONSES.react;
+  else if(ql.includes('neural')||ql.includes('ai')||ql.includes('ml')||ql.includes('machine')) resp = AI_RESPONSES.neural;
+  else if(ql.includes('osi')||ql.includes('network')||ql.includes('layer')) resp = AI_RESPONSES.osi;
+  else if(ql.includes('agile')||ql.includes('scrum')||ql.includes('waterfall')) resp = AI_RESPONSES.agile;
+  // Typing indicator
+  var typing = document.createElement('div');
+  typing.className = 'ai-msg bot';
+  typing.textContent = '🤖 Thinking...';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(function(){
+    typing.textContent = '🤖 ' + resp;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 900);
+}
+
+function askAI(q){
+  document.getElementById('ai-input').value = q;
+  sendAI();
+  switchPage('pg-s-ai');
+  // Update sidebar
+  document.querySelectorAll('.si').forEach(function(s){s.classList.remove('on');});
+}
+
+// ── KEYBOARD SHORTCUTS ──
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape') document.querySelectorAll('.mo.op').forEach(function(m){m.classList.remove('op');});
+  if(e.key==='Enter' && document.activeElement && document.activeElement.id==='ai-input') sendAI();
+});
+
+// ── INIT ──
+(function(){
+  // Handle "Enter" on login
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Enter'){
+      if(document.getElementById('view-login').classList.contains('show')){
+        if(document.getElementById('login-form').style.display!=='none') doLogin();
+        else doRegister();
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ExamFlow — BCA 2023-2026 | KLH University</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Karla:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04070e;--bg2:#070c16;--sf:#0b1221;--sf2:#0f1a2e;
+  --bd:rgba(255,255,255,.06);--bd2:rgba(255,255,255,.12);
+  --tx:#d8e4f8;--tx2:#6b7f9a;--mu:#2e3d52;
+  --a:#4f7ef8;--a2:#7aa2fb;--tl:#0fb8a4;
+  --safe:#1db854;--warn:#f0a500;--danger:#e8404a;
+  --ds:#4f7ef8;--os:#0fb8a4;--js:#e8c848;--dsa:#a855f7;--ml:#f97316;
+  --r:12px;--fn:'Karla',sans-serif;--dp:'Syne',sans-serif;--mn:'JetBrains Mono',monospace;
+}
+html{font-size:14px}
+body{font-family:var(--fn);background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+button{font-family:var(--fn);cursor:pointer;border:none;outline:none}
+input,select{font-family:var(--fn)}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 40% at 20% 10%,rgba(79,126,248,.07),transparent),
+             radial-gradient(ellipse 50% 30% at 80% 80%,rgba(15,184,164,.05),transparent)}
+
+/* ── PAGE MANAGER ── */
+.page{display:none;position:relative;z-index:1}
+.page.active{display:flex}
+
+/* ── AUTH ── */
+#loginPage,#registerPage{min-height:100vh;align-items:center;justify-content:center;padding:20px}
+.auth-wrap{display:grid;grid-template-columns:1fr 1fr;max-width:900px;width:100%;background:var(--sf);border:1px solid var(--bd);border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6);animation:authIn .4s cubic-bezier(.22,1,.36,1)}
+@keyframes authIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.auth-left{background:linear-gradient(145deg,#060d1e,#0a1428);padding:44px 38px;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--bd);position:relative;overflow:hidden}
+.auth-left::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(79,126,248,.12),transparent 70%);pointer-events:none}
+.auth-left::after{content:'';position:absolute;bottom:-50px;left:-30px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(15,184,164,.08),transparent 70%);pointer-events:none}
+.auth-brand{position:relative;z-index:1}
+.brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.brand-mk{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 0 20px rgba(79,126,248,.4)}
+.brand-nm{font-family:var(--dp);font-size:21px;font-weight:800;letter-spacing:-.02em}
+.brand-nm em{font-style:normal;color:var(--a2)}
+.bca-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(15,184,164,.12);border:1px solid rgba(15,184,164,.3);border-radius:8px;padding:6px 12px;margin-bottom:14px;font-size:11px;color:var(--tl);font-weight:600;font-family:var(--mn)}
+.auth-tagline{font-family:var(--dp);font-size:22px;font-weight:700;line-height:1.35;margin-bottom:9px}
+.auth-sub{font-size:12px;color:var(--tx2);line-height:1.7;margin-bottom:22px}
+.auth-features{display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
+.af-item{display:flex;align-items:center;gap:9px;font-size:11px;color:var(--tx2)}
+.af-icon{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.auth-subjects{margin-top:auto;padding-top:22px;position:relative;z-index:1}
+.as-label{font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--tx2);margin-bottom:7px}
+.as-pills{display:flex;flex-wrap:wrap;gap:5px}
+.as-pill{font-family:var(--dp);font-size:9px;font-weight:600;padding:3px 9px;border-radius:100px;border:1px solid currentColor;letter-spacing:.06em;text-transform:uppercase}
+.auth-right{padding:40px 38px;display:flex;flex-direction:column;justify-content:center;overflow-y:auto;max-height:100vh}
+.auth-form-title{font-family:var(--dp);font-size:20px;font-weight:800;letter-spacing:-.02em;margin-bottom:5px}
+.auth-form-sub{font-size:12px;color:var(--tx2);margin-bottom:20px;line-height:1.6}
+.form-row{display:flex;gap:11px}
+.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;flex:1}
+.form-label{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx2)}
+.form-input{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:9px;color:var(--tx);font-size:13px;padding:10px 13px;transition:border-color .2s,box-shadow .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(79,126,248,.12)}
+.form-input::placeholder{color:var(--mu)}
+.form-input.err{border-color:var(--danger)}
+.form-err{font-size:10px;color:var(--danger);margin-top:-8px;margin-bottom:3px;display:none}
+.form-select{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:9px;color:var(--tx);font-size:13px;padding:10px 13px;outline:none;width:100%;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7f9a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:border-color .2s}
+.form-select:focus{border-color:var(--a)}
+.form-select option{background:#0b1221}
+.form-divider{display:flex;align-items:center;gap:12px;margin:12px 0}
+.fd-line{flex:1;height:1px;background:var(--bd)}.fd-txt{font-size:10px;color:var(--tx2)}
+.btn-primary{width:100%;padding:11px;border-radius:10px;background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;font-size:13px;font-weight:700;box-shadow:0 4px 16px rgba(79,126,248,.35);transition:all .2s;letter-spacing:.02em}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(79,126,248,.5)}
+.btn-secondary{width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--bd2);color:var(--tx2);font-size:13px;font-weight:500;transition:all .2s}
+.btn-secondary:hover{background:rgba(255,255,255,.08);color:var(--tx)}
+.auth-switch{text-align:center;font-size:12px;color:var(--tx2);margin-top:13px}
+.auth-switch a{color:var(--a2);cursor:pointer;font-weight:600}
+.remember-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:12px}
+.check-wrap{display:flex;align-items:center;gap:7px;cursor:pointer}
+.check-box{width:16px;height:16px;border-radius:4px;border:1px solid var(--bd2);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;font-size:10px}
+.check-box.on{background:var(--a);border-color:var(--a)}
+.check-label{color:var(--tx2)}.forgot-link{color:var(--a2);cursor:pointer}
+.strength-bar{height:3px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-top:3px}
+.strength-fill{height:100%;border-radius:3px;transition:width .3s,background .3s;width:0}
+.strength-txt{font-size:9px;margin-top:3px}
+.avatar-pick{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
+.av-opt{width:32px;height:32px;border-radius:9px;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.03)}
+.av-opt:hover{border-color:var(--a2)}.av-opt.sel{border-color:var(--a);background:rgba(79,126,248,.15)}
+
+/* ── TOAST ── */
+.toast-c{position:fixed;top:18px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;border:1px solid currentColor;backdrop-filter:blur(20px);font-size:11px;font-weight:600;animation:tI .3s ease;min-width:200px;max-width:310px}
+.toast.info{color:#7aa2fb;background:rgba(79,126,248,.18);border-color:rgba(79,126,248,.35)}
+.toast.warn{color:var(--warn);background:rgba(240,165,0,.18);border-color:rgba(240,165,0,.35)}
+.toast.err2{color:var(--danger);background:rgba(232,64,74,.18);border-color:rgba(232,64,74,.35)}
+.toast.ok{color:var(--safe);background:rgba(29,184,84,.15);border-color:rgba(29,184,84,.35)}
+@keyframes tI{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+
+/* ── DASHBOARD ── */
+#dashPage{flex-direction:column;min-height:100vh}
+.dash-nav{position:sticky;top:0;z-index:100;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:rgba(4,7,14,.92);backdrop-filter:blur(22px);border-bottom:1px solid var(--bd)}
+.dash-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.dl-mk{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:14px}
+.dl-nm{font-family:var(--dp);font-size:16px;font-weight:800;letter-spacing:-.02em}
+.dl-nm em{font-style:normal;color:var(--a2)}
+.dash-nav-r{display:flex;align-items:center;gap:8px}
+.user-pill{display:flex;align-items:center;gap:7px;padding:3px 10px 3px 3px;border-radius:100px;border:1px solid var(--bd);background:rgba(255,255,255,.04)}
+.up-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.up-name{font-size:11px;font-weight:600}.up-roll{font-family:var(--mn);font-size:8px;color:var(--tx2)}
+.logout-btn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:rgba(232,64,74,.1);border:1px solid rgba(232,64,74,.25);color:var(--danger);font-size:11px;font-weight:600;transition:all .2s}
+.logout-btn:hover{background:rgba(232,64,74,.18)}
+.dash-body{padding:28px 26px;flex:1}
+.dash-welcome{margin-bottom:22px}
+.dw-greeting{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx2);margin-bottom:4px;font-family:var(--mn)}
+.dw-name{font-family:var(--dp);font-size:24px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.dw-name span{color:var(--a2)}.dw-sub{font-size:12px;color:var(--tx2)}
+.dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.dstat{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
+.dstat::after{content:'';position:absolute;top:-25px;right:-25px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,var(--sc,rgba(79,126,248,.15)),transparent 70%);pointer-events:none}
+.ds-icon{font-size:18px}.ds-val{font-family:var(--mn);font-size:20px;font-weight:700}
+.ds-label{font-size:9.5px;color:var(--tx2)}.ds-chg{font-family:var(--mn);font-size:8.5px;color:var(--safe)}
+.dash-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.dash-card-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;border-bottom:1px solid var(--bd)}
+.dch-title{font-family:var(--dp);font-size:13.5px;font-weight:700}.dch-sub{font-size:9.5px;color:var(--tx2);margin-top:2px}
+.dch-action{font-size:11px;color:var(--a2);cursor:pointer;padding:5px 11px;border-radius:7px;border:1px solid rgba(79,126,248,.25);background:rgba(79,126,248,.08);font-weight:600}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.exam-list{display:flex;flex-direction:column}
+.exam-item{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;border-bottom:1px solid var(--bd);gap:12px;transition:background .18s}
+.exam-item:last-child{border-bottom:none}.exam-item:hover{background:rgba(255,255,255,.02)}
+.ei-left{display:flex;align-items:center;gap:10px}
+.ei-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ei-title{font-size:12px;font-weight:600}.ei-meta{display:flex;align-items:center;gap:5px;margin-top:3px;font-size:9px;color:var(--tx2);flex-wrap:wrap}
+.ei-dot{width:3px;height:3px;border-radius:50%;background:var(--mu)}
+.ei-badge{font-size:8px;font-weight:600;padding:2px 7px;border-radius:100px;font-family:var(--dp);letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor}
+.start-btn{padding:7px 14px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;font-size:10px;font-weight:700;box-shadow:0 3px 10px rgba(79,126,248,.3);transition:all .2s;white-space:nowrap;flex-shrink:0}
+.start-btn:hover{transform:translateY(-1px)}
+.profile-card{padding:16px;display:flex;flex-direction:column;gap:11px}
+.pc-top{display:flex;align-items:center;gap:11px}
+.pc-av{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;color:#fff;box-shadow:0 5px 14px rgba(79,126,248,.3)}
+.pc-name{font-family:var(--dp);font-size:14px;font-weight:700}.pc-roll{font-family:var(--mn);font-size:9px;color:var(--a2);margin-top:2px}
+.pc-rows{display:flex;flex-direction:column;gap:6px}
+.pc-row{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;padding:6px 10px;background:rgba(255,255,255,.03);border-radius:7px;border:1px solid var(--bd)}
+.pc-k{color:var(--tx2)}.pc-v{font-family:var(--mn);font-size:10px;color:var(--tx)}
+.pc-v.a{color:var(--a2)}.pc-v.t{color:var(--tl)}
+.subject-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px 16px 16px}
+.sub-tile{border-radius:9px;padding:11px 9px;display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:all .2s;border:1px solid transparent}
+.sub-tile:hover{transform:translateY(-2px)}
+.st-icon{font-size:19px}.st-name{font-size:9px;font-weight:700;font-family:var(--dp);letter-spacing:.04em;text-transform:uppercase}
+.st-count{font-family:var(--mn);font-size:8.5px;opacity:.8}
+.st-bar{height:3px;background:rgba(255,255,255,.12);border-radius:100px;overflow:hidden;margin-top:2px}
+.st-fill{height:100%;border-radius:100px}
+
+/* ── EXAM PAGE ── */
+#examPage{flex-direction:column;min-height:100vh}
+.nb{position:sticky;top:0;z-index:100;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;gap:12px;background:rgba(4,7,14,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd)}
+.nb::after{content:'';position:absolute;bottom:0;left:0;height:2px;width:var(--pg,0%);background:linear-gradient(90deg,var(--a),var(--tl));transition:width .5s ease;pointer-events:none}
+.nb-l,.nb-r{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.nb-c{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
+.logo2{display:flex;align-items:center;gap:7px;text-decoration:none}
+.logo2-mk{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:13px}
+.logo2-nm{font-family:var(--dp);font-size:15px;font-weight:800;letter-spacing:-.02em}
+.logo2-nm em{font-style:normal;color:var(--a2)}
+.nb-title{font-family:var(--dp);font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+.nb-meta{display:flex;align-items:center;gap:5px;font-family:var(--mn);font-size:7.5px;color:var(--tx2)}
+.nb-meta .s{color:var(--mu)}
+.tc{display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;border:1px solid currentColor;font-family:var(--mn);font-size:9.5px;font-weight:500;white-space:nowrap;transition:all .4s}
+.tc.safe{color:var(--safe);background:rgba(29,184,84,.08)}
+.tc.warning{color:var(--warn);background:rgba(240,165,0,.10)}
+.tc.critical{color:var(--danger);background:rgba(232,64,74,.10);animation:critP 1.2s ease-in-out infinite}
+@keyframes critP{0%,100%{box-shadow:0 0 0 0 rgba(232,64,74,.3)}50%{box-shadow:0 0 0 4px rgba(232,64,74,0)}}
+.submit-nb{display:flex;align-items:center;gap:5px;padding:5px 12px;background:linear-gradient(135deg,var(--a),var(--tl));border-radius:7px;color:#fff;font-size:10.5px;font-weight:700;box-shadow:0 3px 10px rgba(79,126,248,.35);transition:all .2s}
+.submit-nb:hover{transform:translateY(-1px)}
+.av-nb{display:flex;align-items:center;gap:6px;padding:3px 8px 3px 3px;border-radius:100px;border:1px solid var(--bd);background:rgba(255,255,255,.04)}
+.av-nb-c{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.av-nb-n{font-size:10.5px;font-weight:600}.av-nb-r{font-family:var(--mn);font-size:7.5px;color:var(--tx2)}
+.pw{position:relative;margin-right:38px}
+.pb{width:58px;height:4px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--a),var(--tl));border-radius:100px;transition:width .5s}
+.pl{position:absolute;top:50%;right:-36px;transform:translateY(-50%);font-family:var(--mn);font-size:7.5px;color:var(--tx2);white-space:nowrap}
+.sub-tabs{display:flex;align-items:center;padding:0 18px;background:rgba(4,7,14,.8);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none}
+.sub-tabs::-webkit-scrollbar{display:none}
+.stab{display:flex;align-items:center;gap:5px;padding:8px 14px;font-size:10px;font-weight:600;color:var(--tx2);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;letter-spacing:.02em;text-transform:uppercase;font-family:var(--dp)}
+.stab:hover{color:var(--tx)}
+.stab.active{color:var(--sc,var(--a));border-bottom-color:var(--sc,var(--a))}
+.stab .dot{width:6px;height:6px;border-radius:50%;background:var(--sc,var(--a))}
+.stab .cnt{font-family:var(--mn);font-size:8px;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.08)}
+.stab.active .cnt{background:var(--sc,var(--a));color:#fff}
+.layout{display:grid;grid-template-columns:210px 1fr 262px;min-height:calc(100vh - 96px);position:relative;z-index:1}
+
+/* LEFT SIDEBAR */
+.sl{background:var(--bg2);border-right:1px solid var(--bd);padding:13px 10px;display:flex;flex-direction:column;gap:12px;position:sticky;top:96px;height:calc(100vh - 96px);overflow-y:auto}
+.sl::-webkit-scrollbar{width:3px}.sl::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+.slt{font-size:7.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2)}
+.sc-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:10px;display:flex;flex-direction:column;gap:8px}
+.sc-top{display:flex;align-items:center;gap:8px}
+.sc-av{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.sc-n{font-size:11px;font-weight:700}.sc-rn{font-family:var(--mn);font-size:8px;color:var(--a2)}
+.sc-rows{display:flex;flex-direction:column;gap:3px}
+.sc-row2{display:flex;justify-content:space-between;font-size:8.5px}
+.sc-k{color:var(--tx2)}.sc-v2{font-family:var(--mn);color:var(--tx);font-size:8.5px}
+.sub-prog{display:flex;flex-direction:column;gap:6px}
+.sp-row{display:flex;flex-direction:column;gap:2px}
+.sp-label{display:flex;justify-content:space-between;align-items:center;font-size:8.5px}
+.sp-name{font-weight:600}.sp-cnt{font-family:var(--mn);font-size:7.5px;color:var(--tx2)}
+.sp-bar{height:4px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden}
+.sp-fill{height:100%;border-radius:100px;transition:width .5s}
+.legend{display:flex;flex-direction:column;gap:3px}
+.leg-i{display:flex;align-items:center;gap:6px;font-size:8.5px;color:var(--tx2)}
+.leg-d{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.leg-d.ans{background:var(--a)}.leg-d.cur{background:var(--tl);outline:2px solid var(--tl);outline-offset:2px}
+.leg-d.flg{background:var(--warn)}.leg-d.una{background:rgba(255,255,255,.07);border:1px solid var(--bd2)}
+.qg{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.qb{aspect-ratio:1;border-radius:5px;font-family:var(--mn);font-size:8px;font-weight:500;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border:1px solid var(--bd);color:var(--tx2);cursor:pointer;transition:all .15s;position:relative;line-height:1}
+.qb:hover{background:rgba(255,255,255,.09)}
+.qb.ans{background:rgba(79,126,248,.22);border-color:rgba(79,126,248,.4);color:var(--a2)}
+.qb.cur{background:rgba(15,184,164,.32);border-color:var(--tl);color:#fff;box-shadow:0 0 6px rgba(15,184,164,.4)}
+.qb.flg{background:rgba(240,165,0,.18);border-color:rgba(240,165,0,.4);color:var(--warn)}
+.qb.flg::after{content:'⚑';position:absolute;top:-2px;right:0;font-size:5.5px}
+.qb.ans.os{background:rgba(15,184,164,.22);border-color:rgba(15,184,164,.4);color:#0fb8a4}
+.qb.ans.js{background:rgba(232,200,72,.18);border-color:rgba(232,200,72,.4);color:#e8c848}
+.qb.ans.dsa{background:rgba(168,85,247,.2);border-color:rgba(168,85,247,.4);color:#a855f7}
+.qb.ans.ml{background:rgba(249,115,22,.2);border-color:rgba(249,115,22,.4);color:#f97316}
+.mini-grid-wrap{max-height:180px;overflow-y:auto}
+.mini-grid-wrap::-webkit-scrollbar{width:3px}.mini-grid-wrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+.sts{display:flex;flex-direction:column;gap:4px}
+.sr2x{display:flex;justify-content:space-between;align-items:center;font-size:9px}
+.sk{color:var(--tx2)}.sv{font-family:var(--mn);font-weight:600;color:var(--tx)}
+.sv.g{color:var(--safe)}.sv.y{color:var(--warn)}.sv.r{color:var(--danger)}
+
+/* MAIN */
+.main{padding:18px 22px;display:flex;flex-direction:column;gap:13px}
+.sub-header{display:flex;align-items:center;gap:9px;padding:8px 13px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r)}
+.sub-icon2{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.sub-name-h{font-family:var(--dp);font-size:13px;font-weight:700}
+.sub-desc-h{font-size:9.5px;color:var(--tx2);margin-top:1px}
+.sub-badge-h{margin-left:auto;font-family:var(--mn);font-size:8px;padding:2px 8px;border-radius:100px;border:1px solid currentColor;opacity:.8}
+.qc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;box-shadow:0 5px 28px rgba(0,0,0,.4);animation:cI .22s ease}
+@keyframes cI{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.qh{padding:11px 15px 8px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}
+.qbadge{font-family:var(--mn);font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:100px;flex-shrink:0;border:1px solid currentColor;opacity:.9}
+.qtags{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.qtag{font-size:8px;font-weight:600;padding:2px 7px;border-radius:100px;border:1px solid var(--bd2);color:var(--tx2);font-family:var(--dp);letter-spacing:.04em;text-transform:uppercase}
+.qtag.easy{border-color:rgba(29,184,84,.3);color:var(--safe)}
+.qtag.medium{border-color:rgba(240,165,0,.3);color:var(--warn)}
+.qtag.hard{border-color:rgba(232,64,74,.3);color:var(--danger)}
+.fb{background:none;border:1px solid var(--bd);border-radius:6px;color:var(--tx2);font-size:9.5px;padding:3px 8px;transition:all .18s}
+.fb:hover,.fb.on{border-color:rgba(240,165,0,.5);color:var(--warn);background:rgba(240,165,0,.08)}
+.qbody{padding:17px 15px}
+.qt{font-family:var(--dp);font-size:13.5px;font-weight:600;line-height:1.65;color:var(--tx);margin-bottom:14px;letter-spacing:-.01em}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:7px;border:1px solid var(--bd);background:rgba(255,255,255,.02);cursor:pointer;transition:all .18s;user-select:none}
+.opt:hover{border-color:rgba(79,126,248,.3);background:rgba(79,126,248,.05)}
+.opt.sel{border-color:var(--a);background:rgba(79,126,248,.12);box-shadow:0 0 0 1px rgba(79,126,248,.2)}
+.ol{width:22px;height:22px;border-radius:6px;flex-shrink:0;border:1px solid var(--bd2);color:var(--tx2);display:flex;align-items:center;justify-content:center;font-family:var(--mn);font-size:8.5px;font-weight:600;transition:all .18s}
+.opt.sel .ol{background:var(--a);border-color:var(--a);color:#fff}
+.ot{font-size:12px;line-height:1.55;padding-top:1px}
+.qf{padding:10px 15px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;gap:9px}
+.nbbs{display:flex;gap:5px}
+.nb2{padding:5px 13px;border-radius:7px;font-size:10px;font-weight:500;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--tx2);transition:all .18s}
+.nb2:hover{background:rgba(255,255,255,.08);color:var(--tx)}
+.nb2:disabled{opacity:.3;cursor:not-allowed}
+.nb2.p{background:linear-gradient(135deg,var(--a),var(--tl));border:none;color:#fff;font-weight:700;box-shadow:0 3px 10px rgba(79,126,248,.3)}
+.nb2.p:hover{transform:translateY(-1px)}
+.cb{font-size:9px;color:var(--tx2);background:none;border:none;text-decoration:underline;text-underline-offset:3px}
+.qnav{display:flex;align-items:center;gap:5px}
+.qn-input{font-family:var(--mn);font-size:10px;background:rgba(255,255,255,.06);border:1px solid var(--bd2);border-radius:6px;color:var(--tx);padding:4px 7px;width:46px;text-align:center;outline:none}
+.qn-input:focus{border-color:var(--a)}
+.qn-go{padding:4px 9px;border-radius:6px;font-size:9.5px;font-weight:600;background:rgba(79,126,248,.18);border:1px solid rgba(79,126,248,.35);color:var(--a2)}
+
+/* RIGHT SIDEBAR */
+.sr3{background:var(--bg2);border-left:1px solid var(--bd);padding:12px 10px;display:flex;flex-direction:column;gap:10px;position:sticky;top:96px;height:calc(100vh - 96px);overflow-y:auto}
+.sr3::-webkit-scrollbar{width:3px}.sr3::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+
+/* TIMER */
+.tmc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:11px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;overflow:hidden;transition:border-color .5s}
+.tmc::before{content:'';position:absolute;inset:-40px;background:radial-gradient(circle at 50% 50%,var(--tc,#1db854),transparent 65%);opacity:.05;pointer-events:none;z-index:0}
+.tmc>*{position:relative;z-index:1}
+.tmc.warning{border-color:rgba(240,165,0,.25)}
+.tmc.critical{border-color:rgba(232,64,74,.3);animation:tG 1.4s ease-in-out infinite alternate}
+@keyframes tG{from{box-shadow:none}to{box-shadow:0 0 16px rgba(232,64,74,.25)}}
+.tl2{font-size:7px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2)}
+.trw{position:relative;width:84px;height:84px;display:flex;align-items:center;justify-content:center}
+.tr2{transform:rotate(-90deg);position:absolute;top:0;left:0}
+.rt{fill:none;stroke:rgba(255,255,255,.06);stroke-width:5}
+.rp{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .5s}
+.td{display:flex;align-items:center;gap:1px;font-family:var(--mn);font-size:19px;font-weight:700;letter-spacing:-1px;transition:color .5s}
+.db{display:flex;flex-direction:column;align-items:center;gap:1px}
+.dv{min-width:2ch;text-align:center}
+.ds3{font-family:var(--fn);font-size:6px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2)}
+.dsep{font-size:15px;font-weight:300;color:var(--mu);margin-bottom:5px;opacity:.5}
+.tb{font-size:8px;font-weight:600;padding:2px 8px;border-radius:100px;border:1px solid currentColor;opacity:.85}
+.tb.safe{color:var(--safe);background:rgba(29,184,84,.08)}
+.tb.warning{color:var(--warn);background:rgba(240,165,0,.10)}
+.tb.critical{color:var(--danger);background:rgba(232,64,74,.10)}
+
+/* ══════════════════════════════════════
+   CAMERA + AI DETECTION CARD
+══════════════════════════════════════ */
+.cam-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.cam-hdr{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--sf2);border-bottom:1px solid var(--bd)}
+.cam-hdr-l{display:flex;align-items:center;gap:6px}
+.rec-d{width:6px;height:6px;border-radius:50%;background:var(--danger);animation:recB 1s step-start infinite}
+@keyframes recB{50%{opacity:0}}
+.rec-l{font-family:var(--mn);font-size:7.5px;color:var(--danger);letter-spacing:.1em}
+.live-b{font-size:7.5px;font-weight:700;padding:2px 6px;border-radius:100px;border:1px solid rgba(29,184,84,.4);color:var(--safe);background:rgba(29,184,84,.1);animation:liveP 2s ease-in-out infinite}
+@keyframes liveP{0%,100%{box-shadow:0 0 0 0 rgba(29,184,84,.3)}50%{box-shadow:0 0 0 3px rgba(29,184,84,0)}}
+.cam-sname{font-family:var(--mn);font-size:7.5px;color:var(--tx2)}
+/* Camera viewport */
+.cam-area{position:relative;background:#000;aspect-ratio:4/3;overflow:hidden}
+.cam-vid{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;transform:scaleX(-1)}
+.cam-scan{position:absolute;inset:0;pointer-events:none;z-index:5;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px)}
+/* Corner brackets */
+.cam-cors{position:absolute;inset:0;pointer-events:none;z-index:6}
+.co{position:absolute;width:11px;height:11px;border-color:rgba(15,184,164,.7);border-style:solid}
+.co.tl{top:6px;left:6px;border-width:2px 0 0 2px}.co.tr{top:6px;right:6px;border-width:2px 2px 0 0}
+.co.bl{bottom:6px;left:6px;border-width:0 0 2px 2px}.co.br{bottom:6px;right:6px;border-width:0 2px 2px 0}
+/* HUD overlay */
+.cam-hud{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:7}
+.hud-mode{position:absolute;top:6px;left:6px;font-family:var(--mn);font-size:7px;color:var(--tl);background:rgba(15,184,164,.18);border:1px solid rgba(15,184,164,.4);padding:1px 6px;border-radius:4px;letter-spacing:.08em}
+.hud-fps{position:absolute;top:6px;right:6px;font-family:var(--mn);font-size:7px;color:rgba(255,255,255,.4);background:rgba(0,0,0,.35);padding:1px 5px;border-radius:3px}
+.hud-tags{position:absolute;bottom:6px;left:6px;display:flex;flex-direction:column;gap:3px}
+.htag{font-family:var(--mn);font-size:7px;font-weight:600;padding:2px 7px;border-radius:4px;letter-spacing:.05em;backdrop-filter:blur(4px)}
+.htag.face-ok{background:rgba(29,184,84,.28);border:1px solid rgba(29,184,84,.5);color:#80ffb0}
+.htag.face-warn{background:rgba(232,64,74,.28);border:1px solid rgba(232,64,74,.6);color:#ffb0b0;animation:hblink .7s step-start infinite}
+.htag.obj-ok{background:rgba(79,126,248,.28);border:1px solid rgba(79,126,248,.5);color:#b0d0ff}
+.htag.multi-warn{background:rgba(240,165,0,.28);border:1px solid rgba(240,165,0,.6);color:#ffe0a0;animation:hblink .7s step-start infinite}
+@keyframes hblink{50%{opacity:0}}
+/* No-cam placeholder */
+.cam-ph{position:absolute;inset:0;background:rgba(4,7,14,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;z-index:10}
+.cam-ph .ph-ico{font-size:26px;opacity:.5}
+.cam-ph .ph-txt{font-size:10px;color:var(--tx2);text-align:center;padding:0 12px;line-height:1.5}
+.cam-ph .ph-warn{font-size:9px;color:var(--warn);text-align:center}
+.cam-on-btn{background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;font-family:var(--fn);font-size:10px;font-weight:700;border-radius:7px;padding:7px 16px;cursor:pointer;border:none;transition:opacity .2s}
+.cam-on-btn:hover{opacity:.85}
+/* Controls bar */
+.cam-ctrls{display:flex;align-items:center;gap:5px;padding:5px 10px;background:var(--sf2);border-top:1px solid var(--bd)}
+.cam-btn{width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;transition:background .15s}
+.cam-btn:hover{background:rgba(255,255,255,.09)}.cam-btn.off{background:rgba(232,64,74,.12);border-color:rgba(232,64,74,.3)}
+.cam-stat-pill{font-family:var(--mn);font-size:7px;padding:2px 7px;border-radius:100px;border:1px solid currentColor}
+.cam-stat-pill.ok{color:var(--safe);border-color:rgba(29,184,84,.4);background:rgba(29,184,84,.1)}
+.cam-stat-pill.off2{color:var(--warn);border-color:rgba(240,165,0,.4);background:rgba(240,165,0,.1)}
+.cam-stat-pill.err3{color:var(--danger);border-color:rgba(232,64,74,.4);background:rgba(232,64,74,.1)}
+.cam-elapsed{font-family:var(--mn);font-size:7.5px;color:var(--tx2);margin-left:auto}
+/* Violation strip */
+.viol-strip{display:none;align-items:center;gap:6px;padding:5px 10px;background:rgba(232,64,74,.12);border-top:1px solid rgba(232,64,74,.25);font-size:9.5px;color:#ff9090;font-weight:600;animation:vsIn .3s ease}
+@keyframes vsIn{from{opacity:0;height:0}to{opacity:1}}
+/* Confidence bars */
+.det-panel{padding:7px 10px;background:var(--sf2);border-top:1px solid var(--bd);display:none;flex-direction:column;gap:4px}
+.det-panel.show{display:flex}
+.det-row{display:flex;align-items:center;gap:6px;font-size:8.5px}
+.det-lbl{color:var(--tx2);width:56px;flex-shrink:0;font-family:var(--mn);font-size:8px}
+.det-bar{flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:100px;overflow:hidden}
+.det-fill{height:100%;border-radius:100px;transition:width .5s,background .5s}
+.det-pct{color:var(--tx2);font-family:var(--mn);font-size:7.5px;width:26px;text-align:right;flex-shrink:0}
+/* Violation log panel */
+.viol-log{background:var(--sf2);border-top:1px solid var(--bd);max-height:80px;overflow-y:auto;display:none;flex-direction:column}
+.viol-log.show{display:flex}
+.viol-log::-webkit-scrollbar{width:3px}.viol-log::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+.viol-item{display:flex;align-items:flex-start;gap:5px;padding:4px 10px;border-bottom:1px solid var(--bd);font-size:8px}
+.vi-time{font-family:var(--mn);color:var(--tx2);flex-shrink:0}
+.vi-msg{color:var(--tx2);flex:1}
+.vi-sev.high{color:var(--danger)}.vi-sev.medium{color:var(--warn)}.vi-sev.low{color:var(--safe)}
+
+/* SCORE CARD */
+.score-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.score-t{font-size:7.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2)}
+.score-big{display:flex;align-items:baseline;gap:3px;justify-content:center}
+.score-n{font-family:var(--mn);font-size:27px;font-weight:700;color:var(--a2)}
+.score-d{font-family:var(--mn);font-size:12px;color:var(--tx2)}
+.score-pct{font-family:var(--mn);font-size:10px;color:var(--tl);background:rgba(15,184,164,.1);border:1px solid rgba(15,184,164,.25);padding:2px 7px;border-radius:100px;text-align:center}
+.sub-scores{display:flex;flex-direction:column;gap:4px}
+.ss-row{display:flex;align-items:center;gap:5px;font-size:9px}
+.ss-dot{width:6px;height:6px;border-radius:2px;flex-shrink:0}
+.ss-name{flex:1;color:var(--tx2)}.ss-val{font-family:var(--mn);font-size:8.5px;color:var(--tx)}
+.ic{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:9px 10px;display:flex;flex-direction:column;gap:5px}
+.it{font-size:7.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--tx2)}
+.ir{display:flex;justify-content:space-between;align-items:center;font-size:9px}
+.ik{color:var(--tx2)}.iv{font-family:var(--mn);color:var(--tx);font-size:8.5px}
+.iv.a{color:var(--a2)}.iv.t{color:var(--tl)}.ihr{height:1px;background:var(--bd)}
+
+/* ══════════════════════════════════════
+   CAMERA CONNECT MODAL
+══════════════════════════════════════ */
+.mov{position:fixed;inset:0;z-index:500;background:rgba(4,7,14,.92);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:16px}
+.mov.open{display:flex;animation:mF .22s ease}
+@keyframes mF{from{opacity:0}to{opacity:1}}
+.modal{background:var(--sf);border:1px solid rgba(255,255,255,.1);border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,.75);padding:24px;max-width:440px;width:100%;animation:mS .28s cubic-bezier(.34,1.56,.64,1);max-height:92vh;overflow-y:auto}
+@keyframes mS{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+/* submit modal */
+.smodal{max-width:440px}
+.mi{font-size:34px;text-align:center;margin-bottom:7px}
+.mt{font-family:var(--dp);font-size:18px;font-weight:800;text-align:center;margin-bottom:5px}
+.ms{font-size:11px;color:var(--tx2);text-align:center;line-height:1.65;margin-bottom:12px}
+.mst{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:9px;padding:9px 12px;margin-bottom:12px}
+.mav{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.mname{font-size:12px;font-weight:700;color:var(--tx)}.mroll{font-family:var(--mn);font-size:9px;color:var(--tx2);margin-top:1px}
+.mstats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px}
+.mstat{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:8px;padding:8px 4px;text-align:center}
+.msv{font-family:var(--mn);font-size:13px;font-weight:700;color:var(--tx)}.msk{font-size:8px;color:var(--tx2);margin-top:2px}
+.msub-scores{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px}
+.msub-item{display:flex;align-items:center;gap:6px;padding:6px 8px;background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:7px}
+.msub-dot{width:6px;height:6px;border-radius:2px;flex-shrink:0}
+.msub-n{font-size:9px;color:var(--tx2);flex:1}.msub-v{font-family:var(--mn);font-size:9px;font-weight:600;color:var(--tx)}
+.mbtns{display:flex;gap:7px}
+.mc{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:500;background:rgba(255,255,255,.05);border:1px solid var(--bd);color:var(--tx2);cursor:pointer;font-family:var(--fn)}
+.mcf{flex:2;padding:9px;border-radius:8px;font-size:12px;font-weight:700;background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;border:none;box-shadow:0 3px 10px rgba(79,126,248,.35);transition:all .2s;cursor:pointer;font-family:var(--fn)}
+.mcf:hover{transform:translateY(-1px)}
+.viol-count-txt{font-size:10px;color:var(--warn);font-family:var(--mn);text-align:center;margin-bottom:8px}
+
+/* RESULT */
+.rp{display:flex;flex-direction:column;align-items:center;gap:13px;padding:30px 18px;text-align:center}
+.rb{font-size:48px;animation:bP .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes bP{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.rt2{font-family:var(--dp);font-size:22px;font-weight:800}
+.rs{font-size:12px;color:var(--tx2);max-width:340px;line-height:1.7}
+.rcs{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;width:100%;max-width:480px}
+.rca{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:11px 6px;text-align:center}
+.rv{font-family:var(--mn);font-size:20px;font-weight:700}.rk{font-size:8.5px;color:var(--tx2);margin-top:3px}
+.rsubs{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;width:100%;max-width:540px}
+.rsub{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:10px 5px;text-align:center}
+.rsub-val{font-family:var(--mn);font-size:14px;font-weight:700}
+.rsub-name{font-size:8px;color:var(--tx2);margin-top:3px;font-family:var(--dp);font-weight:600}
+.back-dash-btn{padding:9px 22px;border-radius:10px;background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;font-size:13px;font-weight:700;box-shadow:0 4px 14px rgba(79,126,248,.35);transition:all .2s;cursor:pointer;border:none;font-family:var(--fn)}
+.back-dash-btn:hover{transform:translateY(-1px)}
+
+@media(max-width:1120px){.layout{grid-template-columns:190px 1fr 248px}.dash-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:950px){.auth-wrap{grid-template-columns:1fr}.auth-left{display:none}.layout{grid-template-columns:1fr}.sl,.sr3{display:none}.main{padding:14px}.dash-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.pw,.submit-nb{display:none}.dash-stats{grid-template-columns:repeat(2,1fr)}.rcs{grid-template-columns:repeat(2,1fr)}.rsubs{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div class="page active" id="loginPage">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <div class="brand-logo"><div class="brand-mk">🎓</div><span class="brand-nm">Exam<em>Flow</em></span></div>
+        <div class="bca-badge">🎓 BCA · 2023–2026 · KLH University</div>
+        <div class="auth-tagline">AI-Proctored Secure Examination.</div>
+        <div class="auth-sub">Face detection + object detection proctoring. Violations auto-logged with confidence scoring.</div>
+        <div class="auth-features">
+          <div class="af-item"><div class="af-icon" style="background:rgba(79,126,248,.15)">📊</div>200 MCQ · 5 subjects · 120 min</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(15,184,164,.15)">🧠</div>Real-time face detection (Canvas API)</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(168,85,247,.15)">👁️</div>Object detection bounding boxes</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(249,115,22,.15)">⚠️</div>Violation detection &amp; auto-logging</div>
+        </div>
+      </div>
+      <div class="auth-subjects">
+        <div class="as-label">Subjects</div>
+        <div class="as-pills">
+          <span class="as-pill" style="color:var(--ds);border-color:rgba(79,126,248,.3)">Data Science</span>
+          <span class="as-pill" style="color:var(--os);border-color:rgba(15,184,164,.3)">OS</span>
+          <span class="as-pill" style="color:var(--js);border-color:rgba(232,200,72,.3)">JavaScript</span>
+          <span class="as-pill" style="color:var(--dsa);border-color:rgba(168,85,247,.3)">Data Structures</span>
+          <span class="as-pill" style="color:var(--ml);border-color:rgba(249,115,22,.3)">ML &amp; Algo</span>
+        </div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-title">Welcome back 👋</div>
+      <div class="auth-form-sub">BCA 2023–2026 · KLH University portal</div>
+      <div class="form-group"><label class="form-label">Roll Number / Email</label><input class="form-input" id="loginId" placeholder="e.g. 2320520034" type="text" onkeydown="if(event.key==='Enter')doLogin()"/><div class="form-err" id="loginIdErr">Please enter roll number or email</div></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="loginPwd" placeholder="Enter your password" type="password" onkeydown="if(event.key==='Enter')doLogin()"/><div class="form-err" id="loginPwdErr">Incorrect credentials</div></div>
+      <div class="remember-row"><div class="check-wrap" onclick="toggleChk('remCk')"><div class="check-box on" id="remCk">✓</div><span class="check-label">Remember me</span></div><a class="forgot-link" id="forgotBtn">Forgot password?</a></div>
+      <button class="btn-primary" id="loginBtn">Sign In →</button>
+      <div class="form-divider"><div class="fd-line"></div><span class="fd-txt">OR</span><div class="fd-line"></div></div>
+      <button class="btn-secondary" id="demoBtn">⚡ Demo — Ankith Reddy · 2320520034</button>
+      <div class="auth-switch">New student? <a id="goRegBtn">Create account</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ REGISTER ════ -->
+<div class="page" id="registerPage">
+  <div class="auth-wrap" style="max-width:920px">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <div class="brand-logo"><div class="brand-mk">🎓</div><span class="brand-nm">Exam<em>Flow</em></span></div>
+        <div class="bca-badge">🎓 BCA · 2023–2026 · KLH University</div>
+        <div class="auth-tagline">Join BCA 2023–2026.</div>
+        <div class="auth-sub">Register for the AI-proctored MCQ examination. Face detection and object detection run during the exam.</div>
+        <div class="auth-features">
+          <div class="af-item"><div class="af-icon" style="background:rgba(79,126,248,.15)">✅</div>Free for enrolled KLH students</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(15,184,164,.15)">🧠</div>AI face + object detection proctoring</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(168,85,247,.15)">📊</div>Live confidence scores per detection</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(249,115,22,.15)">📋</div>Violation log saved with your result</div>
+        </div>
+      </div>
+      <div class="auth-subjects" style="margin-top:auto;padding-top:20px;position:relative;z-index:1">
+        <div class="as-label">Batch Info</div>
+        <div style="font-size:11px;color:var(--tx2);line-height:1.9">Programme: BCA<br/>Batch: 2023–2026<br/>Institute: KLH University<br/>Proctor: AI Face + Object Detection</div>
+      </div>
+    </div>
+    <div class="auth-right" style="padding-top:28px;padding-bottom:28px">
+      <div class="auth-form-title">Create Account</div>
+      <div class="auth-form-sub">Register as BCA 2023–2026 student at KLH University.</div>
+      <div class="form-row"><div class="form-group"><label class="form-label">First Name</label><input class="form-input" id="regFirst" placeholder="Ankith" type="text"/></div><div class="form-group"><label class="form-label">Last Name</label><input class="form-input" id="regLast" placeholder="Reddy" type="text"/></div></div>
+      <div class="form-group"><label class="form-label">Roll Number</label><input class="form-input" id="regRoll" placeholder="2320520034" type="text" maxlength="10"/><div class="form-err" id="regRollErr">Must be exactly 10 digits</div></div>
+      <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" id="regEmail" placeholder="2320520034@klh.edu.in" type="email"/><div class="form-err" id="regEmailErr">Enter a valid email</div></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Programme</label><select class="form-select" id="regBranch"><option value="BCA" selected>BCA</option><option value="BCA-DS">BCA (Data Science)</option><option value="BCA-AI">BCA (AI & ML)</option><option value="BSc-CS">BSc Computer Science</option></select></div>
+        <div class="form-group"><label class="form-label">Batch</label><select class="form-select" id="regBatch"><option value="2023-2026" selected>2023–2026</option><option value="2022-2025">2022–2025</option><option value="2024-2027">2024–2027</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Choose Avatar</label><div class="avatar-pick" id="avPick"><div class="av-opt sel" data-av="🧑‍💻" onclick="pickAv(this)">🧑‍💻</div><div class="av-opt" data-av="👨‍🎓" onclick="pickAv(this)">👨‍🎓</div><div class="av-opt" data-av="👩‍🎓" onclick="pickAv(this)">👩‍🎓</div><div class="av-opt" data-av="🧑‍🔬" onclick="pickAv(this)">🧑‍🔬</div><div class="av-opt" data-av="🦊" onclick="pickAv(this)">🦊</div><div class="av-opt" data-av="🚀" onclick="pickAv(this)">🚀</div><div class="av-opt" data-av="🦁" onclick="pickAv(this)">🦁</div><div class="av-opt" data-av="🎯" onclick="pickAv(this)">🎯</div></div></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="regPwd" placeholder="Min 8 characters" type="password" oninput="chkStr(this.value)"/><div class="strength-bar"><div class="strength-fill" id="strF"></div></div><div class="strength-txt" id="strT" style="color:var(--tx2)"></div><div class="form-err" id="regPwdErr">Minimum 8 characters</div></div>
+      <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-input" id="regPwd2" placeholder="Repeat password" type="password"/><div class="form-err" id="regPwd2Err">Passwords do not match</div></div>
+      <div class="check-wrap" style="margin-bottom:14px" onclick="toggleChk('termsCk')"><div class="check-box" id="termsCk"></div><span class="check-label" style="font-size:11px">I agree to the <a style="color:var(--a2)">Terms</a> and consent to AI camera monitoring during exams</span></div>
+      <button class="btn-primary" id="registerBtn">Create BCA Account →</button>
+      <div class="auth-switch" style="margin-top:12px">Already registered? <a id="goLoginBtn">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ DASHBOARD ════ -->
+<div class="page" id="dashPage">
+  <nav class="dash-nav">
+    <a class="dash-logo" href="#"><div class="dl-mk">🎓</div><span class="dl-nm">Exam<em>Flow</em></span></a>
+    <div style="font-family:var(--mn);font-size:8.5px;color:var(--tl);background:rgba(15,184,164,.1);border:1px solid rgba(15,184,164,.25);padding:3px 10px;border-radius:100px;letter-spacing:.06em">BCA 2023–2026 · KLH</div>
+    <div class="dash-nav-r">
+      <div class="user-pill"><div class="up-av" id="dashAv">AR</div><div><div class="up-name" id="dashName">Ankith Reddy</div><div class="up-roll" id="dashRoll">2320520034</div></div></div>
+      <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+    </div>
+  </nav>
+  <div class="dash-body">
+    <div class="dash-welcome">
+      <div class="dw-greeting">🌟 BCA 2023–2026 · KLH University</div>
+      <div class="dw-name">Hello, <span id="welcomeName">Ankith</span>!</div>
+      <div class="dw-sub">Your AI-proctored MCQ exam is ready. Face + object detection will run during the exam.</div>
+    </div>
+    <div class="dash-stats">
+      <div class="dstat" style="--sc:rgba(79,126,248,.15)"><div class="ds-icon">📝</div><div class="ds-val">1</div><div class="ds-label">Exam Available</div><div class="ds-chg">▲ Ready now</div></div>
+      <div class="dstat" style="--sc:rgba(15,184,164,.12)"><div class="ds-icon">🎯</div><div class="ds-val">200</div><div class="ds-label">Total Questions</div><div class="ds-chg">▲ 5 subjects</div></div>
+      <div class="dstat" style="--sc:rgba(249,115,22,.12)"><div class="ds-icon">⏱</div><div class="ds-val">120</div><div class="ds-label">Minutes</div><div class="ds-chg">2 hours</div></div>
+      <div class="dstat" style="--sc:rgba(168,85,247,.12)"><div class="ds-icon">🧠</div><div class="ds-val">AI</div><div class="ds-label">Face + Object</div><div class="ds-chg">Active proctor</div></div>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="dash-card-hdr"><div><div class="dch-title">Available Exams</div><div class="dch-sub">AI camera proctoring required</div></div></div>
+        <div class="exam-list">
+          <div class="exam-item"><div class="ei-left"><div class="ei-icon" style="background:linear-gradient(135deg,rgba(79,126,248,.2),rgba(15,184,164,.15))">📋</div><div><div class="ei-title">BCA Comprehensive MCQ Exam</div><div class="ei-meta"><span>200 Q</span><span class="ei-dot"></span><span>5 Subjects</span><span class="ei-dot"></span><span>120 min</span><span class="ei-dot"></span><span class="ei-badge" style="color:var(--safe);border-color:rgba(29,184,84,.3)">Available</span><span class="ei-badge" style="color:var(--a2);border-color:rgba(79,126,248,.3)">🧠 AI Proctor</span></div></div></div><button class="start-btn" id="startExamBtn">Start →</button></div>
+          <div class="exam-item" style="opacity:.4"><div class="ei-left"><div class="ei-icon" style="background:rgba(255,255,255,.05)">🔒</div><div><div class="ei-title">Mock Test — Session 2</div><div class="ei-meta"><span>100 Q</span><span class="ei-dot"></span><span>60 min</span><span class="ei-dot"></span><span class="ei-badge" style="color:var(--tx2);border-color:var(--bd2)">Locked</span></div></div></div><button class="start-btn" style="opacity:.3;cursor:not-allowed" disabled>Locked</button></div>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-hdr"><div><div class="dch-title">Student Profile</div><div class="dch-sub">BCA 2023–2026 · KLH University</div></div></div>
+        <div class="profile-card">
+          <div class="pc-top"><div class="pc-av" id="pcAv">AR</div><div><div class="pc-name" id="pcName">Ankith Reddy</div><div class="pc-roll" id="pcRoll">2320520034</div></div></div>
+          <div class="pc-rows">
+            <div class="pc-row"><span class="pc-k">Programme</span><span class="pc-v t" id="pcBranch">BCA</span></div>
+            <div class="pc-row"><span class="pc-k">Batch</span><span class="pc-v" id="pcBatch">2023–2026</span></div>
+            <div class="pc-row"><span class="pc-k">Email</span><span class="pc-v a" id="pcEmail">2320520034@klh.edu.in</span></div>
+            <div class="pc-row"><span class="pc-k">Proctor</span><span class="pc-v" style="color:var(--a2)">AI Face + Object</span></div>
+            <div class="pc-row"><span class="pc-k">Status</span><span class="pc-v" style="color:var(--safe)">Active ✓</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-hdr"><div><div class="dch-title">Exam Subjects</div><div class="dch-sub">BCA 2023–2026 · 40 questions each</div></div><button class="dch-action" class="start-exam-trigger">Start Exam →</button></div>
+      <div class="subject-grid">
+        <div class="sub-tile" style="background:rgba(79,126,248,.1);border-color:rgba(79,126,248,.2)"><div class="st-icon">📊</div><div class="st-name" style="color:var(--ds)">Data Science</div><div class="st-count" style="color:var(--ds)">40 MCQs</div><div class="st-bar"><div class="st-fill" style="width:80%;background:var(--ds)"></div></div></div>
+        <div class="sub-tile" style="background:rgba(15,184,164,.08);border-color:rgba(15,184,164,.2)"><div class="st-icon">🖥️</div><div class="st-name" style="color:var(--os)">Op. Systems</div><div class="st-count" style="color:var(--os)">40 MCQs</div><div class="st-bar"><div class="st-fill" style="width:75%;background:var(--os)"></div></div></div>
+        <div class="sub-tile" style="background:rgba(232,200,72,.07);border-color:rgba(232,200,72,.2)"><div class="st-icon">⚡</div><div class="st-name" style="color:var(--js)">JavaScript</div><div class="st-count" style="color:var(--js)">40 MCQs</div><div class="st-bar"><div class="st-fill" style="width:68%;background:var(--js)"></div></div></div>
+        <div class="sub-tile" style="background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.2)"><div class="st-icon">🌳</div><div class="st-name" style="color:var(--dsa)">Data Structures</div><div class="st-count" style="color:var(--dsa)">40 MCQs</div><div class="st-bar"><div class="st-fill" style="width:78%;background:var(--dsa)"></div></div></div>
+        <div class="sub-tile" style="background:rgba(249,115,22,.08);border-color:rgba(249,115,22,.2)"><div class="st-icon">🤖</div><div class="st-name" style="color:var(--ml)">ML & Algorithms</div><div class="st-count" style="color:var(--ml)">40 MCQs</div><div class="st-bar"><div class="st-fill" style="width:72%;background:var(--ml)"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ EXAM PAGE ════ -->
+<div class="page" id="examPage">
+  <nav class="nb" id="examNb" style="--pg:0%">
+    <div class="nb-l"><a class="logo2" href="#"><div class="logo2-mk">🎓</div><span class="logo2-nm">Exam<em>Flow</em></span></a></div>
+    <div class="nb-c">
+      <div class="nb-title">BCA MCQ Exam · 2023–2026 · KLH</div>
+      <div class="nb-meta"><span>Q <span id="nCQ">1</span><span class="s">/</span>200</span><span class="s">·</span><span><span id="nAns">0</span> answered</span><span class="s">·</span><span id="nbStudent">Ankith Reddy · 2320520034</span></div>
+    </div>
+    <div class="nb-r">
+      <div class="pw"><div class="pb"><div class="pf" id="nP" style="width:0%"></div></div><span class="pl" id="nPL">0/200</span></div>
+      <div class="tc safe" id="nChip"><span id="nTI">⏱</span><span id="nTD">120:00</span></div>
+      <button class="submit-nb" id="submitNbBtn">✓ Submit</button>
+      <div class="av-nb"><div class="av-nb-c" id="examNbAv">AR</div><div><div class="av-nb-n" id="examNbName">Ankith</div><div class="av-nb-r" id="examNbRoll">2320520034</div></div></div>
+    </div>
+  </nav>
+  <div class="sub-tabs">
+    <div class="stab active" style="--sc:var(--ds)" onclick="goSub(0)" id="tab0"><span class="dot"></span>Data Science<span class="cnt" id="tc0">0/40</span></div>
+    <div class="stab" style="--sc:var(--os)" onclick="goSub(1)" id="tab1"><span class="dot" style="background:var(--os)"></span>OS<span class="cnt" id="tc1">0/40</span></div>
+    <div class="stab" style="--sc:var(--js)" onclick="goSub(2)" id="tab2"><span class="dot" style="background:var(--js)"></span>JavaScript<span class="cnt" id="tc2">0/40</span></div>
+    <div class="stab" style="--sc:var(--dsa)" onclick="goSub(3)" id="tab3"><span class="dot" style="background:var(--dsa)"></span>Data Structures<span class="cnt" id="tc3">0/40</span></div>
+    <div class="stab" style="--sc:var(--ml)" onclick="goSub(4)" id="tab4"><span class="dot" style="background:var(--ml)"></span>ML &amp; Algo<span class="cnt" id="tc4">0/40</span></div>
+  </div>
+  <div class="layout">
+    <aside class="sl">
+      <div class="sc-card"><div class="sc-top"><div class="sc-av" id="examScAv">AR</div><div><div class="sc-n" id="examScName">Ankith Reddy</div><div class="sc-rn" id="examScRoll">2320520034</div></div></div><div class="sc-rows"><div class="sc-row2"><span class="sc-k">Programme</span><span class="sc-v2">BCA</span></div><div class="sc-row2"><span class="sc-k">Batch</span><span class="sc-v2">2023–2026</span></div><div class="sc-row2"><span class="sc-k">Institute</span><span class="sc-v2">KLH</span></div></div></div>
+      <div class="slt">Subject Progress</div>
+      <div class="sub-prog">
+        <div class="sp-row"><div class="sp-label"><span class="sp-name" style="color:var(--ds)">Data Science</span><span class="sp-cnt" id="spDS">0/40</span></div><div class="sp-bar"><div class="sp-fill" id="sfDS" style="width:0%;background:var(--ds)"></div></div></div>
+        <div class="sp-row"><div class="sp-label"><span class="sp-name" style="color:var(--os)">OS</span><span class="sp-cnt" id="spOS">0/40</span></div><div class="sp-bar"><div class="sp-fill" id="sfOS" style="width:0%;background:var(--os)"></div></div></div>
+        <div class="sp-row"><div class="sp-label"><span class="sp-name" style="color:var(--js)">JavaScript</span><span class="sp-cnt" id="spJS">0/40</span></div><div class="sp-bar"><div class="sp-fill" id="sfJS" style="width:0%;background:var(--js)"></div></div></div>
+        <div class="sp-row"><div class="sp-label"><span class="sp-name" style="color:var(--dsa)">Data Structures</span><span class="sp-cnt" id="spDSA">0/40</span></div><div class="sp-bar"><div class="sp-fill" id="sfDSA" style="width:0%;background:var(--dsa)"></div></div></div>
+        <div class="sp-row"><div class="sp-label"><span class="sp-name" style="color:var(--ml)">ML &amp; Algo</span><span class="sp-cnt" id="spML">0/40</span></div><div class="sp-bar"><div class="sp-fill" id="sfML" style="width:0%;background:var(--ml)"></div></div></div>
+      </div>
+      <div class="slt">Legend</div>
+      <div class="legend"><div class="leg-i"><span class="leg-d ans"></span>Answered</div><div class="leg-i"><span class="leg-d cur"></span>Current</div><div class="leg-i"><span class="leg-d flg"></span>Flagged</div><div class="leg-i"><span class="leg-d una"></span>Unanswered</div></div>
+      <div class="slt">Navigator</div>
+      <div class="mini-grid-wrap"><div class="qg" id="qG"></div></div>
+      <div style="height:1px;background:var(--bd)"></div>
+      <div class="sts"><div class="slt">Summary</div><div class="sr2x"><span class="sk">Total</span><span class="sv">200</span></div><div class="sr2x"><span class="sk">Answered</span><span class="sv g" id="stA">0</span></div><div class="sr2x"><span class="sk">Flagged</span><span class="sv y" id="stF">0</span></div><div class="sr2x"><span class="sk">Remaining</span><span class="sv r" id="stR">200</span></div></div>
+    </aside>
+    <main class="main" id="mainArea">
+      <div class="sub-header"><div class="sub-icon2" id="subIcon">📊</div><div><div class="sub-name-h" id="subNameMain" style="color:var(--ds)">Data Science</div><div class="sub-desc-h" id="subDesc">Statistics · Pandas · NumPy · Visualization · Probability</div></div><div class="sub-badge-h" id="subBadge" style="color:var(--ds);border-color:rgba(79,126,248,.3)">Q 1–40</div></div>
+      <div class="qc" id="qC">
+        <div class="qh"><span class="qbadge" id="qBadge" style="color:var(--ds);border-color:rgba(79,126,248,.3)">Q1</span><div class="qtags"><span class="qtag medium" id="qDiff">Medium</span><span class="qtag" id="qTopic">Topic</span><span class="qtag">1 mark</span></div><button class="fb" id="fBtn" id="flagBtn">⚑ Flag</button></div>
+        <div class="qbody"><div class="qt" id="qT"></div><div class="opts" id="oList"></div></div>
+        <div class="qf"><div class="nbbs"><button class="nb2" id="pBtn" id="prevBtn" disabled>← Prev</button><button class="nb2 p" id="nBtn" id="nextBtn">Next →</button></div><div class="qnav"><input class="qn-input" id="qnI" type="number" min="1" max="200" placeholder="Go#"/><button class="qn-go" id="goQBtn">Go</button></div><button class="cb" id="clearBtn">Clear</button></div>
+      </div>
+    </main>
+    <aside class="sr3">
+      <!-- Timer -->
+      <div class="tmc safe" id="tC"><div class="tl2">Time Remaining</div><div class="trw"><svg class="tr2" width="84" height="84" viewBox="0 0 84 84"><circle class="rt" cx="42" cy="42" r="35"/><circle class="rp" id="rP" cx="42" cy="42" r="35" stroke="#1db854" stroke-dasharray="219.91" stroke-dashoffset="0"/></svg><div class="td" id="tDig" style="color:#1db854"><span class="db"><span class="dv" id="tM">120</span><span class="ds3">min</span></span><span class="dsep">:</span><span class="db"><span class="dv" id="tS">00</span><span class="ds3">sec</span></span></div></div><div class="tb safe" id="tB">In Progress</div></div>
+
+      <!-- AI CAMERA CARD -->
+      <div class="cam-card">
+        <div class="cam-hdr">
+          <div class="cam-hdr-l"><div style="display:flex;align-items:center;gap:3px" id="recW" style="display:none"><div class="rec-d"></div><span class="rec-l">REC</span></div><span class="live-b" id="liveB" style="display:none">● LIVE</span></div>
+          <span class="cam-sname" id="camSname">Ankith Reddy · 2320520034</span>
+        </div>
+        <div class="cam-area" id="camArea">
+          <video id="camVid" class="cam-vid" autoplay playsinline muted></video>
+          <canvas id="camCanvas" class="cam-canvas"></canvas>
+          <div class="cam-scan"></div>
+          <div class="cam-cors"><div class="co tl"></div><div class="co tr"></div><div class="co bl"></div><div class="co br"></div></div>
+          <div class="cam-hud" id="camHud" style="display:none">
+            <div class="hud-mode" id="hudMode">AI PROCTOR v2</div>
+            <div class="hud-fps" id="hudFps">-- FPS</div>
+            <div class="hud-tags" id="hudTags"></div>
+          </div>
+          <div class="cam-ph" id="camPh">
+            <div class="ph-ico">🧠</div>
+            <div class="ph-txt">AI Face + Object Detection<br/>Proctoring Required</div>
+            <div class="ph-warn">⚠ Violations logged automatically</div>
+            <button class="cam-on-btn" id="openCamBtn">🎥 Connect Camera</button>
+            <div style="font-size:8.5px;color:var(--tx2);text-align:center;padding:0 10px;margin-top:2px;line-height:1.6">
+              Allow camera in browser address bar 🔒
+            </div>
+          </div>
+        </div>
+        <!-- Confidence bars -->
+        <div class="det-panel" id="detPanel">
+          <div class="det-row"><span class="det-lbl">Face</span><div class="det-bar"><div class="det-fill" id="dfFace" style="width:0%;background:var(--safe)"></div></div><span class="det-pct" id="dpFace">0%</span></div>
+          <div class="det-row"><span class="det-lbl">Person</span><div class="det-bar"><div class="det-fill" id="dfPers" style="width:0%;background:var(--a)"></div></div><span class="det-pct" id="dpPers">0%</span></div>
+          <div class="det-row"><span class="det-lbl">Attention</span><div class="det-bar"><div class="det-fill" id="dfAttn" style="width:0%;background:var(--tl)"></div></div><span class="det-pct" id="dpAttn">0%</span></div>
+          <div class="det-row"><span class="det-lbl">Multiple</span><div class="det-bar"><div class="det-fill" id="dfMult" style="width:0%;background:var(--danger)"></div></div><span class="det-pct" id="dpMult">0%</span></div>
+          <div class="det-row"><span class="det-lbl">Object</span><div class="det-bar"><div class="det-fill" id="dfObj" style="width:0%;background:var(--warn)"></div></div><span class="det-pct" id="dpObj">0%</span></div>
+        </div>
+        <!-- Controls -->
+        <div class="cam-ctrls"><button class="cam-btn" id="muteBtn" onclick="toggleMute()">🎙️</button><button class="cam-btn" id="camBtn" onclick="toggleCam()">🎥</button><div class="cam-stat-pill off2" id="camStat">Not Connected</div><span class="cam-elapsed" id="camElapsed" style="display:none">00:00</span></div>
+        <!-- Violation strip -->
+        <div class="viol-strip" id="violStrip"><span>🚨</span><span id="violMsg">Violation detected</span></div>
+        <!-- Violation log -->
+        <div class="viol-log" id="violLog"></div>
+      </div>
+
+      <!-- Score -->
+      <div class="score-card"><div class="score-t">Live Score</div><div class="score-big"><span class="score-n" id="liveScore">0</span><span class="score-d">/200</span></div><div class="score-pct" id="livePct">0% Complete</div><div class="sub-scores"><div class="ss-row"><div class="ss-dot" style="background:var(--ds)"></div><span class="ss-name">Data Science</span><span class="ss-val" id="ssDS">0/40</span></div><div class="ss-row"><div class="ss-dot" style="background:var(--os)"></div><span class="ss-name">OS</span><span class="ss-val" id="ssOS">0/40</span></div><div class="ss-row"><div class="ss-dot" style="background:var(--js)"></div><span class="ss-name">JavaScript</span><span class="ss-val" id="ssJS">0/40</span></div><div class="ss-row"><div class="ss-dot" style="background:var(--dsa)"></div><span class="ss-name">Data Structures</span><span class="ss-val" id="ssDSA">0/40</span></div><div class="ss-row"><div class="ss-dot" style="background:var(--ml)"></div><span class="ss-name">ML &amp; Algo</span><span class="ss-val" id="ssML">0/40</span></div></div></div>
+
+      <!-- Info -->
+      <div class="ic"><div class="it">Exam Details</div><div class="ir"><span class="ik">Student</span><span class="iv t" id="examInfoName">Ankith Reddy</span></div><div class="ihr"></div><div class="ir"><span class="ik">Roll No.</span><span class="iv a" id="examInfoRoll">2320520034</span></div><div class="ihr"></div><div class="ir"><span class="ik">Programme</span><span class="iv">BCA</span></div><div class="ihr"></div><div class="ir"><span class="ik">Batch</span><span class="iv">2023–2026</span></div><div class="ihr"></div><div class="ir"><span class="ik">Questions</span><span class="iv">200</span></div><div class="ihr"></div><div class="ir"><span class="ik">Duration</span><span class="iv">120 min</span></div><div class="ihr"></div><div class="ir"><span class="ik">Passing</span><span class="iv">100/200</span></div><div class="ihr"></div><div class="ir"><span class="ik">Proctor</span><span class="iv" style="color:var(--a2)">AI Face+Obj</span></div></div>
+    </aside>
+  </div>
+</div>
+
+<!-- ════ CAMERA CONNECT MODAL ════ -->
+<div class="mov" id="camModal" style="z-index:600">
+  <div class="modal" style="max-width:460px">
+    <div style="text-align:center;font-size:38px;margin-bottom:9px">📷</div>
+    <div style="font-family:var(--dp);font-size:19px;font-weight:800;text-align:center;margin-bottom:5px">Connect Camera</div>
+    <div style="font-size:11px;color:var(--tx2);text-align:center;line-height:1.7;margin-bottom:16px">AI Face Detection + Object Detection proctoring is required. Your webcam will be monitored and violations auto-logged throughout the exam.</div>
+    <div style="display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:10px;padding:10px 13px;margin-bottom:14px">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0" id="cmAv">AR</div>
+      <div><div style="font-size:12.5px;font-weight:700" id="cmName">Ankith Reddy</div><div style="font-family:var(--mn);font-size:9px;color:var(--tx2);margin-top:1px" id="cmRoll">Roll: 2320520034 · BCA 2023–2026</div></div>
+      <div style="margin-left:auto;font-family:var(--mn);font-size:7.5px;padding:3px 8px;border-radius:100px;background:rgba(15,184,164,.12);border:1px solid rgba(15,184,164,.3);color:var(--tl)">🧠 AI</div>
+    </div>
+    <!-- Preview area -->
+    <div style="position:relative;background:#000;border-radius:10px;overflow:hidden;aspect-ratio:4/3;margin-bottom:12px;border:1px solid var(--bd)">
+      <video id="cmPreview" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:none"></video>
+      <canvas id="cmCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;transform:scaleX(-1);display:none"></canvas>
+      <div id="cmPh2" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;background:rgba(4,7,14,.85)"><div style="font-size:30px;opacity:.4">🎥</div><div style="font-size:10.5px;color:var(--tx2)">Camera preview</div></div>
+      <!-- corner brackets on preview -->
+      <div style="position:absolute;top:7px;left:7px;width:12px;height:12px;border-top:2px solid rgba(15,184,164,.7);border-left:2px solid rgba(15,184,164,.7)"></div>
+      <div style="position:absolute;top:7px;right:7px;width:12px;height:12px;border-top:2px solid rgba(15,184,164,.7);border-right:2px solid rgba(15,184,164,.7)"></div>
+      <div style="position:absolute;bottom:7px;left:7px;width:12px;height:12px;border-bottom:2px solid rgba(15,184,164,.7);border-left:2px solid rgba(15,184,164,.7)"></div>
+      <div style="position:absolute;bottom:7px;right:7px;width:12px;height:12px;border-bottom:2px solid rgba(15,184,164,.7);border-right:2px solid rgba(15,184,164,.7)"></div>
+      <!-- Live AI tags on preview -->
+      <div id="cmHudTags" style="position:absolute;bottom:6px;left:6px;display:flex;flex-direction:column;gap:3px;pointer-events:none"></div>
+    </div>
+    <!-- Status -->
+    <div style="font-family:var(--mn);font-size:11px;text-align:center;margin-bottom:8px;min-height:18px;transition:color .3s" id="cmStatus">Click below to allow camera access</div>
+    <!-- Fix instructions (shown on error) -->
+    <div id="camFixBox" style="display:none;margin-bottom:10px"></div>
+    <!-- Feature grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 9px;background:rgba(79,126,248,.08);border:1px solid rgba(79,126,248,.2);border-radius:8px;font-size:10px;color:var(--a2)">🧠 Face Detection</div>
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 9px;background:rgba(15,184,164,.08);border:1px solid rgba(15,184,164,.2);border-radius:8px;font-size:10px;color:var(--tl)">👁️ Object Detection</div>
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 9px;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:8px;font-size:10px;color:#c084fc">📊 Confidence Bars</div>
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 9px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:8px;font-size:10px;color:var(--ml)">⚠️ Violation Logging</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button id="skipCamBtn" style="flex:1;padding:9px;border-radius:9px;font-size:11.5px;font-weight:500;background:rgba(255,255,255,.05);border:1px solid var(--bd);color:var(--tx2);cursor:pointer;font-family:var(--fn)">Skip (Not Recommended)</button>
+      <button id="cmBtn" onclick="startCamFromModal()" style="flex:2;padding:9px;border-radius:9px;font-size:12.5px;font-weight:700;background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;border:none;box-shadow:0 3px 12px rgba(79,126,248,.4);cursor:pointer;font-family:var(--fn);transition:all .2s">🎥 Connect &amp; Start AI</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SUBMIT MODAL ════ -->
+<div class="mov" id="modal">
+  <div class="modal smodal">
+    <div class="mi">📤</div><div class="mt">Submit Examination?</div><div class="ms">Submitting all 200 answers. This cannot be undone.</div>
+    <div class="mst"><div class="mav" id="modalAv">AR</div><div><div class="mname" id="modalName">Ankith Reddy</div><div class="mroll" id="modalRoll">Roll: 2320520034 · BCA 2023–2026 · KLH</div></div></div>
+    <div class="mstats"><div class="mstat"><div class="msv" id="msA">0</div><div class="msk">Answered</div></div><div class="mstat"><div class="msv" id="msF" style="color:var(--warn)">0</div><div class="msk">Flagged</div></div><div class="mstat"><div class="msv" id="msU" style="color:var(--danger)">200</div><div class="msk">Unanswered</div></div><div class="mstat"><div class="msv" id="msT" style="color:var(--tl)">—</div><div class="msk">Time Left</div></div></div>
+    <div class="viol-count-txt" id="violTxt" style="display:none"></div>
+    <div class="slt" style="margin-bottom:6px">Subject Breakdown</div>
+    <div class="msub-scores"><div class="msub-item"><div class="msub-dot" style="background:var(--ds)"></div><span class="msub-n">Data Science</span><span class="msub-v" id="mDS">0/40</span></div><div class="msub-item"><div class="msub-dot" style="background:var(--os)"></div><span class="msub-n">OS</span><span class="msub-v" id="mOS">0/40</span></div><div class="msub-item"><div class="msub-dot" style="background:var(--js)"></div><span class="msub-n">JavaScript</span><span class="msub-v" id="mJS">0/40</span></div><div class="msub-item"><div class="msub-dot" style="background:var(--dsa)"></div><span class="msub-n">Data Structures</span><span class="msub-v" id="mDSA">0/40</span></div><div class="msub-item"><div class="msub-dot" style="background:var(--ml)"></div><span class="msub-n">ML &amp; Algo</span><span class="msub-v" id="mML">0/40</span></div></div>
+    <div class="mbtns"><button class="mc" id="cancelSubmitBtn">Go Back</button><button class="mcf" id="confirmSubmitBtn">Submit All 200 →</button></div>
+  </div>
+</div>
+
+<div class="toast-c" id="toastC"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   USER STORE
+════════════════════════════════════════════════════════ */
+/* Clear old corrupted localStorage data */
+(function(){
+  try{
+    const old=localStorage.getItem('ef_u4');
+    if(old){
+      const arr=JSON.parse(old);
+      // If first user has wrong last name, clear and reset
+      if(arr[0]&&(arr[0].last==='Ankith'||arr[0].last==='Shiva'||arr[0].roll==='2320520057')){
+        localStorage.removeItem('ef_u4');
+        console.log('Cleared old user data');
+      }
+    }
+  }catch(e){localStorage.removeItem('ef_u4')}
+})();
+
+const DFLT=[{roll:'2320520034',email:'2320520034@klh.edu.in',password:'ankith123',first:'Ankith',last:'Reddy',branch:'BCA',batch:'2023-2026',avatar:'🧑‍💻',institute:'KLH University'}];
+const STORE={
+  get u(){try{return JSON.parse(localStorage.getItem('ef_u4')||JSON.stringify(DFLT))}catch(e){return DFLT}},
+  save(u){const a=this.u;a.push(u);localStorage.setItem('ef_u4',JSON.stringify(a))},
+  find(id){return this.u.find(u=>u.roll===id||u.email===id)},
+};
+let CU=null,termsOn=false,selAv='🧑‍💻',violCount=0;
+const violHistory=[];
+
+/* ── Helpers ── */
+function se(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo(0,0)}
+function toggleChk(id){const el=document.getElementById(id);el.classList.toggle('on');el.textContent=el.classList.contains('on')?'✓':'';if(id==='termsCk')termsOn=el.classList.contains('on')}
+function pickAv(el){document.querySelectorAll('.av-opt').forEach(a=>a.classList.remove('sel'));el.classList.add('sel');selAv=el.dataset.av}
+function chkStr(p){
+  const f=document.getElementById('strF'),t=document.getElementById('strT');
+  if(!p){f.style.width='0';t.textContent='';return}
+  let s=0;if(p.length>=8)s++;if(p.length>=12)s++;if(/[A-Z]/.test(p))s++;if(/[0-9]/.test(p))s++;if(/[^A-Za-z0-9]/.test(p))s++;
+  const L=[['0%','var(--danger)',''],['20%','var(--danger)','Weak'],['40%','var(--warn)','Fair'],['60%','var(--warn)','Good'],['80%','var(--tl)','Strong'],['100%','var(--safe)','Very Strong']];
+  const l=L[Math.min(s,5)];f.style.width=l[0];f.style.background=l[1];t.style.color=l[1];t.textContent=l[2];
+}
+function shErr(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block';if(e.previousElementSibling)e.previousElementSibling.classList.add('err')}
+function clErr(id){const e=document.getElementById(id);if(e){e.style.display='none';if(e.previousElementSibling)e.previousElementSibling.classList.remove('err')}}
+function toast(type,msg,dur=3200){
+  const c=document.getElementById('toastC'),t=document.createElement('div');
+  t.className='toast '+type;t.textContent=msg;c.appendChild(t);
+  setTimeout(()=>t.style.opacity='0',dur);setTimeout(()=>t.remove(),dur+500);
+}
+function pad(n){return String(n).padStart(2,'0')}
+
+/* ── Auth ── */
+function doLogin(){
+  const id=document.getElementById('loginId').value.trim();
+  const pw=document.getElementById('loginPwd').value;
+  clErr('loginIdErr');clErr('loginPwdErr');
+  if(!id){shErr('loginIdErr','Enter roll number or email');return}
+  if(!pw){shErr('loginPwdErr','Enter password');return}
+  const u=STORE.find(id);
+  if(!u||u.password!==pw){shErr('loginPwdErr','Invalid credentials — try 2320520034 / ankith123');return}
+  loginOk(u);
+}
+function quickLogin(){const u=STORE.find('2320520034');if(u)loginOk(u)}
+function loginOk(u){CU=u;fillDash(u);toast('ok','Welcome, '+u.first+'! 🎓');showPage('dashPage')}
+function fillDash(u){
+  const ini=(u.first[0]+(u.last?u.last[0]:'')).toUpperCase();
+  const av=u.avatar||ini;
+  const batch=(u.batch||'2023-2026').replace('-','–');
+  const full=u.first+' '+u.last;
+  ['dashAv','pcAv','examScAv','examNbAv','modalAv','cmAv'].forEach(id=>se(id,av));
+  se('dashName',full);se('dashRoll',u.roll);se('welcomeName',u.first);
+  se('pcName',full);se('pcRoll',u.roll);se('pcBranch',u.branch||'BCA');se('pcBatch',batch);se('pcEmail',u.email||'—');
+  se('examScName',full);se('examScRoll',u.roll);se('examNbName',u.first);se('examNbRoll',u.roll);
+  se('nbStudent',full+' · '+u.roll);
+  se('examInfoName',full);se('examInfoRoll',u.roll);
+  se('modalName',full);se('modalRoll','Roll: '+u.roll+' · '+(u.branch||'BCA')+' '+batch+' · '+(u.institute||'KLH'));
+  se('camSname',u.first+' · '+u.roll);se('cmName',full);se('cmRoll','Roll: '+u.roll+' · '+(u.branch||'BCA')+' '+batch);
+}
+function doRegister(){
+  const first=document.getElementById('regFirst').value.trim();
+  const last=document.getElementById('regLast').value.trim();
+  const roll=document.getElementById('regRoll').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const branch=document.getElementById('regBranch').value;
+  const batch=document.getElementById('regBatch').value;
+  const pw=document.getElementById('regPwd').value;
+  const pw2=document.getElementById('regPwd2').value;
+  ['regRollErr','regEmailErr','regPwdErr','regPwd2Err'].forEach(clErr);
+  let ok=true;
+  if(!/^\d{10}$/.test(roll)){shErr('regRollErr','Must be exactly 10 digits');ok=false}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){shErr('regEmailErr','Enter a valid email');ok=false}
+  if(pw.length<8){shErr('regPwdErr','Minimum 8 characters');ok=false}
+  if(pw!==pw2){shErr('regPwd2Err','Passwords do not match');ok=false}
+  if(!termsOn){toast('warn','Please accept Terms & camera consent');ok=false}
+  if(!ok)return;
+  if(STORE.find(roll)){shErr('regRollErr','Roll already registered');return}
+  const u={roll,email,password:pw,first,last,branch:branch||'BCA',batch:batch||'2023-2026',avatar:selAv,institute:'KLH University'};
+  STORE.save(u);loginOk(u);toast('ok','Account created! Welcome, '+first+'!');
+}
+function doLogout(){CU=null;stopCam();toast('info','Logged out');setTimeout(()=>showPage('loginPage'),600)}
+function startExam(){if(!CU){showPage('loginPage');return}resetExam();showPage('examPage');setTimeout(openCamModal,400)}
+
+/* ════════════════════════════════════════════════════════
+   CAMERA + AI DETECTION ENGINE
+════════════════════════════════════════════════════════ */
+let camStream=null,camMuted=false,camOff=false,camSec=0;
+let camInterval=null,detInterval=null,fpsTimer=Date.now(),fpsCount=0,lastFps=0;
+/* Detection state — smooth values */
+let dFace=0,dPers=0,dAttn=0,dMult=0,dObj=0;
+/* Target values driven by physics */
+let tFace=88,tPers=92,tAttn=85,tMult=2,tObj=10;
+let phaseT=0; /* animation phase */
+let camReady=false;
+
+function lerp(a,b,t){return a+(b-a)*t}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+function rnd(amp){return(Math.random()-.5)*amp}
+
+/* Open camera connect modal */
+function openCamModal(){
+  /* Reset modal state */
+  const btn=document.getElementById('cmBtn');
+  btn.textContent='🎥 Connect & Start AI';btn.disabled=false;btn.style.background='linear-gradient(135deg,var(--a),var(--tl))';
+  btn.onclick=startCamFromModal;
+  se('cmStatus','Click below to allow camera access');
+  document.getElementById('cmStatus').style.color='var(--tx2)';
+  const pv=document.getElementById('cmPreview');pv.srcObject=null;pv.style.display='none';
+  document.getElementById('cmCanvas').style.display='none';
+  document.getElementById('cmPh2').style.display='flex';
+  document.getElementById('cmHudTags').innerHTML='';
+  const fixBox=document.getElementById('camFixBox');if(fixBox){fixBox.style.display='none';fixBox.innerHTML=''}
+  document.getElementById('camModal').classList.add('open');
+}
+function closeCamModal(){document.getElementById('camModal').classList.remove('open')}
+function skipCamera(){closeCamModal();toast('warn','Camera skipped — violations will be logged')}
+
+async function startCamFromModal(){
+  const btn=document.getElementById('cmBtn');
+  const statEl=document.getElementById('cmStatus');
+  const fixEl=document.getElementById('camFixBox');
+  if(fixEl)fixEl.style.display='none';
+  btn.textContent='⏳ Requesting...';btn.disabled=true;
+  statEl.textContent='Waiting for camera permission popup...';statEl.style.color='var(--warn)';
+
+  /* Try 1: video + audio */
+  let stream=null;
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({
+      video:{width:{ideal:640},height:{ideal:480},facingMode:'user'},
+      audio:true
+    });
+  }catch(e1){
+    /* Try 2: video only (no mic) */
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({video:true});
+    }catch(e2){
+      /* Both failed — show fix instructions */
+      const name=e2.name||'';
+      let msg='';
+      let fixHTML='';
+      if(name==='NotAllowedError'||name==='PermissionDeniedError'){
+        msg='❌ Camera access BLOCKED. Follow steps below to fix:';
+        fixHTML=getBrowserFixHTML();
+      } else if(name==='NotFoundError'||name==='DevicesNotFoundError'){
+        msg='❌ No camera found. Connect a webcam and try again.';
+        fixHTML='<div style="color:var(--warn);font-size:11px;text-align:center;margin-top:8px">Make sure your webcam is plugged in and not used by another app.</div>';
+      } else if(name==='NotReadableError'||name==='TrackStartError'){
+        msg='❌ Camera is in use by another app. Close Zoom/Teams/Skype and try again.';
+        fixHTML='<div style="color:var(--warn);font-size:11px;text-align:center;margin-top:8px">Close any other app using your camera (Zoom, Teams, Skype, etc.) then click Try Again.</div>';
+      } else if(name==='OverconstrainedError'){
+        msg='⚠ Camera resolution issue. Trying basic mode...';
+        /* Try 3: absolute minimum constraints */
+        try{stream=await navigator.mediaDevices.getUserMedia({video:true});}catch(e3){}
+      } else {
+        msg='❌ Camera error: '+name+'. Try refreshing the page.';
+      }
+      if(!stream){
+        statEl.textContent=msg;statEl.style.color='var(--danger)';
+        if(fixEl){fixEl.innerHTML=fixHTML;fixEl.style.display='block';}
+        btn.textContent='🔄 Try Again';btn.disabled=false;btn.style.background='linear-gradient(135deg,var(--a),var(--tl))';btn.onclick=startCamFromModal;
+        return;
+      }
+    }
+  }
+
+  /* Stream acquired */
+  camStream=stream;
+  const pv=document.getElementById('cmPreview');
+  pv.srcObject=stream;pv.style.display='block';
+  document.getElementById('cmPh2').style.display='none';
+  document.getElementById('cmCanvas').style.display='block';
+  statEl.textContent='✓ Camera connected! AI proctoring active.';statEl.style.color='var(--safe)';
+  btn.textContent='✓ Connected — Enter Exam →';btn.disabled=false;
+  btn.style.background='linear-gradient(135deg,#1db854,#0fb8a4)';
+  btn.onclick=function(){closeCamModal();activateCamInExam();};
+  startModalDetection();
+  toast('ok','📷 Camera connected! Click Enter Exam to begin.');
+}
+
+function getBrowserFixHTML(){
+  /* Detect browser */
+  const ua=navigator.userAgent.toLowerCase();
+  const isChrome=ua.includes('chrome')&&!ua.includes('edg');
+  const isFirefox=ua.includes('firefox');
+  const isEdge=ua.includes('edg');
+  const isSafari=ua.includes('safari')&&!ua.includes('chrome');
+
+  let steps='';
+  if(isChrome||isEdge){
+    const browserName=isEdge?'Edge':'Chrome';
+    steps=`
+      <div style="font-size:10.5px;font-weight:700;color:var(--warn);margin-bottom:8px">Fix in ${browserName}:</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:10px">
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <span style="background:var(--a);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700">1</span>
+          <span>Click the <b>🔒 lock icon</b> or <b>📷 camera icon</b> in the address bar (top left)</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <span style="background:var(--a);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700">2</span>
+          <span>Set <b>Camera</b> → <b>Allow</b> and set <b>Microphone</b> → <b>Allow</b></span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <span style="background:var(--a);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700">3</span>
+          <span>Click <b>Reload</b> / <b>Refresh</b> the page, then click Connect Camera again</span>
+        </div>
+      </div>
+      <div style="margin-top:10px;padding:7px 10px;background:rgba(79,126,248,.1);border:1px solid rgba(79,126,248,.25);border-radius:7px;font-size:9.5px;color:var(--a2)">
+        Or go to: <b>${browserName==='Edge'?'edge':'chrome'}://settings/content/camera</b> → Allow this site
+      </div>`;
+  } else if(isFirefox){
+    steps=`
+      <div style="font-size:10.5px;font-weight:700;color:var(--warn);margin-bottom:8px">Fix in Firefox:</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:10px">
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <span style="background:var(--a);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700">1</span>
+          <span>Click the <b>🔒 shield/lock icon</b> in the address bar</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <span style="background:var(--a);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700">2</span>
+          <span>Click <b>More Information</b> → <b>Permissions</b></span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <span style="background:var(--a);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700">3</span>
+          <span>Set <b>Use the Camera</b> → <b>Allow</b>, then refresh</span>
+        </div>
+      </div>`;
+  } else if(isSafari){
+    steps=`
+      <div style="font-size:10.5px;font-weight:700;color:var(--warn);margin-bottom:8px">Fix in Safari:</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:10px">
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <span style="background:var(--a);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700">1</span>
+          <span>Go to <b>Safari menu</b> → <b>Settings for This Website</b></span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <span style="background:var(--a);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700">2</span>
+          <span>Set <b>Camera</b> → <b>Allow</b></span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <span style="background:var(--a);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700">3</span>
+          <span>Reload the page and try again</span>
+        </div>
+      </div>`;
+  } else {
+    steps=`<div style="font-size:10px">Click the <b>camera/lock icon</b> in your browser's address bar → Allow camera access → Reload the page and try again.</div>`;
+  }
+  return `<div style="background:rgba(232,64,74,.08);border:1px solid rgba(232,64,74,.25);border-radius:10px;padding:12px 14px;margin-top:8px">${steps}</div>`;
+}
+let modalDetInterval=null;
+function startModalDetection(){
+  if(modalDetInterval)clearInterval(modalDetInterval);
+  const pv=document.getElementById('cmPreview');
+  const cv=document.getElementById('cmCanvas');
+  const tagsEl=document.getElementById('cmHudTags');
+  let mp=0;
+  modalDetInterval=setInterval(()=>{
+    if(!pv.videoWidth){return}
+    cv.width=pv.videoWidth;cv.height=pv.videoHeight;
+    mp+=0.05;
+    const fc=clamp(85+rnd(12),55,99);
+    const ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,cv.width,cv.height);
+    drawFaceBox(ctx,cv.width,cv.height,fc,mp);
+    drawScanLine(ctx,cv.width,cv.height,mp);
+    /* Tags */
+    tagsEl.innerHTML='';
+    const t1=document.createElement('div');t1.className='htag '+(fc>65?'face-ok':'face-warn');
+    t1.textContent=(fc>65?'✓ FACE (':'✗ FACE (')+Math.round(fc)+'%)';tagsEl.appendChild(t1);
+    const t2=document.createElement('div');t2.className='htag obj-ok';t2.textContent='PERSON DETECTED';tagsEl.appendChild(t2);
+  },150);
+}
+
+function activateCamInExam(){
+  if(modalDetInterval){clearInterval(modalDetInterval);modalDetInterval=null}
+  const v=document.getElementById('camVid');
+  const c=document.getElementById('camCanvas');
+  if(camStream){v.srcObject=camStream;}
+  /* Show live feed in exam */
+  document.getElementById('camPh').style.display='none';
+  document.getElementById('camHud').style.display='block';
+  document.getElementById('detPanel').classList.add('show');
+  document.getElementById('violLog').classList.add('show');
+  document.getElementById('camElapsed').style.display='';
+  document.getElementById('recW').style.display='flex';
+  document.getElementById('liveB').style.display='';
+  se('camStat','AI Active ●');document.getElementById('camStat').className='cam-stat-pill ok';
+  camReady=true;
+  /* Size canvas */
+  function sizeCanvas(){if(v.videoWidth){c.width=v.videoWidth;c.height=v.videoHeight}}
+  if(v.readyState>=1)sizeCanvas();else v.onloadedmetadata=sizeCanvas;
+  /* Timers */
+  camInterval=setInterval(()=>{camSec++;const m=Math.floor(camSec/60),s=camSec%60;se('camElapsed',pad(m)+':'+pad(s))},1000);
+  detInterval=setInterval(runDetection,110);
+  toast('ok','🧠 AI Proctoring LIVE — Face + Object detection running');
+}
+
+function stopCam(){
+  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}
+  if(camInterval){clearInterval(camInterval);camInterval=null}
+  if(detInterval){clearInterval(detInterval);detInterval=null}
+  if(modalDetInterval){clearInterval(modalDetInterval);modalDetInterval=null}
+  camReady=false;
+}
+function toggleMute(){
+  camMuted=!camMuted;
+  if(camStream)camStream.getAudioTracks().forEach(t=>t.enabled=!camMuted);
+  const b=document.getElementById('muteBtn');b.textContent=camMuted?'🔇':'🎙️';b.className='cam-btn'+(camMuted?' off':'');
+  if(camMuted)logViolation('mic_muted','Microphone muted','medium');
+}
+function toggleCam(){
+  camOff=!camOff;
+  if(camStream)camStream.getVideoTracks().forEach(t=>t.enabled=!camOff);
+  document.getElementById('camPh').style.display=camOff?'flex':'none';
+  document.getElementById('camHud').style.display=camOff?'none':'block';
+  const b=document.getElementById('camBtn');b.textContent=camOff?'📷':'🎥';b.className='cam-btn'+(camOff?' off':'');
+  if(camOff){se('camStat','Camera Off');document.getElementById('camStat').className='cam-stat-pill off2';logViolation('camera_off','Camera disabled by student','high');}
+  else{se('camStat','AI Active ●');document.getElementById('camStat').className='cam-stat-pill ok';}
+}
+
+/* ── Main AI detection loop ── */
+function runDetection(){
+  if(!camReady||camOff)return;
+  phaseT+=0.04;
+  /* Drive targets with realistic noise */
+  tFace=clamp(tFace+rnd(9),52,99);
+  tPers=clamp(tPers+rnd(6),58,99);
+  tAttn=clamp(tAttn+rnd(11),35,98);
+  tMult=clamp(tMult+rnd(5),0,30);
+  tObj =clamp(tObj +rnd(7),0,40);
+  /* Smooth lerp towards targets */
+  dFace=lerp(dFace,tFace,0.16);
+  dPers=lerp(dPers,tPers,0.13);
+  dAttn=lerp(dAttn,tAttn,0.14);
+  dMult=lerp(dMult,tMult,0.10);
+  dObj =lerp(dObj ,tObj ,0.12);
+  const fc=Math.round(dFace),pc=Math.round(dPers),ac=Math.round(dAttn),mc=Math.round(dMult),oc=Math.round(dObj);
+  /* Update confidence bars */
+  setBar('dfFace','dpFace',fc,fc>70?'var(--safe)':fc>45?'var(--warn)':'var(--danger)');
+  setBar('dfPers','dpPers',pc,'var(--a)');
+  setBar('dfAttn','dpAttn',ac,ac>60?'var(--tl)':ac>35?'var(--warn)':'var(--danger)');
+  setBar('dfMult','dpMult',mc,mc<15?'rgba(255,255,255,.25)':mc<30?'var(--warn)':'var(--danger)');
+  setBar('dfObj', 'dpObj', oc,oc<20?'rgba(255,255,255,.25)':oc<35?'var(--warn)':'var(--danger)');
+  /* Update HUD tags */
+  const tagsEl=document.getElementById('hudTags');tagsEl.innerHTML='';
+  const fTag=document.createElement('div');
+  fTag.className='htag '+(fc>65?'face-ok':'face-warn');
+  fTag.textContent=(fc>65?'✓ FACE (':'✗ FACE (')+fc+'%)';tagsEl.appendChild(fTag);
+  const pTag=document.createElement('div');pTag.className='htag obj-ok';pTag.textContent='PERSON '+pc+'%';tagsEl.appendChild(pTag);
+  if(mc>25){const mTag=document.createElement('div');mTag.className='htag multi-warn';mTag.textContent='⚠ MULTIPLE PERSONS '+mc+'%';tagsEl.appendChild(mTag);}
+  if(oc>28){const oTag=document.createElement('div');oTag.className='htag obj-ok';oTag.textContent='OBJECT '+oc+'%';tagsEl.appendChild(oTag);}
+  /* Auto-trigger violations */
+  if(fc<50&&Math.random()<0.06) logViolation('face_not_visible','Face not clearly visible ('+fc+'%)','high');
+  if(mc>28&&Math.random()<0.05) logViolation('multiple_faces','Multiple persons detected ('+mc+'%)','high');
+  if(ac<32&&Math.random()<0.04) logViolation('low_attention','Low attention score ('+ac+'%)','medium');
+  if(oc>32&&Math.random()<0.03) logViolation('unknown_object','Suspicious object detected ('+oc+'%)','medium');
+  /* Draw on canvas */
+  drawDetection(fc,pc,ac,mc,oc);
+  /* FPS */
+  fpsCount++;const now=Date.now();
+  if(now-fpsTimer>=1000){lastFps=fpsCount;fpsCount=0;fpsTimer=now;se('hudFps',lastFps+' FPS')}
+}
+
+function setBar(fillId,pctId,val,color){
+  const f=document.getElementById(fillId),p=document.getElementById(pctId);
+  if(f){f.style.width=val+'%';f.style.background=color}
+  if(p)p.textContent=val+'%';
+}
+
+/* ── Canvas drawing — face detection + object detection bounding boxes ── */
+function drawDetection(fc,pc,ac,mc,oc){
+  const v=document.getElementById('camVid');
+  const c=document.getElementById('camCanvas');
+  if(!c||!v||!v.videoWidth)return;
+  c.width=v.videoWidth;c.height=v.videoHeight;
+  const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  const W=c.width,H=c.height;
+  /* 1. Scan line sweep */
+  drawScanLine(ctx,W,H,phaseT);
+  /* 2. Detection grid (faint) */
+  drawGrid(ctx,W,H);
+  /* 3. Person bounding box (object detection) */
+  if(pc>55){drawPersonBox(ctx,W,H,pc,phaseT);}
+  /* 4. Face bounding box (face detection) */
+  if(fc>48){drawFaceBox(ctx,W,H,fc,phaseT);}
+  /* 5. Additional object box if detected */
+  if(oc>28){drawObjectBox(ctx,W,H,oc,phaseT);}
+  /* 6. Multiple faces warning overlay */
+  if(mc>25){drawMultiWarning(ctx,W,H,mc);}
+}
+
+function drawScanLine(ctx,W,H,phase){
+  const y=((phase*18)%(H+20))-10;
+  const grad=ctx.createLinearGradient(0,y-4,0,y+4);
+  grad.addColorStop(0,'rgba(79,126,248,0)');
+  grad.addColorStop(0.5,'rgba(79,126,248,0.18)');
+  grad.addColorStop(1,'rgba(79,126,248,0)');
+  ctx.fillStyle=grad;ctx.fillRect(0,y-4,W,8);
+}
+function drawGrid(ctx,W,H){
+  ctx.strokeStyle='rgba(79,126,248,0.05)';ctx.lineWidth=0.5;
+  for(let x=0;x<W;x+=W/10){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+  for(let y=0;y<H;y+=H/7){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+}
+
+function drawFaceBox(ctx,W,H,fc,phase){
+  const wobX=Math.sin(phase*1.4)*3.5+Math.sin(phase*2.8)*1.5;
+  const wobY=Math.cos(phase*1.2)*2.5+Math.cos(phase*2.2)*1.5;
+  const fx=W*0.21+wobX, fy=H*0.07+wobY, fw=W*0.58, fh=H*0.80;
+  const alpha=clamp((fc-48)/52,0,1);
+  const good=fc>65;
+  const mainColor=good?`rgba(29,184,84,${alpha})`:`rgba(240,165,0,${alpha})`;
+  const glowColor=good?'rgba(29,184,84,0.5)':'rgba(240,165,0,0.4)';
+  /* Glow */
+  ctx.shadowBlur=10;ctx.shadowColor=glowColor;
+  ctx.strokeStyle=mainColor;ctx.lineWidth=1.5;
+  ctx.strokeRect(fx,fy,fw,fh);
+  ctx.shadowBlur=0;
+  /* Corner accents */
+  const cs=16;
+  [[fx,fy,1,1],[fx+fw,fy,-1,1],[fx,fy+fh,1,-1],[fx+fw,fy+fh,-1,-1]].forEach(([cx,cy,dx,dy])=>{
+    ctx.strokeStyle=good?`rgba(29,184,84,${0.85+alpha*0.15})`:`rgba(240,165,0,0.9)`;ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(cx+dx*cs,cy);ctx.lineTo(cx,cy);ctx.lineTo(cx,cy+dy*cs);ctx.stroke();
+  });
+  /* Face label */
+  const lbl=(good?'FACE ':'⚠ FACE ')+fc+'%';
+  ctx.font='bold 9px "JetBrains Mono",monospace';
+  const lw=ctx.measureText(lbl).width+10;
+  ctx.fillStyle=good?'rgba(29,184,84,0.85)':'rgba(240,165,0,0.85)';
+  ctx.fillRect(fx,fy-16,lw,15);
+  ctx.fillStyle='#fff';ctx.fillText(lbl,fx+5,fy-5);
+  /* Facial landmarks (when high confidence) */
+  if(fc>68){
+    const eyeLx=fx+fw*0.30, eyeRx=fx+fw*0.70, eyeY=fy+fh*0.30;
+    const noseX=fx+fw*0.50, noseY=fy+fh*0.52;
+    const mouthL=fx+fw*0.33, mouthR=fx+fw*0.67, mouthY=fy+fh*0.72;
+    /* Eyes */
+    [[eyeLx,eyeY],[eyeRx,eyeY]].forEach(([ex,ey])=>{
+      /* Outer ring */
+      ctx.strokeStyle='rgba(15,184,164,0.6)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(ex,ey,8,0,Math.PI*2);ctx.stroke();
+      /* Iris */
+      ctx.strokeStyle='rgba(15,184,164,0.9)';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.arc(ex,ey,4,0,Math.PI*2);ctx.stroke();
+      /* Pupil */
+      ctx.fillStyle='rgba(15,184,164,0.8)';
+      ctx.beginPath();ctx.arc(ex,ey,2,0,Math.PI*2);ctx.fill();
+      /* Tracking lines */
+      ctx.strokeStyle='rgba(15,184,164,0.2)';ctx.lineWidth=0.5;ctx.setLineDash([3,4]);
+      ctx.beginPath();ctx.moveTo(ex-14,ey);ctx.lineTo(ex+14,ey);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(ex,ey-14);ctx.lineTo(ex,ey+14);ctx.stroke();
+      ctx.setLineDash([]);
+    });
+    /* Nose point */
+    ctx.fillStyle='rgba(15,184,164,0.7)';
+    ctx.beginPath();ctx.arc(noseX,noseY,2.5,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(15,184,164,0.3)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.arc(noseX,noseY,7,0,Math.PI*2);ctx.stroke();
+    /* Mouth */
+    ctx.strokeStyle='rgba(15,184,164,0.55)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(mouthL,mouthY);
+    ctx.quadraticCurveTo(fx+fw*0.50,mouthY+4,mouthR,mouthY);ctx.stroke();
+    /* Jaw outline dots */
+    const jawPts=[];
+    for(let i=0;i<=8;i++){const a=-Math.PI*0.2+(Math.PI*1.4/8)*i;jawPts.push([fx+fw*0.5+Math.cos(a)*fw*0.35,fy+fh*0.55+Math.sin(a)*fh*0.38])}
+    ctx.strokeStyle='rgba(15,184,164,0.25)';ctx.lineWidth=1;ctx.setLineDash([2,5]);
+    ctx.beginPath();ctx.moveTo(jawPts[0][0],jawPts[0][1]);
+    jawPts.slice(1).forEach(([px,py])=>ctx.lineTo(px,py));ctx.stroke();ctx.setLineDash([]);
+    /* Measurement lines */
+    ctx.strokeStyle='rgba(15,184,164,0.15)';ctx.lineWidth=0.5;ctx.setLineDash([3,6]);
+    ctx.beginPath();ctx.moveTo(fx+fw/2,fy);ctx.lineTo(fx+fw/2,fy+fh);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(fx,fy+fh/2);ctx.lineTo(fx+fw,fy+fh/2);ctx.stroke();
+    ctx.setLineDash([]);
+    /* Confidence arc */
+    const arcRad=Math.min(fw,fh)*0.45;
+    ctx.strokeStyle=`rgba(29,184,84,${alpha*0.25})`;ctx.lineWidth=3;
+    ctx.beginPath();ctx.arc(fx+fw/2,fy+fh/2,arcRad,-Math.PI/2,-Math.PI/2+Math.PI*2*(fc/100));ctx.stroke();
+  }
+}
+
+function drawPersonBox(ctx,W,H,pc,phase){
+  const wobX=Math.sin(phase*0.7)*2, wobY=Math.cos(phase*0.5)*2;
+  const px=W*0.07+wobX, py=H*0.01+wobY, pw=W*0.86, ph=H*0.98;
+  const alpha=clamp((pc-55)/45,0,0.55);
+  ctx.strokeStyle=`rgba(122,162,251,${alpha})`;ctx.lineWidth=1.2;ctx.setLineDash([6,5]);
+  ctx.strokeRect(px,py,pw,ph);ctx.setLineDash([]);
+  /* Label */
+  ctx.font='bold 8px "JetBrains Mono",monospace';
+  const lbl='PERSON '+pc+'%';
+  const lw=ctx.measureText(lbl).width+8;
+  ctx.fillStyle=`rgba(79,126,248,${alpha*1.4})`;ctx.fillRect(px,py,lw,14);
+  ctx.fillStyle='rgba(180,210,255,0.9)';ctx.fillText(lbl,px+4,py+10);
+  /* Skeleton keypoints */
+  if(pc>70){
+    const kp=[
+      [W*0.5,H*0.12],  /* head */
+      [W*0.5,H*0.28],  /* neck */
+      [W*0.32,H*0.30],[W*0.68,H*0.30],/* shoulders */
+      [W*0.28,H*0.50],[W*0.72,H*0.50],/* elbows */
+      [W*0.26,H*0.66],[W*0.74,H*0.66],/* wrists */
+      [W*0.5,H*0.55],  /* hip center */
+      [W*0.40,H*0.72],[W*0.60,H*0.72],/* knees */
+    ];
+    const bones=[[0,1],[1,2],[1,3],[2,4],[3,5],[4,6],[5,7],[1,8],[8,9],[8,10]];
+    /* Bones */
+    ctx.strokeStyle='rgba(79,126,248,0.28)';ctx.lineWidth=1.2;
+    bones.forEach(([a,b])=>{
+      ctx.beginPath();ctx.moveTo(kp[a][0],kp[a][1]);ctx.lineTo(kp[b][0],kp[b][1]);ctx.stroke();
+    });
+    /* Joints */
+    kp.forEach(([kx,ky])=>{
+      ctx.fillStyle='rgba(122,162,251,0.7)';
+      ctx.beginPath();ctx.arc(kx,ky,3,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='rgba(122,162,251,0.4)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(kx,ky,6,0,Math.PI*2);ctx.stroke();
+    });
+  }
+}
+
+function drawObjectBox(ctx,W,H,oc,phase){
+  /* Simulates detecting a foreign object (phone/book) in lower area */
+  const bx=W*0.72+Math.sin(phase*1.1)*3;
+  const by=H*0.70+Math.cos(phase*0.9)*3;
+  const bw=W*0.18, bh=H*0.22;
+  const alpha=clamp((oc-28)/30,0,0.75);
+  ctx.strokeStyle=`rgba(240,165,0,${alpha})`;ctx.lineWidth=1.5;
+  ctx.strokeRect(bx,by,bw,bh);
+  ctx.font='bold 8px "JetBrains Mono",monospace';
+  const lbl='OBJECT '+oc+'%';
+  const lw=ctx.measureText(lbl).width+8;
+  ctx.fillStyle=`rgba(240,165,0,${alpha*0.85})`;ctx.fillRect(bx,by-14,lw,14);
+  ctx.fillStyle='rgba(255,230,150,0.95)';ctx.fillText(lbl,bx+4,by-4);
+}
+
+function drawMultiWarning(ctx,W,H,mc){
+  /* Red overlay flash when multiple persons detected */
+  const alpha=(mc-25)/75*0.12;
+  ctx.fillStyle=`rgba(232,64,74,${alpha})`;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle=`rgba(232,64,74,0.6)`;ctx.lineWidth=3;
+  ctx.strokeRect(2,2,W-4,H-4);
+  ctx.font='bold 10px "JetBrains Mono",monospace';
+  const lbl='⚠ MULTIPLE PERSONS '+mc+'%';
+  const lw=ctx.measureText(lbl).width+14;
+  ctx.fillStyle='rgba(232,64,74,0.85)';ctx.fillRect(W/2-lw/2,8,lw,18);
+  ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(lbl,W/2,21);ctx.textAlign='left';
+}
+
+/* ── Violation logging ── */
+function logViolation(type,msg,severity){
+  violCount++;
+  const ts=new Date();
+  const tStr=pad(ts.getHours())+':'+pad(ts.getMinutes())+':'+pad(ts.getSeconds());
+  violHistory.push({type,msg,severity,time:tStr,q:cQ+1});
+  /* Strip at bottom of camera */
+  const s=document.getElementById('violStrip');
+  se('violMsg','[#'+violCount+'] '+msg);
+  s.style.display='flex';
+  clearTimeout(s._t);s._t=setTimeout(()=>s.style.display='none',5000);
+  /* Violation log panel */
+  const logEl=document.getElementById('violLog');
+  const item=document.createElement('div');item.className='viol-item';
+  item.innerHTML=`<span class="vi-time">${tStr}</span><span class="vi-msg">${msg}</span><span class="vi-sev ${severity}">[${severity}]</span>`;
+  logEl.prepend(item);
+  /* Only show recent 6 */
+  while(logEl.children.length>6)logEl.removeChild(logEl.lastChild);
+  toast('warn','⚠ '+msg,4000);
+}
+
+/* Tab switch detection */
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden&&document.getElementById('examPage').classList.contains('active'))
+    logViolation('tab_switch','Tab switch / window focus lost','medium');
+});
+
+/* ════════════════════════════════════════════════════════
+   EXAM ENGINE
+════════════════════════════════════════════════════════ */
+const SUBS=[
+  {n:'Data Science',i:'📊',d:'Statistics · Pandas · NumPy · Visualization · Probability',r:'Q 1–40',c:'var(--ds)',k:'ds'},
+  {n:'Operating Systems',i:'🖥️',d:'Processes · Memory · Scheduling · File Systems · Concurrency',r:'Q 41–80',c:'var(--os)',k:'os'},
+  {n:'JavaScript',i:'⚡',d:'ES6+ · DOM · Async · Closures · Prototypes · Event Loop',r:'Q 81–120',c:'var(--js)',k:'js'},
+  {n:'Data Structures',i:'🌳',d:'Arrays · Trees · Graphs · Hashing · Stacks · Queues · Heaps',r:'Q 121–160',c:'var(--dsa)',k:'dsa'},
+  {n:'ML & Algorithms',i:'🤖',d:'Supervised · Unsupervised · Neural Networks · Sorting · DP',r:'Q 161–200',c:'var(--ml)',k:'ml'},
+];
+const QS=[
+{s:0,t:'What does a p-value < 0.05 indicate?',sub:'Statistics',diff:'medium',o:['Accept null hypothesis','Reject null hypothesis','No conclusion','Data invalid'],a:1},
+{s:0,t:'Which Pandas function reads a CSV file?',sub:'Pandas',diff:'easy',o:['pd.load_csv()','pd.read_csv()','pd.import_csv()','pd.open_csv()'],a:1},
+{s:0,t:'IQR equals?',sub:'Statistics',diff:'easy',o:['Q3-Q1','Q2-Q1','Q4-Q2','Mean-Median'],a:0},
+{s:0,t:'NumPy function for array of zeros?',sub:'NumPy',diff:'easy',o:['np.empty()','np.zeros()','np.null()','np.blank()'],a:1},
+{s:0,t:'Normal distribution: % within 2 SDs?',sub:'Statistics',diff:'medium',o:['68%','95%','99.7%','90%'],a:1},
+{s:0,t:'groupby() groups rows by?',sub:'Pandas',diff:'easy',o:['Sorts rows','Column values','Filters data','Merges frames'],a:1},
+{s:0,t:'Central tendency most affected by outliers?',sub:'Statistics',diff:'easy',o:['Median','Mode','Mean','IQR'],a:2},
+{s:0,t:'Purpose of data normalization?',sub:'Preprocessing',diff:'medium',o:['Remove duplicates','Scale features to standard range','Fill missing','Encode categories'],a:1},
+{s:0,t:'Primary Python visualization library?',sub:'Visualization',diff:'easy',o:['NumPy','SciPy','Matplotlib','Pandas'],a:2},
+{s:0,t:'df.describe() returns?',sub:'Pandas',diff:'easy',o:['Column names','Data types','Summary statistics','First 5 rows'],a:2},
+{s:0,t:'P(AuB) for mutually exclusive events?',sub:'Probability',diff:'medium',o:['P(A)*P(B)','P(A)+P(B)','P(A)+P(B)-P(AnB)','P(A)-P(B)'],a:1},
+{s:0,t:'Fill missing values with column mean?',sub:'Preprocessing',diff:'medium',o:['dropna()','fillna(mean())','replace()','impute()'],a:1},
+{s:0,t:'Correlation -1 means?',sub:'Statistics',diff:'medium',o:['No correlation','Perfect positive','Perfect negative','Weak'],a:2},
+{s:0,t:'Shape: 100 rows x 5 cols?',sub:'Pandas',diff:'easy',o:['(5,100)','(100,5)','[100,5]','500'],a:1},
+{s:0,t:'NumPy dot product function?',sub:'NumPy',diff:'medium',o:['np.multiply()','np.cross()','np.dot()','np.sum()'],a:2},
+{s:0,t:'Bayes theorem updates?',sub:'Probability',diff:'hard',o:['Mean','Probability given new evidence','Variance','IQR'],a:1},
+{s:0,t:'Best plot for continuous variable distribution?',sub:'Visualization',diff:'easy',o:['Bar chart','Pie chart','Histogram','Line chart'],a:2},
+{s:0,t:'One-hot encoding converts?',sub:'Preprocessing',diff:'medium',o:['Numerical to binary','Categorical to binary vectors','Handles missing','Scales features'],a:1},
+{s:0,t:'df.merge() combines on?',sub:'Pandas',diff:'medium',o:['Splits frame','A key column','Sorts values','Removes duplicates'],a:1},
+{s:0,t:'Variance is?',sub:'Statistics',diff:'medium',o:['Sum of values','Avg squared deviation from mean','Median squared','SD cubed'],a:1},
+{s:0,t:'df.count() returns?',sub:'Pandas',diff:'easy',o:['Non-null count per col','Sum per col','Row count only','Col names'],a:0},
+{s:0,t:'Box plot displays?',sub:'Visualization',diff:'easy',o:['Correlation','Time series','Distribution and outliers','Frequency'],a:2},
+{s:0,t:'In NumPy, axis=0 means?',sub:'NumPy',diff:'medium',o:['Column-wise','Row-wise','Element-wise','Diagonal'],a:0},
+{s:0,t:'Mode of [2,3,3,5,7,3]?',sub:'Statistics',diff:'easy',o:['2','3','5','7'],a:1},
+{s:0,t:'Test comparing means of two groups?',sub:'Statistics',diff:'medium',o:['Chi-square','ANOVA','t-test','F-test'],a:2},
+{s:0,t:'df.pivot_table() creates?',sub:'Pandas',diff:'hard',o:['Charts','Aggregated summary table','Split frames','Transposed data'],a:1},
+{s:0,t:'Standard normal: Mean=? SD=?',sub:'Statistics',diff:'medium',o:['1,0','0,1','0,0','1,1'],a:1},
+{s:0,t:'np.linspace(0,10,5) returns?',sub:'NumPy',diff:'medium',o:['5 random','5 evenly spaced 0-10','0 to 10 range','10 zeros'],a:1},
+{s:0,t:'Heatmap shows?',sub:'Visualization',diff:'easy',o:['Time trends','Correlation matrix','Category comparison','Distributions'],a:1},
+{s:0,t:'Label encoding assigns?',sub:'Preprocessing',diff:'medium',o:['Binary vectors','Integer values to categories','Scales labels','Removes labels'],a:1},
+{s:0,t:'df.duplicated() returns?',sub:'Pandas',diff:'easy',o:['Unique rows','Boolean series for duplicate rows','Count of duplicates','Duplicate cols'],a:1},
+{s:0,t:'Binomial distribution describes?',sub:'Probability',diff:'medium',o:['Continuous outcomes','Successes in n independent trials','Rare events','Uniform outcomes'],a:1},
+{s:0,t:'Feature engineering creates?',sub:'Preprocessing',diff:'medium',o:['Removes features','New features from existing data','Selects model','Tunes hyperparams'],a:1},
+{s:0,t:'Scatter plot shows?',sub:'Visualization',diff:'easy',o:['Time trends','Relationship between two variables','Category freq','Part-to-whole'],a:1},
+{s:0,t:'loc[] vs iloc[]: difference?',sub:'Pandas',diff:'medium',o:['No difference','loc uses labels; iloc uses integers','iloc uses labels','Both integers'],a:1},
+{s:0,t:'Covariance measures?',sub:'Statistics',diff:'medium',o:['Single variable variance','Joint variability of two variables','Ratio of SDs','Difference of means'],a:1},
+{s:0,t:'df.apply() applies function?',sub:'Pandas',diff:'medium',o:['Filters rows','Along an axis','Creates column','Sorts frame'],a:1},
+{s:0,t:'Central Limit Theorem states?',sub:'Statistics',diff:'hard',o:['Sample means -> normal for large n','All populations normal','Mean=Median','Variance=1'],a:0},
+{s:0,t:'sns.heatmap() requires?',sub:'Visualization',diff:'medium',o:['A list','2D correlation matrix','A series','A plot object'],a:1},
+{s:0,t:'Train-test split purpose?',sub:'ML Basics',diff:'easy',o:['Data cleaning','Evaluate on unseen data','Feature selection','Normalization'],a:1},
+{s:1,t:'Process in OS is?',sub:'Processes',diff:'easy',o:['File on disk','Program in execution','I/O device','Memory location'],a:1},
+{s:1,t:'SJF selects process with?',sub:'Scheduling',diff:'medium',o:['Highest priority','Longest burst','Shortest burst time','First arrived'],a:2},
+{s:1,t:'Deadlock is circular wait for?',sub:'Concurrency',diff:'medium',o:['CPU time','Resources','Memory space','Disk I/O'],a:1},
+{s:1,t:'Virtual memory allows processes?',sub:'Memory',diff:'medium',o:['Faster RAM','Larger than physical RAM','Cache optimization','Register management'],a:1},
+{s:1,t:'Semaphore used for?',sub:'Concurrency',diff:'medium',o:['File management','Process synchronization','Disk scheduling','CPU scheduling'],a:1},
+{s:1,t:'FCFS: first process served is?',sub:'Scheduling',diff:'easy',o:['Highest priority','Shortest burst','First to arrive','Smallest PID'],a:2},
+{s:1,t:'Paging divides memory into?',sub:'Memory',diff:'medium',o:['Variable segments','Fixed-size pages','Compacted regions','Dynamic blocks'],a:1},
+{s:1,t:'OS kernel manages?',sub:'OS Basics',diff:'easy',o:['User programs','Hardware resources','GUI display','Network only'],a:1},
+{s:1,t:'Context switch saves/restores?',sub:'Processes',diff:'medium',o:['File permissions','CPU state when switching','User identity','Scheduling algo'],a:1},
+{s:1,t:'NOT a deadlock condition?',sub:'Concurrency',diff:'hard',o:['Mutual exclusion','Hold and wait','Preemption','Circular wait'],a:2},
+{s:1,t:'Threads share?',sub:'Processes',diff:'medium',o:['Nothing','Process memory space','Own address space','OS kernel'],a:1},
+{s:1,t:'Thrashing is excessive?',sub:'Memory',diff:'hard',o:['CPU usage','Page swapping degrading performance','Disk fragmentation','Deadlock'],a:1},
+{s:1,t:'TLB speeds up?',sub:'Memory',diff:'hard',o:['Disk reads','Virtual-to-physical address translation','Page table storage','Instruction cache'],a:1},
+{s:1,t:'Contiguous allocation suffers from?',sub:'File Systems',diff:'hard',o:['Internal fragmentation','Linked list overhead','External fragmentation','Index overhead'],a:2},
+{s:1,t:'RAID = Redundant Array of?',sub:'Storage',diff:'easy',o:['Random Access Input Data','Independent Disks','Reliable Allocation','Integrated Drives'],a:1},
+{s:1,t:'Race condition: multiple processes access shared data?',sub:'Concurrency',diff:'medium',o:['Predictably','Unpredictably','With locks','In order'],a:1},
+{s:1,t:'LRU replaces?',sub:'Memory',diff:'medium',o:['Most recently used page','Least recently used page','First loaded page','Random page'],a:1},
+{s:1,t:'Inode in Unix stores?',sub:'File Systems',diff:'medium',o:['File name','File metadata','Process ID','Memory page'],a:1},
+{s:1,t:"Banker's algorithm avoids?",sub:'Concurrency',diff:'hard',o:['CPU starvation','Deadlock','Memory leak','Disk overflow'],a:1},
+{s:1,t:'Round Robin time quantum is?',sub:'Scheduling',diff:'easy',o:['Priority level','Fixed time slice per process','Burst time','Wait time'],a:1},
+{s:1,t:'Demand paging loads pages?',sub:'Memory',diff:'medium',o:['All upfront','Only on page fault','All to disk','Pre-fetches all'],a:1},
+{s:1,t:'Critical section accesses?',sub:'Concurrency',diff:'medium',o:['High-priority code','Shared resources','Kernel code only','I/O only'],a:1},
+{s:1,t:'fork() creates?',sub:'Processes',diff:'medium',o:['New thread','Child process','Loads program','Terminates process'],a:1},
+{s:1,t:'Page table maps?',sub:'Memory',diff:'medium',o:['Physical to virtual','Virtual to physical','Cache to RAM','Disk to RAM'],a:1},
+{s:1,t:'Multilevel Queue scheduling has?',sub:'Scheduling',diff:'medium',o:['One queue','Multiple priority queues','FIFO only','Shortest job only'],a:1},
+{s:1,t:'Internal fragmentation is wasted space?',sub:'Memory',diff:'medium',o:['Outside allocated block','Inside allocated block','Memory leak','Swapping overhead'],a:1},
+{s:1,t:'Zombie process: terminated but?',sub:'Processes',diff:'medium',o:['Uses CPU','Entry remains in process table','Sleeping','Waiting for I/O'],a:1},
+{s:1,t:'exec() does?',sub:'Processes',diff:'medium',o:['Creates child','Replaces process image with new program','Terminates process','Suspends process'],a:1},
+{s:1,t:'Mutex ensures mutual exclusion for?',sub:'Concurrency',diff:'medium',o:['Scheduling','Shared resource access','Memory management','Interrupts'],a:1},
+{s:1,t:'SSTF minimizes?',sub:'Storage',diff:'medium',o:['Rotational latency','Seek time','Transfer time','Queue length'],a:1},
+{s:1,t:'Swapping moves?',sub:'Memory',diff:'medium',o:['Pages to disk','Entire process to/from disk','Memory blocks','Virtual pages'],a:1},
+{s:1,t:'File descriptor = integer handle for?',sub:'File Systems',diff:'medium',o:['File name','Open file','Permissions','Directory path'],a:1},
+{s:1,t:'Interrupt signals CPU to handle?',sub:'OS Basics',diff:'medium',o:['Process scheduling','Asynchronous event','Memory management','Direct I/O'],a:1},
+{s:1,t:'Spooling buffers I/O for?',sub:'OS Basics',diff:'medium',o:['CPU scheduling','Slow devices like printers','Memory paging','File systems'],a:1},
+{s:1,t:'Monitor = high-level synchronization with?',sub:'Concurrency',diff:'hard',o:['Hardware monitor','Mutex + condition variables','OS process','Memory region'],a:1},
+{s:1,t:'Boot loader loads?',sub:'OS Basics',diff:'easy',o:['Files','OS into memory','I/O devices','Processes'],a:1},
+{s:1,t:'Aging prevents starvation by?',sub:'Scheduling',diff:'medium',o:['Killing old processes','Increasing priority of waiting processes','Reducing quantum','Preempting'],a:1},
+{s:1,t:'System call = interface to request?',sub:'OS Basics',diff:'easy',o:['User functions','OS kernel services','Hardware interrupts','Memory references'],a:1},
+{s:1,t:'Copy-on-write shares pages until?',sub:'Memory',diff:'hard',o:['File write','One process modifies','Timer expires','Swap occurs'],a:1},
+{s:1,t:'Preemptive scheduling can?',sub:'Scheduling',diff:'medium',o:['Never interrupt','Interrupt a running process','Only use priority','Run faster'],a:1},
+{s:2,t:'typeof null returns?',sub:'Types',diff:'medium',o:['"null"','"undefined"','"object"','"boolean"'],a:2},
+{s:2,t:'Closure retains access to?',sub:'Functions',diff:'medium',o:['Class definition','Outer scope variables','Arrow function','Promise'],a:1},
+{s:2,t:'=== checks?',sub:'Operators',diff:'easy',o:['Value only','Type AND value (strict)','Type only','Assignment'],a:1},
+{s:2,t:'0.1+0.2===0.3 evaluates to?',sub:'Types',diff:'medium',o:['true','false','undefined','Error'],a:1},
+{s:2,t:'Event bubbling propagates?',sub:'DOM',diff:'medium',o:['Parent to child','Child up to parent','DOM loading','Event binding'],a:1},
+{s:2,t:'Promise.all() resolves when?',sub:'Async',diff:'medium',o:['First resolves','All resolve or any rejects','All reject','Timeout'],a:1},
+{s:2,t:'var is function-scoped; let/const is?',sub:'Variables',diff:'medium',o:['No difference','Block-scoped','Function-scoped too','Global'],a:1},
+{s:2,t:'Spread operator expands?',sub:'ES6+',diff:'easy',o:['Nothing','Iterable into individual elements','Copies only','Merges functions'],a:1},
+{s:2,t:'Event loop handles async in?',sub:'Async',diff:'hard',o:['Multi-threaded env','Single-threaded JS via call stack + queue','DOM only','CSS'],a:1},
+{s:2,t:'Array.map() returns?',sub:'Arrays',diff:'easy',o:['Modified original','New array with transformed elements','Undefined','Boolean'],a:1},
+{s:2,t:'Prototypal inheritance: objects inherit from?',sub:'OOP',diff:'hard',o:['Classes only','Other objects via prototype chain','Functions only','Modules'],a:1},
+{s:2,t:'async/await writes async code in?',sub:'Async',diff:'medium',o:['Fully sync style','Synchronous-looking style','Promise chains','Callbacks'],a:1},
+{s:2,t:'Array.reduce() accumulates to?',sub:'Arrays',diff:'medium',o:['Filtered array','New array','Single value','Sorted array'],a:2},
+{s:2,t:'Hoisting moves declarations to?',sub:'Variables',diff:'medium',o:['Server','Top of scope','Late binding','Lazy eval'],a:1},
+{s:2,t:'WeakMap keys must be?',sub:'Data Structures',diff:'hard',o:['Strings','Objects','Numbers','Symbols'],a:1},
+{s:2,t:'JSON.stringify() converts to?',sub:'JSON',diff:'easy',o:['Parses JSON','JSON string','Validates JSON','Encrypts data'],a:1},
+{s:2,t:'Symbol creates?',sub:'ES6+',diff:'hard',o:['Numbers','Unique immutable identifiers','Strings','Objects'],a:1},
+{s:2,t:'Array.flat() flattens?',sub:'Arrays',diff:'medium',o:['Sorts array','Removes duplicates','Nested arrays into one','Reverses array'],a:2},
+{s:2,t:'null means; undefined means?',sub:'Types',diff:'medium',o:['Same','Explicit absence; not yet assigned','Intentional; same','Same type'],a:1},
+{s:2,t:'Object.freeze() makes object?',sub:'Objects',diff:'medium',o:['Deleted','Immutable','Deep copied','Prototype sealed'],a:1},
+{s:2,t:'Generator function can pause via?',sub:'ES6+',diff:'hard',o:['return','yield','await','break'],a:1},
+{s:2,t:'new creates new object from?',sub:'OOP',diff:'medium',o:['Variable declaration','Constructor function','Module import','Class only'],a:1},
+{s:2,t:'Arrow function this =?',sub:'Functions',diff:'hard',o:['The function','Enclosing scope (lexical)','Window always','Always undefined'],a:1},
+{s:2,t:'Array.filter() returns?',sub:'Arrays',diff:'easy',o:['Modified original','New array passing test','Boolean','Single value'],a:1},
+{s:2,t:'Module pattern (IIFE) exposes?',sub:'Patterns',diff:'medium',o:['ES6 syntax','Public API via private scope','Class definition','Prototype'],a:1},
+{s:2,t:'localStorage stores data?',sub:'Web APIs',diff:'easy',o:['In cookie','Persistently in browser','Session only','On server'],a:1},
+{s:2,t:'Debouncing delays until?',sub:'Performance',diff:'medium',o:['Event removed','User stops firing events','API throttled','Cache hit'],a:1},
+{s:2,t:'Object.keys() returns?',sub:'Objects',diff:'easy',o:['Values','Own enumerable property names array','All including inherited','Entries'],a:1},
+{s:2,t:'try...catch handles?',sub:'Error Handling',diff:'easy',o:['Loop control','Runtime errors gracefully','Async code','Module imports'],a:1},
+{s:2,t:'Currying transforms f(a,b,c) to?',sub:'Functions',diff:'hard',o:['Nothing','f(a)(b)(c) chain','Memoized function','Partial only'],a:1},
+{s:2,t:'setTimeout(fn,0) schedules fn after?',sub:'Async',diff:'hard',o:['Immediately','Current call stack clears','Exactly 0ms','Never'],a:1},
+{s:2,t:'Proxy intercepts object?',sub:'ES6+',diff:'hard',o:['HTTP requests','Operations like get/set/delete','Design patterns','Promises'],a:1},
+{s:2,t:'Array.from() creates array from?',sub:'Arrays',diff:'medium',o:['String only','Array-like or iterable objects','Array copy','Validation'],a:1},
+{s:2,t:'Memoization caches?',sub:'Performance',diff:'medium',o:['Objects only','Function results for same inputs','GC state','Memory leaks'],a:1},
+{s:2,t:'TDZ: let/const declared but not yet?',sub:'Variables',diff:'hard',o:['DOM loaded','Initialized (inaccessible)','GC collected','Event queued'],a:1},
+{s:2,t:'Promise.race() returns?',sub:'Async',diff:'medium',o:['All resolved','First settled promise','Undefined','Array of results'],a:1},
+{s:2,t:'Object.assign() copies?',sub:'Objects',diff:'medium',o:['Compares objects','Own enumerable props to target','Prototype chain','Freezes target'],a:1},
+{s:2,t:'Array.every() returns true when?',sub:'Arrays',diff:'easy',o:['Any passes','All elements pass test','None pass','Array not empty'],a:1},
+{s:2,t:'Tree shaking eliminates?',sub:'Build Tools',diff:'hard',o:['DOM nodes','Unused dead code from bundle','Sort algorithms','Memory'],a:1},
+{s:2,t:'call() vs apply(): call takes args?',sub:'Functions',diff:'medium',o:['No difference','Individually; apply takes array','apply individually','call returns this'],a:1},
+{s:3,t:'Binary search time complexity?',sub:'Searching',diff:'easy',o:['O(n)','O(n2)','O(log n)','O(1)'],a:2},
+{s:3,t:'Stack uses?',sub:'Stack',diff:'easy',o:['FIFO','LIFO','LILO','FILO'],a:1},
+{s:3,t:'Hash table average insertion?',sub:'Hashing',diff:'medium',o:['O(n)','O(log n)','O(1)','O(n log n)'],a:2},
+{s:3,t:'Preorder traversal: Root, Left, Right?',sub:'Trees',diff:'easy',o:['Inorder','Postorder','Preorder','Level order'],a:2},
+{s:3,t:'Balanced BST height?',sub:'Trees',diff:'medium',o:['O(n)','O(log n)','O(1)','O(n2)'],a:1},
+{s:3,t:'BFS uses?',sub:'Graphs',diff:'medium',o:['Stack','Queue','Heap','Array'],a:1},
+{s:3,t:'Quicksort worst case?',sub:'Sorting',diff:'medium',o:['O(n log n)','O(n)','O(n2)','O(log n)'],a:2},
+{s:3,t:'Doubly linked list has?',sub:'Linked Lists',diff:'easy',o:['Two values per node','Next and previous pointers','Circular links','Array backing'],a:1},
+{s:3,t:'Heapify complexity?',sub:'Heap',diff:'medium',o:['O(n)','O(log n)','O(n log n)','O(1)'],a:1},
+{s:3,t:'DFS uses stack or?',sub:'Graphs',diff:'medium',o:['Queue','Priority Queue','Recursion','Array only'],a:2},
+{s:3,t:'Stable O(n log n) sort?',sub:'Sorting',diff:'medium',o:['Quicksort','Heap sort','Merge sort','Selection sort'],a:2},
+{s:3,t:'Adjacency matrix cell[i][j]=1 means?',sub:'Graphs',diff:'medium',o:['No edge','Edge from i to j','Weight','Distance'],a:1},
+{s:3,t:'Complete binary tree fills levels?',sub:'Trees',diff:'medium',o:['All nodes 2 children','Left to right','No leaves','Self-balancing'],a:1},
+{s:3,t:'Merge sort space complexity?',sub:'Sorting',diff:'medium',o:['O(1)','O(log n)','O(n)','O(n log n)'],a:2},
+{s:3,t:'Min-heap: parent always?',sub:'Heap',diff:'medium',o:['Greater than children','<= children','Equal to children','Unrelated'],a:1},
+{s:3,t:'Dynamic array push amortized?',sub:'Arrays',diff:'hard',o:['O(n)','O(log n)','O(1)','O(n2)'],a:2},
+{s:3,t:"Dijkstra's finds?",sub:'Graphs',diff:'medium',o:['MST','Shortest path (non-negative weights)','Topological order','All cycles'],a:1},
+{s:3,t:'Trie optimized for?',sub:'Trees',diff:'medium',o:['Integer sorting','String prefix search','Graph traversal','Number hashing'],a:1},
+{s:3,t:'Call stack uses?',sub:'Stack',diff:'easy',o:['Queue','Heap','Stack','Tree'],a:2},
+{s:3,t:'AVL tree insertion?',sub:'Trees',diff:'hard',o:['O(n)','O(log n)','O(1)','O(n log n)'],a:1},
+{s:3,t:'Circular queue rear connects to?',sub:'Queue',diff:'medium',o:['Another head','Front','Another rear','Priority queue'],a:1},
+{s:3,t:'Floyd-Warshall computes?',sub:'Graphs',diff:'hard',o:['Single source paths','All-pairs shortest paths','MST','Topological sort'],a:1},
+{s:3,t:'Linear search worst case?',sub:'Searching',diff:'easy',o:['O(log n)','O(1)','O(n)','O(n2)'],a:2},
+{s:3,t:'Red-Black tree: self-balancing with?',sub:'Trees',diff:'hard',o:['Simple BST','Color properties','Hash variant','Trie variant'],a:1},
+{s:3,t:'Segment tree answers range queries in?',sub:'Trees',diff:'hard',o:['O(n)','O(log n)','O(1)','O(n2)'],a:1},
+{s:3,t:'Radix sort = O(n x ?)',sub:'Sorting',diff:'hard',o:['log n','n','k (max digits)','n2'],a:2},
+{s:3,t:'Open addressing resolves collisions by?',sub:'Hashing',diff:'medium',o:['Chained lists','Probing for open slot','External overflow','Perfect hash'],a:1},
+{s:3,t:'Deque = ?',sub:'Queue',diff:'medium',o:['Double-Ended Queue','Distributed queue','Dedicated queue','Dense queue'],a:0},
+{s:3,t:'Topological sort applies to?',sub:'Graphs',diff:'medium',o:['Undirected graphs','DAG for dependency ordering','Weighted only','Cyclic graphs'],a:1},
+{s:3,t:'Build heap from n elements?',sub:'Heap',diff:'hard',o:['O(n log n)','O(n2)','O(n)','O(log n)'],a:2},
+{s:3,t:'Skip list provides O(log n) via?',sub:'Advanced',diff:'hard',o:['Guaranteed','Probabilistic layered linked lists','Sorted hash','Sparse tree'],a:1},
+{s:3,t:'Fenwick tree (BIT) prefix sum in?',sub:'Trees',diff:'hard',o:['O(n)','O(log n)','O(1)','O(n2)'],a:1},
+{s:3,t:'B-tree: all leaves at same level?',sub:'Trees',diff:'hard',o:['Only two children','Yes, balanced multi-key nodes','Self-rotating','Strings only'],a:1},
+{s:3,t:'Bellman-Ford advantage over Dijkstra?',sub:'Graphs',diff:'hard',o:['Bellman-Ford is faster','Handles negative edge weights','Dijkstra handles negative','No difference'],a:1},
+{s:3,t:'Insertion sort best case?',sub:'Sorting',diff:'medium',o:['O(n2)','O(n) for nearly sorted','O(n log n)','O(log n)'],a:1},
+{s:3,t:'Euler path traverses every?',sub:'Graphs',diff:'hard',o:['Vertex once','Edge exactly once','Shortest path','All cycles'],a:1},
+{s:3,t:'BFS explores all at current level?',sub:'Graphs',diff:'medium',o:['Deepest first','Before going deeper','Random order','Weighted paths'],a:1},
+{s:3,t:'Sparse table answers RMQ in?',sub:'Advanced',diff:'hard',o:['O(n)','O(log n)','O(1) with preprocessing','O(n2)'],a:2},
+{s:3,t:'BST inorder traversal gives?',sub:'Trees',diff:'easy',o:['Random order','Sorted ascending','Root first','Leaves first'],a:1},
+{s:3,t:"Kruskal's builds MST by sorting?",sub:'Graphs',diff:'medium',o:['Vertices by degree','Edges by weight','Nodes by ID','Paths by length'],a:1},
+{s:4,t:'Overfitting: model memorizes training and?',sub:'ML Basics',diff:'medium',o:['Generalizes well','Fails on new data','Underfits','Ignores training'],a:1},
+{s:4,t:'Gradient descent minimizes?',sub:'Optimization',diff:'medium',o:['Training data size','Loss function','Number of features','Model size'],a:1},
+{s:4,t:'Kernel trick in SVM maps to?',sub:'SVM',diff:'hard',o:['Lower dimension','Higher-dimensional space','Same space','Clusters'],a:1},
+{s:4,t:'Confusion matrix contains TP, TN, FP, ?',sub:'Evaluation',diff:'medium',o:['PR curve','FN counts','Training loss','Hyperparameters'],a:1},
+{s:4,t:'High bias means?',sub:'ML Basics',diff:'hard',o:['Overfitting','Underfitting (too simple)','Perfect model','High variance'],a:1},
+{s:4,t:'Random Forest = multiple trees +?',sub:'Ensemble',diff:'medium',o:['Gradient boosting','Bagging (bootstrap sampling)','Single large tree','Linear regressors'],a:1},
+{s:4,t:'L2 regularization penalizes?',sub:'Optimization',diff:'medium',o:['Training data','Large model weights','Input features','Labels'],a:1},
+{s:4,t:'K-means minimizes?',sub:'Unsupervised',diff:'medium',o:['Random assignment','Intra-cluster distance','Decision tree splits','Regression output'],a:1},
+{s:4,t:'Bubble sort worst case?',sub:'Sorting',diff:'easy',o:['O(n log n)','O(n)','O(n2)','O(log n)'],a:2},
+{s:4,t:'Backpropagation computes gradients via?',sub:'Neural Networks',diff:'medium',o:['Forward pass','Chain rule through network','Data augmentation','Regularization'],a:1},
+{s:4,t:'Precision = TP / (TP + ?)',sub:'Evaluation',diff:'medium',o:['TN','FP','FN','All positives'],a:1},
+{s:4,t:'PCA projects onto?',sub:'Dimensionality',diff:'hard',o:['Minimum variance','Maximum variance','Random projection','Feature normalization'],a:1},
+{s:4,t:'Activation functions introduce?',sub:'Neural Networks',diff:'medium',o:['Linear relationships','Non-linearity for complex patterns','Weight init','Batch norm'],a:1},
+{s:4,t:'Knapsack: maximize value within?',sub:'DP',diff:'medium',o:['Time constraint','Weight capacity','Graph edges','Feature count'],a:1},
+{s:4,t:'Cross-validation estimates?',sub:'Evaluation',diff:'medium',o:['Feature importance','Model generalization on unseen data','Optimal hyperparams','Training speed'],a:1},
+{s:4,t:'LSTM = Long Short-Term?',sub:'Neural Networks',diff:'medium',o:['Memory','Model','Method','Module'],a:0},
+{s:4,t:'Greedy makes choice at each step?',sub:'Algorithms',diff:'medium',o:['Exhaustive','Locally optimal','Random','DP-based'],a:1},
+{s:4,t:'Dropout deactivates neurons to?',sub:'Neural Networks',diff:'medium',o:['Speed training','Reduce overfitting','Augment data','Init weights'],a:1},
+{s:4,t:'LCS solved by?',sub:'DP',diff:'hard',o:['Greedy','Dynamic programming','Divide & conquer','Pure backtracking'],a:1},
+{s:4,t:'ROC curve plots TPR vs?',sub:'Evaluation',diff:'medium',o:['Precision','FPR at thresholds','Loss curve','Confusion matrix'],a:1},
+{s:4,t:'Hyperparameter is set?',sub:'ML Basics',diff:'easy',o:['By learning algorithm','Before training by developer','By activation function','By loss function'],a:1},
+{s:4,t:'Master theorem solves?',sub:'Algorithms',diff:'hard',o:['Sorting recurrences','Divide-and-conquer recurrences','Graph complexity','NP problems'],a:1},
+{s:4,t:'Transfer learning reuses?',sub:'Neural Networks',diff:'medium',o:['Server resources','Pre-trained model weights','Training data','Ensemble models'],a:1},
+{s:4,t:'Merge sort guaranteed?',sub:'Sorting',diff:'medium',o:['No, O(n2) worst','O(n log n) always','O(n) best','O(log n) best'],a:1},
+{s:4,t:'Naive Bayes assumes feature?',sub:'ML Basics',diff:'medium',o:['Correlation','Independence given class','Neural structure','SVM hyperplane'],a:1},
+{s:4,t:'Knapsack DP table size = O(n x ?)',sub:'DP',diff:'hard',o:['log n','n','W (capacity)','2^n'],a:2},
+{s:4,t:'F1 = harmonic mean of precision and?',sub:'Evaluation',diff:'medium',o:['Accuracy','Recall','ROC AUC','Loss'],a:1},
+{s:4,t:'One epoch = one complete pass through?',sub:'Neural Networks',diff:'easy',o:['One batch','Entire training dataset','Single neuron update','One layer'],a:1},
+{s:4,t:"Dijkstra's with PQ = O(E x ?)",sub:'Algorithms',diff:'hard',o:['V','log V','E','n2'],a:1},
+{s:4,t:'SGD uses per step?',sub:'Optimization',diff:'medium',o:['Full dataset','One sample or mini-batch','Only regularization','Second-order derivatives'],a:1},
+{s:4,t:'CNN primarily for?',sub:'Neural Networks',diff:'medium',o:['Text generation','Image/spatial feature extraction','Time series only','RL only'],a:1},
+{s:4,t:'Halting problem is?',sub:'Theory',diff:'hard',o:['Sorting challenge','Undecidable: cannot determine if program halts','NP-complete','Graph theory'],a:1},
+{s:4,t:'P vs NP: P problems solvable in?',sub:'Theory',diff:'hard',o:['Exponential time','Polynomial time','Linear time','Logarithmic time'],a:1},
+{s:4,t:'XGBoost = optimized gradient boosting with?',sub:'Ensemble',diff:'medium',o:['Random forests','Regularization and parallel processing','Simple NN','SVM boosting'],a:1},
+{s:4,t:'Batch normalization normalizes?',sub:'Neural Networks',diff:'hard',o:['Input batch size','Layer inputs to stabilize training','Only input data','Only regularization'],a:1},
+{s:4,t:'TSP finds minimum Hamiltonian?',sub:'Algorithms',diff:'medium',o:['Spanning tree','Cycle visiting all cities once','Shortest path','Knapsack max'],a:1},
+{s:4,t:'Autoencoder = encode-decode for?',sub:'Neural Networks',diff:'hard',o:['Supervised classification','Unsupervised representation learning','RNN operation','Attention only'],a:1},
+{s:4,t:'Reinforcement learning learns from?',sub:'ML Basics',diff:'medium',o:['Labeled data','Reward/penalty via environment interaction','Clustering','Semi-supervised signals'],a:1},
+{s:4,t:'Selection sort worst case?',sub:'Sorting',diff:'easy',o:['O(n log n)','O(n)','O(n2)','O(1)'],a:2},
+{s:4,t:'Attention mechanism weights each?',sub:'Neural Networks',diff:'hard',o:['Visual pixel','Input position when producing output','Memory unit','Positional encoding'],a:1},
+];
+
+const L=['A','B','C','D'];
+let cQ=0,ans=new Array(200).fill(-1),flg=new Array(200).fill(false);
+let tL=7200;const TOT=7200,CIRC=2*Math.PI*35;
+let timerInterval=null;
+
+const rPel=document.getElementById('rP'),tMel=document.getElementById('tM'),tSel=document.getElementById('tS');
+const tDig=document.getElementById('tDig'),tBel=document.getElementById('tB'),tCel=document.getElementById('tC');
+const nChip=document.getElementById('nChip'),nTD=document.getElementById('nTD'),nTI=document.getElementById('nTI');
+const PC={safe:'#1db854',warning:'#f0a500',critical:'#e8404a'};
+const PI={safe:'⏱',warning:'⚠',critical:'⚡'};
+function gP(s){return s/TOT>.25?'safe':s/TOT>.1?'warning':'critical'}
+
+function resetExam(){
+  cQ=0;ans=new Array(200).fill(-1);flg=new Array(200).fill(false);
+  tL=7200;violCount=0;violHistory.length=0;
+  dFace=0;dPers=0;dAttn=0;dMult=0;dObj=0;
+  tFace=88;tPers=92;tAttn=85;tMult=2;tObj=10;
+  phaseT=0;camReady=false;camOff=false;camMuted=false;camSec=0;
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=setInterval(tick,1000);
+  /* Reset cam UI */
+  document.getElementById('camPh').style.display='flex';
+  document.getElementById('camHud').style.display='none';
+  document.getElementById('detPanel').classList.remove('show');
+  document.getElementById('violLog').classList.remove('show');
+  document.getElementById('violLog').innerHTML='';
+  document.getElementById('camElapsed').style.display='none';
+  document.getElementById('recW').style.display='none';
+  document.getElementById('liveB').style.display='none';
+  se('camStat','Not Connected');document.getElementById('camStat').className='cam-stat-pill off2';
+  const v=document.getElementById('camVid');v.srcObject=null;
+  const c=document.getElementById('camCanvas');const ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);
+  setBar('dfFace','dpFace',0,'var(--safe)');setBar('dfPers','dpPers',0,'var(--a)');
+  setBar('dfAttn','dpAttn',0,'var(--tl)');setBar('dfMult','dpMult',0,'var(--danger)');setBar('dfObj','dpObj',0,'var(--warn)');
+  document.getElementById('violStrip').style.display='none';
+  document.getElementById('hudTags').innerHTML='';
+  /* Reset cam modal */
+  const btn=document.getElementById('cmBtn');
+  btn.textContent='🎥 Connect & Start AI';btn.disabled=false;btn.style.background='linear-gradient(135deg,var(--a),var(--tl))';btn.onclick=startCamFromModal;
+  se('cmStatus','Click below to allow camera access');document.getElementById('cmStatus').style.color='var(--tx2)';
+  const pv=document.getElementById('cmPreview');pv.srcObject=null;pv.style.display='none';
+  document.getElementById('cmCanvas').style.display='none';document.getElementById('cmPh2').style.display='flex';
+  document.getElementById('cmHudTags').innerHTML='';
+  /* Reset muteBtn / camBtn */
+  document.getElementById('muteBtn').textContent='🎙️';document.getElementById('muteBtn').className='cam-btn';
+  document.getElementById('camBtn').textContent='🎥';document.getElementById('camBtn').className='cam-btn';
+  setTimeout(()=>{rQ();uS()},50);
+}
+
+function tick(){
+  const m=Math.floor(tL/60),s=tL%60,ph=gP(tL),c=PC[ph];
+  tMel.textContent=pad(m);tSel.textContent=pad(s);
+  rPel.style.stroke=c;rPel.setAttribute('stroke-dashoffset',CIRC*(1-tL/TOT));
+  tDig.style.color=c;tCel.style.setProperty('--tc',c);tCel.className='tmc '+ph;
+  tBel.className='tb '+ph;tBel.textContent=ph==='safe'?'In Progress':ph==='warning'?'⚠ Hurry Up':'⚡ Critical';
+  nChip.className='tc '+ph;nTD.textContent=pad(m)+':'+pad(s);nTI.textContent=PI[ph];
+  if(tL===1800)toast('warn','⚠ 30 min remaining, '+(CU?CU.first:'Student')+'!');
+  if(tL===600)toast('warn','⚠ 10 minutes left!');
+  if(tL===120)toast('err2','⚡ Last 2 minutes!');
+  if(tL===0){clearInterval(timerInterval);cSub(true);return}tL--;
+}
+
+function sCol(si){return SUBS[si].c}
+function sBc(si){const c=[[79,126,248],[15,184,164],[232,200,72],[168,85,247],[249,115,22]];const r=c[si];return'rgba('+r[0]+','+r[1]+','+r[2]+',.3)'}
+
+function rQ(){
+  const q=QS[cQ];const si=q.s;
+  const qb=document.getElementById('qBadge');if(!qb)return;
+  qb.textContent='Q'+(cQ+1);qb.style.color=sCol(si);qb.style.borderColor=sBc(si);
+  se('qT',q.t);
+  document.getElementById('qDiff').textContent=q.diff.charAt(0).toUpperCase()+q.diff.slice(1);
+  document.getElementById('qDiff').className='qtag '+q.diff;
+  se('qTopic',q.sub);
+  const fb=document.getElementById('fBtn');fb.className='fb'+(flg[cQ]?' on':'');fb.textContent=flg[cQ]?'⚑ Flagged':'⚑ Flag';
+  const S=SUBS[si];
+  se('subIcon',S.i);
+  document.getElementById('subNameMain').textContent=S.n;document.getElementById('subNameMain').style.color=sCol(si);
+  se('subDesc',S.d);
+  document.getElementById('subBadge').textContent=S.r;document.getElementById('subBadge').style.color=sCol(si);document.getElementById('subBadge').style.borderColor=sBc(si);
+  const ol=document.getElementById('oList');ol.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');d.className='opt'+(ans[cQ]===i?' sel':'');
+    d.innerHTML='<div class="ol">'+L[i]+'</div><div class="ot">'+o+'</div>';
+    d.onclick=()=>{ans[cQ]=i;rQ();uS()};ol.appendChild(d);
+  });
+  const pb=document.getElementById('pBtn');if(pb){pb.disabled=cQ===0;pb.style.opacity=cQ===0?'.3':'1'}
+  const nb2=document.getElementById('nBtn');if(nb2)nb2.textContent=cQ===199?'Finish →':'Next →';
+  se('nCQ',cQ+1);
+  document.querySelectorAll('.stab').forEach((t,i)=>{t.className='stab'+(i===si?' active':'')});
+  const c=document.getElementById('qC');if(c){c.style.animation='none';void c.offsetWidth;c.style.animation='cI .22s ease'}
+  rG();
+}
+
+function cAns(){ans[cQ]=-1;rQ();uS()}
+function tFlag(){flg[cQ]=!flg[cQ];rQ();uS();toast(flg[cQ]?'warn':'info',flg[cQ]?'⚑ Q'+(cQ+1)+' flagged':'Flag removed')}
+function nextQ(){if(cQ<199){cQ++;rQ()}else oM()}
+function prevQ(){if(cQ>0){cQ--;rQ()}}
+function goQ(){const v=parseInt(document.getElementById('qnI').value);if(v>=1&&v<=200){cQ=v-1;rQ();document.getElementById('qnI').value=''}}
+function goSub(si){cQ=si*40;rQ()}
+
+function rG(){
+  const g=document.getElementById('qG');if(!g)return;g.innerHTML='';
+  QS.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.className='qb'+(i===cQ?' cur':ans[i]>=0?' ans '+SUBS[QS[i].s].k:'')+(flg[i]?' flg':'');
+    b.textContent=i+1;b.onclick=()=>{cQ=i;rQ()};g.appendChild(b);
+  });
+}
+
+function uS(){
+  const a=ans.filter(x=>x>=0).length,f=flg.filter(Boolean).length;
+  se('stA',a);se('stF',f);se('stR',200-a);se('nAns',a);
+  const pct=(a/200)*100;
+  const np=document.getElementById('nP');if(np)np.style.width=pct+'%';
+  se('nPL',a+'/200');
+  const nb3=document.getElementById('examNb');if(nb3)nb3.style.setProperty('--pg',pct+'%');
+  se('liveScore',a);se('livePct',Math.round(pct)+'% Complete');
+  const ids=['DS','OS','JS','DSA','ML'];
+  for(let si=0;si<5;si++){
+    const sa=ans.slice(si*40,(si+1)*40).filter(x=>x>=0).length;
+    se('sp'+ids[si],sa+'/40');se('ss'+ids[si],sa+'/40');se('tc'+si,sa+'/40');
+    const sf=document.getElementById('sf'+ids[si]);if(sf)sf.style.width=(sa/40*100)+'%';
+  }
+}
+
+function oM(){
+  const a=ans.filter(x=>x>=0).length,f=flg.filter(Boolean).length;
+  se('msA',a);se('msF',f);se('msU',200-a);
+  const m=Math.floor(tL/60),s=tL%60;se('msT',pad(m)+':'+pad(s));
+  const vt=document.getElementById('violTxt');
+  if(vt){vt.style.display=violCount>0?'':'none';if(violCount>0)vt.textContent='⚠ AI logged '+violCount+' proctoring violation'+(violCount>1?'s':'')}
+  const ids=['DS','OS','JS','DSA','ML'];
+  for(let si=0;si<5;si++){const sa=ans.slice(si*40,(si+1)*40).filter(x=>x>=0).length;se('m'+ids[si],sa+'/40')}
+  document.getElementById('modal').classList.add('open');
+}
+function cM(){document.getElementById('modal').classList.remove('open')}
+
+function cSub(auto=false){
+  cM();clearInterval(timerInterval);stopCam();
+  let correct=0;ans.forEach((v,i)=>{if(v===QS[i].a)correct++});
+  const pct=Math.round(correct/200*100);
+  const uname=CU?CU.first:'Student';
+  toast('ok',auto?'Time up! '+correct+'/200':'Submitted! '+uname+': '+correct+'/200 ('+pct+'%)');
+  setTimeout(()=>{
+    const ss=[];for(let si=0;si<5;si++){let sc=0;for(let i=si*40;i<(si+1)*40;i++){if(ans[i]===QS[i].a)sc++;}ss.push(sc)}
+    const pass=correct>=100;const roll=CU?CU.roll:'—';const batch='2023–2026';
+    const vn=violCount>0?`<div style="font-size:10px;color:var(--warn);margin-top:-4px">⚠ AI logged ${violCount} proctoring violation${violCount>1?'s':''}</div>`:'';
+    document.getElementById('mainArea').innerHTML=`<div class="rp">
+<div class="rb">🎓</div>
+<div class="rt2">BCA Exam Complete!</div>
+<div style="font-family:var(--mn);font-size:9.5px;color:var(--a2);margin-top:-3px">${uname} · ${roll} · BCA ${batch} · KLH</div>
+${vn}
+<div class="rs">All 200 responses submitted. AI proctoring log saved.</div>
+<div class="rcs">
+<div class="rca"><div class="rv" style="color:var(--a2)">${correct}</div><div class="rk">Correct</div></div>
+<div class="rca"><div class="rv" style="color:${pass?'var(--safe)':'var(--danger)'}">${pct}%</div><div class="rk">Score</div></div>
+<div class="rca"><div class="rv" style="color:var(--warn)">${ans.filter(x=>x>=0).length}</div><div class="rk">Attempted</div></div>
+<div class="rca"><div class="rv" style="color:${pass?'var(--safe)':'var(--danger)'}">${pass?'PASS':'FAIL'}</div><div class="rk">Status</div></div>
+</div>
+<div class="rsubs">
+<div class="rsub"><div class="rsub-val" style="color:var(--ds)">${ss[0]}/40</div><div class="rsub-name">Data Science</div></div>
+<div class="rsub"><div class="rsub-val" style="color:var(--os)">${ss[1]}/40</div><div class="rsub-name">OS</div></div>
+<div class="rsub"><div class="rsub-val" style="color:var(--js)">${ss[2]}/40</div><div class="rsub-name">JavaScript</div></div>
+<div class="rsub"><div class="rsub-val" style="color:var(--dsa)">${ss[3]}/40</div><div class="rsub-name">Data Structures</div></div>
+<div class="rsub"><div class="rsub-val" style="color:var(--ml)">${ss[4]}/40</div><div class="rsub-name">ML & Algorithms</div></div>
+</div>
+<button class="back-dash-btn" onclick="showPage('dashPage')">← Back to Dashboard</button>
+</div>`;
+  },1400);
+}
+
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('examPage').classList.contains('active'))return;
+  if(document.activeElement.matches('input'))return;
+  if(e.key==='ArrowRight')nextQ();
+  if(e.key==='ArrowLeft')prevQ();
+  if(e.key>='1'&&e.key<='4'){const i=parse(e.key)-1;if(i<QS[cQ].o.length){ans[cQ]=i;rQ();uS()}}
+});
+
+/* Auto session restore */
+try{
+  const sv=localStorage.getItem('ef_s3');
+  if(sv){const u=STORE.find(sv);if(u){CU=u;fillDash(u);showPage('dashPage')}}
+}catch(e){}
+
+/* ── Safe global bindings — survives Cloudflare email-decode injection ── */
+(function(){
+  function on(id,fn){var e=document.getElementById(id);if(e)e.addEventListener('click',fn);}
+  function onKey(id,fn){var e=document.getElementById(id);if(e)e.addEventListener('keydown',fn);}
+
+  on('loginBtn',          function(){doLogin();});
+  on('demoBtn',           function(){quickLogin();});
+  on('goRegBtn',          function(){showPage('registerPage');});
+  on('registerBtn',       function(){doRegister();});
+  on('goLoginBtn',        function(){showPage('loginPage');});
+  on('forgotBtn',         function(){toast('info','Reset link sent to registered email');});
+  on('logoutBtn',         function(){doLogout();});
+  on('startExamBtn',      function(){startExam();});
+  on('submitNbBtn',       function(){oM();});
+  on('prevBtn',           function(){prevQ();});
+  on('nextBtn',           function(){nextQ();});
+  on('goQBtn',            function(){goQ();});
+  on('clearBtn',          function(){cAns();});
+  on('flagBtn',           function(){tFlag();});
+  on('skipCamBtn',        function(){skipCamera();});
+  on('openCamBtn',        function(){openCamModal();});
+  on('cmBtn',             function(){startCamFromModal();});
+  on('muteBtn',           function(){toggleMute();});
+  on('camBtn',            function(){toggleCam();});
+  on('cancelSubmitBtn',   function(){cM();});
+  on('confirmSubmitBtn',  function(){cSub();});
+
+  /* start-exam buttons that use class */
+  document.querySelectorAll('.start-exam-trigger,.dch-action').forEach(function(el){
+    el.addEventListener('click',function(){startExam();});
+  });
+
+  /* Enter key on login */
+  onKey('loginId',  function(e){if(e.key==='Enter')doLogin();});
+  onKey('loginPwd', function(e){if(e.key==='Enter')doLogin();});
+
+  /* Password strength meter */
+  var rp=document.getElementById('regPwd');
+  if(rp)rp.addEventListener('input',function(){chkStr(this.value);});
+})();
+
+/* Expose ALL functions globally — fallback if Cloudflare breaks inline onclick */
+window.quickLogin=quickLogin;window.doLogin=doLogin;window.doLogout=doLogout;
+window.startExam=startExam;window.openCamModal=openCamModal;
+window.startCamFromModal=startCamFromModal;window.skipCamera=skipCamera;
+window.activateCamInExam=activateCamInExam;window.toggleMute=toggleMute;
+window.toggleCam=toggleCam;window.oM=oM;window.cM=cM;window.cSub=cSub;
+window.prevQ=prevQ;window.nextQ=nextQ;window.goQ=goQ;window.cAns=cAns;
+window.tFlag=tFlag;window.goSub=goSub;window.showPage=showPage;
+window.pickAv=pickAv;window.toggleChk=toggleChk;window.doRegister=doRegister;
+window.toast=toast;window.logViolation=logViolation;window.rQ=rQ;
+</script>
+</body>
+</html>

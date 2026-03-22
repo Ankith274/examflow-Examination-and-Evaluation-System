@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoonLMS – KLH University</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1a73e8;
+  --blue-d:#1557b0;
+  --blue-l:#e8f0fe;
+  --green:#1e8e3e;
+  --red:#d93025;
+  --yellow:#f9ab00;
+  --bg:#f8f9fa;
+  --white:#ffffff;
+  --text:#202124;
+  --text2:#3c4043;
+  --text3:#5f6368;
+  --text4:#80868b;
+  --border:#e0e0e0;
+  --hover:#f1f3f4;
+  --sh1:0 1px 2px rgba(60,64,67,.3),0 1px 3px rgba(60,64,67,.15);
+  --sh2:0 1px 3px rgba(60,64,67,.3),0 4px 8px rgba(60,64,67,.15);
+  --font:'Google Sans','Roboto',sans-serif;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);margin:0}
+
+/* ══ TOP BAR ══ */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:64px;
+  background:var(--white);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 24px;
+  z-index:200;gap:8px;
+}
+.tb-logo{display:flex;align-items:center;gap:8px;cursor:pointer;flex:1}
+.moon-orb{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:radial-gradient(circle at 36% 36%,#fff3cc 0%,#f4c167 40%,#e08030 100%);
+  position:relative;overflow:hidden;
+}
+.moon-orb::after{content:'';position:absolute;top:4px;right:3px;width:12px;height:12px;background:var(--white);border-radius:50%}
+.tb-name{font-size:20px;font-weight:500;color:var(--text);letter-spacing:-.2px}
+.tb-name span{color:var(--blue)}
+.tb-right{display:flex;align-items:center;gap:4px}
+.tb-ico{width:40px;height:40px;border-radius:50%;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--text3);transition:background .15s}
+.tb-ico:hover{background:var(--hover)}
+.tb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#1a73e8);border:none;cursor:pointer;font-size:13px;font-weight:500;color:#fff;display:flex;align-items:center;justify-content:center;margin-left:6px}
+
+/* ══ ALL SCREENS ══ */
+.screen{display:none;min-height:100vh;padding-top:64px}
+.screen.active{display:flex;flex-direction:column;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ SCREEN 0 — GOOGLE SIGN IN ══ */
+.signin-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:24px 16px;
+}
+.signin-card{
+  background:var(--white);border-radius:8px;
+  box-shadow:var(--sh1);width:100%;max-width:450px;
+  overflow:hidden;padding:0 0 28px;
+}
+.sc-head{
+  background:linear-gradient(135deg,#1a73e8,#0d47a1);
+  padding:32px 40px 24px;text-align:center;
+}
+.sc-moon{width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 36% 36%,#fff3cc 0%,#f4c167 40%,#e08030 100%);position:relative;overflow:hidden;margin:0 auto 14px}
+.sc-moon::after{content:'';position:absolute;top:7px;right:6px;width:22px;height:22px;background:rgba(0,0,40,.8);border-radius:50%}
+.sc-head h1{font-size:24px;font-weight:500;color:#fff;letter-spacing:-.3px}
+.sc-head p{font-size:14px;color:rgba(255,255,255,.85);margin-top:4px}
+.sc-body{padding:28px 40px 0}
+.sc-subtitle{font-size:16px;color:var(--text2);text-align:center;margin-bottom:24px}
+.google-btn{
+  width:100%;height:48px;
+  border:1px solid var(--border);border-radius:4px;
+  background:var(--white);display:flex;align-items:center;justify-content:center;gap:12px;
+  font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;
+  transition:background .15s,box-shadow .15s;font-family:var(--font);
+  margin-bottom:12px;
+}
+.google-btn:hover{background:#fafafa;box-shadow:var(--sh1)}
+.g-logo{font-size:20px}
+.divider-row{display:flex;align-items:center;gap:12px;margin:8px 0 16px}
+.divider-row::before,.divider-row::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider-row span{font-size:12px;color:var(--text4)}
+.sc-input{
+  width:100%;height:48px;padding:0 14px;
+  border:1px solid var(--border);border-radius:4px;
+  font-size:16px;font-family:var(--font);color:var(--text);
+  outline:none;background:var(--white);margin-bottom:12px;
+  transition:border-color .15s;
+}
+.sc-input:focus{border-color:var(--blue);border-width:2px}
+.sc-btn{
+  width:100%;height:44px;background:var(--blue);color:#fff;
+  border:none;border-radius:4px;font-size:14px;font-weight:500;
+  cursor:pointer;font-family:var(--font);transition:background .15s;
+  margin-bottom:8px;
+}
+.sc-btn:hover{background:var(--blue-d)}
+.sc-links{display:flex;justify-content:space-between;margin-top:8px}
+.sc-link{font-size:13px;color:var(--blue);cursor:pointer;text-decoration:none}
+.sc-link:hover{text-decoration:underline}
+.sc-terms{font-size:11px;color:var(--text4);text-align:center;margin-top:16px;line-height:1.5}
+.sc-terms a{color:var(--blue)}
+
+/* ══ SCREEN 1 — ROLE SELECTION (exact GC style) ══ */
+.role-screen{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:32px 16px;
+}
+.role-card{
+  background:var(--white);border-radius:8px;
+  box-shadow:var(--sh1);width:100%;max-width:560px;
+  padding:40px;
+}
+.role-card h1{font-size:24px;font-weight:400;color:var(--text);margin-bottom:8px}
+.role-card p{font-size:14px;color:var(--text3);margin-bottom:32px;line-height:1.5}
+.role-options{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.role-opt{
+  border:2px solid var(--border);border-radius:8px;
+  padding:24px 20px;text-align:center;cursor:pointer;
+  transition:border-color .2s,background .15s;
+}
+.role-opt:hover{border-color:#9ca3af;background:#fafafa}
+.role-opt.selected{border-color:var(--blue);background:var(--blue-l)}
+.role-opt-icon{font-size:48px;margin-bottom:12px;display:block}
+.role-opt-title{font-size:16px;font-weight:500;color:var(--text);margin-bottom:4px}
+.role-opt-desc{font-size:12px;color:var(--text3);line-height:1.4}
+.role-opt.selected .role-opt-title{color:var(--blue)}
+.role-opt.selected .role-opt-desc{color:#1557b0}
+.role-btn-row{display:flex;justify-content:flex-end;gap:8px}
+.btn-text-blue{background:none;border:none;color:var(--blue);font-size:14px;font-weight:500;cursor:pointer;padding:9px 16px;border-radius:4px;font-family:var(--font);transition:background .15s}
+.btn-text-blue:hover{background:var(--blue-l)}
+.btn-solid-blue{background:var(--blue);color:#fff;border:none;font-size:14px;font-weight:500;cursor:pointer;padding:9px 24px;border-radius:4px;font-family:var(--font);transition:background .15s}
+.btn-solid-blue:hover{background:var(--blue-d)}
+.btn-solid-blue:disabled{background:#9ca3af;cursor:not-allowed}
+
+/* ══ SCREEN 2 — PROFILE SETUP (GC style form) ══ */
+.setup-wrap{
+  flex:1;display:flex;align-items:flex-start;justify-content:center;
+  padding:32px 16px;
+}
+.setup-card{
+  background:var(--white);border-radius:8px;
+  box-shadow:var(--sh1);width:100%;max-width:560px;
+  padding:40px;
+}
+.setup-card h1{font-size:22px;font-weight:400;color:var(--text);margin-bottom:6px}
+.setup-card .step-lbl{font-size:12px;color:var(--text3);margin-bottom:20px;display:flex;align-items:center;gap:6px}
+.step-pill{
+  display:inline-flex;align-items:center;
+  background:var(--blue-l);color:var(--blue);
+  font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.form-field{margin-bottom:16px}
+.form-field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px;letter-spacing:.01em}
+.form-field input,.form-field select{
+  width:100%;height:44px;padding:0 12px;
+  border:1px solid var(--border);border-radius:4px;
+  font-size:14px;font-family:var(--font);color:var(--text);
+  outline:none;background:var(--white);
+  transition:border-color .15s;
+}
+.form-field input:focus,.form-field select:focus{border-color:var(--blue);border-width:2px}
+.form-field textarea{
+  width:100%;padding:10px 12px;
+  border:1px solid var(--border);border-radius:4px;
+  font-size:14px;font-family:var(--font);color:var(--text);
+  outline:none;background:var(--white);resize:none;height:72px;
+  transition:border-color .15s;
+}
+.form-field textarea:focus{border-color:var(--blue);border-width:2px}
+
+/* Avatar row */
+.av-row{display:flex;align-items:center;gap:20px;margin-bottom:20px}
+.av-circle{
+  width:64px;height:64px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#a78bfa,#1a73e8);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:500;color:#fff;cursor:pointer;
+  border:3px solid var(--border);transition:border-color .2s;
+}
+.av-circle:hover{border-color:var(--blue)}
+.av-actions{display:flex;flex-direction:column;gap:6px}
+.av-act-btn{
+  font-size:13px;color:var(--blue);border:none;background:none;
+  cursor:pointer;font-family:var(--font);padding:6px 12px;
+  border-radius:4px;text-align:left;transition:background .15s;
+}
+.av-act-btn:hover{background:var(--blue-l)}
+
+/* Section chips */
+.chip-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chip-sel{
+  padding:6px 14px;border-radius:16px;
+  border:1px solid var(--border);background:var(--white);
+  font-size:13px;color:var(--text2);cursor:pointer;
+  transition:all .15s;font-family:var(--font);
+}
+.chip-sel:hover{border-color:#9ca3af;background:#fafafa}
+.chip-sel.on{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+
+/* ══ SCREEN 3 — JOIN OR CREATE CLASS ══ */
+.joc-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:32px 16px;
+}
+.joc-card{
+  background:var(--white);border-radius:8px;
+  box-shadow:var(--sh1);width:100%;max-width:560px;
+  padding:40px;
+}
+.joc-card h1{font-size:24px;font-weight:400;color:var(--text);margin-bottom:8px}
+.joc-card p{font-size:14px;color:var(--text3);margin-bottom:28px;line-height:1.5}
+.joc-options{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.joc-opt{
+  border:1px solid var(--border);border-radius:8px;
+  padding:24px 16px;text-align:center;cursor:pointer;
+  transition:box-shadow .2s,border-color .2s;
+}
+.joc-opt:hover{box-shadow:var(--sh2);border-color:#9ca3af}
+.joc-opt-icon{font-size:40px;margin-bottom:12px;display:block}
+.joc-opt-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:4px}
+.joc-opt-desc{font-size:12px;color:var(--text3);line-height:1.4}
+.joc-divider{height:1px;background:var(--border);margin:0 0 24px}
+.code-input-row{display:flex;gap:10px;margin-bottom:8px}
+.code-input{
+  flex:1;height:44px;padding:0 12px;
+  border:1px solid var(--border);border-radius:4px;
+  font-size:16px;letter-spacing:.1em;font-weight:600;
+  font-family:var(--font);color:var(--text);outline:none;
+  transition:border-color .15s;
+}
+.code-input:focus{border-color:var(--blue);border-width:2px}
+.code-join-btn{
+  height:44px;padding:0 20px;
+  background:var(--blue);color:#fff;border:none;
+  border-radius:4px;font-size:14px;font-weight:500;
+  cursor:pointer;font-family:var(--font);transition:background .15s;white-space:nowrap;
+}
+.code-join-btn:hover{background:var(--blue-d)}
+.code-hint{font-size:12px;color:var(--text3);line-height:1.5}
+.code-hint a{color:var(--blue)}
+
+/* ══ SCREEN 4 — CLASS SETUP (teacher) ══ */
+.class-setup-card{
+  background:var(--white);border-radius:8px;
+  box-shadow:var(--sh1);width:100%;max-width:560px;
+  padding:0 0 32px;overflow:hidden;
+}
+.csc-banner{
+  height:160px;background:linear-gradient(135deg,#1a73e8,#0d47a1);
+  position:relative;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;
+}
+.csc-banner-pattern{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 1px,transparent 1px,transparent 18px)}
+.csc-banner-title{font-size:22px;font-weight:500;color:#fff;position:relative;z-index:1}
+.csc-banner-sub{font-size:14px;color:rgba(255,255,255,.85);margin-top:4px;position:relative;z-index:1}
+.csc-body{padding:28px 32px 0}
+.csc-body h1{font-size:20px;font-weight:400;color:var(--text);margin-bottom:20px}
+
+/* ══ SCREEN 5 — DONE ══ */
+.done-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:32px 16px;
+}
+.done-card{
+  background:var(--white);border-radius:8px;
+  box-shadow:var(--sh1);width:100%;max-width:520px;
+  padding:48px 40px;text-align:center;
+}
+.done-icon{font-size:64px;margin-bottom:16px;display:block}
+.done-title{font-size:28px;font-weight:400;color:var(--text);margin-bottom:8px;letter-spacing:-.3px}
+.done-sub{font-size:15px;color:var(--text3);margin-bottom:32px;line-height:1.6}
+.done-features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;text-align:left}
+.df{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:6px;padding:10px 12px}
+.df-icon{font-size:18px;flex-shrink:0}
+.df-text{font-size:13px;color:var(--text2)}
+.done-go-btn{
+  display:inline-block;height:44px;padding:0 32px;
+  background:var(--blue);color:#fff;
+  border:none;border-radius:4px;font-size:15px;font-weight:500;
+  cursor:pointer;font-family:var(--font);transition:background .15s;
+}
+.done-go-btn:hover{background:var(--blue-d)}
+
+/* ══ PROGRESS STEPS (top of setup screens) ══ */
+.progress-bar{
+  background:var(--white);border-bottom:1px solid var(--border);
+  padding:0 24px;display:flex;align-items:center;height:52px;gap:0;
+}
+.ps{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;color:var(--text3);font-weight:500;padding:0 12px 0 0;cursor:default;
+}
+.ps.active{color:var(--blue)}
+.ps.done{color:var(--green)}
+.ps-num{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--text4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--text4);
+  transition:all .25s;flex-shrink:0;
+}
+.ps.active .ps-num{border-color:var(--blue);background:var(--blue);color:#fff}
+.ps.done .ps-num{border-color:var(--green);background:var(--green);color:#fff}
+.ps-arrow{color:var(--border);font-size:14px;margin-right:8px;flex-shrink:0}
+
+/* ══ CLASS CODE DISPLAY ══ */
+.class-code-box{
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:16px 20px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ccb-label{font-size:12px;color:var(--text3);margin-bottom:2px}
+.ccb-code{font-size:28px;font-weight:700;color:var(--blue);letter-spacing:.15em}
+.ccb-copy{
+  height:36px;padding:0 16px;
+  border:1px solid var(--border);border-radius:4px;
+  background:var(--white);font-size:13px;font-weight:500;color:var(--blue);
+  cursor:pointer;font-family:var(--font);transition:background .15s;
+}
+.ccb-copy:hover{background:var(--blue-l)}
+
+/* ══ NOTIFICATION PROMO ══ */
+.notif-box{
+  border:1px solid var(--border);border-radius:8px;padding:16px;
+  display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;
+  background:var(--bg);
+}
+.notif-icon{font-size:24px;flex-shrink:0}
+.notif-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:3px}
+.notif-desc{font-size:13px;color:var(--text3);line-height:1.4}
+.notif-btn{
+  margin-top:10px;padding:7px 16px;
+  border:1px solid var(--blue);border-radius:4px;
+  color:var(--blue);font-size:13px;font-weight:500;
+  background:none;cursor:pointer;font-family:var(--font);transition:background .15s;
+}
+.notif-btn:hover{background:var(--blue-l)}
+
+/* ══ MISC ══ */
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- ══ TOP BAR ══ -->
+<header class="topbar">
+  <div class="tb-logo" onclick="showScreen('s0')">
+    <div class="moon-orb"></div>
+    <span class="tb-name">Moon<span>LMS</span></span>
+  </div>
+  <div class="tb-right">
+    <button class="tb-ico">⋮⋮</button>
+    <div class="tb-av" id="tb-av">TK</div>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 0 — SIGN IN
+══════════════════════════════════ -->
+<div class="screen active" id="s0">
+  <div class="signin-wrap">
+    <div class="signin-card">
+      <div class="sc-head">
+        <div class="sc-moon"></div>
+        <h1>MoonLMS</h1>
+        <p>KLH University · Hyderabad</p>
+      </div>
+      <div class="sc-body">
+        <p class="sc-subtitle">Sign in to your account</p>
+
+        <button class="google-btn" onclick="quickSignIn()">
+          <span class="g-logo">🔵</span>
+          Sign in with Google (KLH account)
+        </button>
+        <button class="google-btn" onclick="quickSignIn()">
+          <span class="g-logo">🟦</span>
+          Sign in with Microsoft
+        </button>
+
+        <div class="divider-row"><span>or</span></div>
+
+        <input class="sc-input" type="email" placeholder="Email (rollno@klh.edu.in)" id="signin-email">
+        <input class="sc-input" type="password" placeholder="Password" id="signin-pw" style="margin-bottom:4px">
+
+        <button class="sc-btn" onclick="quickSignIn()">Sign In</button>
+
+        <div class="sc-links">
+          <a class="sc-link" href="#">Forgot password?</a>
+          <a class="sc-link" href="#" onclick="showScreen('s1');return false">Create account</a>
+        </div>
+
+        <div class="sc-terms">
+          By signing in you agree to MoonLMS <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+          <br>© 2026 KLH University
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 1 — ROLE SELECTION
+     (Exact Google Classroom first screen)
+══════════════════════════════════ -->
+<div class="screen" id="s1">
+  <!-- no progress bar on role screen — same as GC -->
+  <div class="role-screen">
+    <div class="role-card">
+      <h1>What's your role?</h1>
+      <p>MoonLMS will be set up based on your role at <strong>KLH University</strong>. You can change this later in Settings.</p>
+
+      <div class="role-options">
+        <div class="role-opt selected" id="role-student" onclick="pickRole('student')">
+          <span class="role-opt-icon">🎓</span>
+          <div class="role-opt-title">I'm a student</div>
+          <div class="role-opt-desc">Join classes, submit assignments, track grades and attend live sessions</div>
+        </div>
+        <div class="role-opt" id="role-teacher" onclick="pickRole('teacher')">
+          <span class="role-opt-icon">👨‍🏫</span>
+          <div class="role-opt-title">I'm a teacher</div>
+          <div class="role-opt-desc">Create classes, post assignments, grade submissions and host live lectures</div>
+        </div>
+      </div>
+
+      <div class="role-btn-row">
+        <button class="btn-text-blue" onclick="showScreen('s0')">Back</button>
+        <button class="btn-solid-blue" id="role-next-btn" onclick="goFromRole()">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 2 — PROFILE SETUP
+══════════════════════════════════ -->
+<div class="screen" id="s2">
+  <div class="progress-bar">
+    <div class="ps done" id="ps1"><div class="ps-num">✓</div>Role</div>
+    <div class="ps-arrow">›</div>
+    <div class="ps active" id="ps2"><div class="ps-num">2</div>Profile</div>
+    <div class="ps-arrow">›</div>
+    <div class="ps" id="ps3"><div class="ps-num">3</div>Class</div>
+    <div class="ps-arrow">›</div>
+    <div class="ps" id="ps4"><div class="ps-num">4</div>Done</div>
+  </div>
+  <div class="setup-wrap">
+    <div class="setup-card">
+      <h1>Set up your profile</h1>
+      <div class="step-lbl"><span class="step-pill">Step 2 of 4</span> Tell us who you are</div>
+
+      <!-- Avatar -->
+      <div class="av-row">
+        <div class="av-circle" id="av-circle" onclick="cycleAvatar()">TK</div>
+        <div class="av-actions">
+          <button class="av-act-btn">📷 Upload photo</button>
+          <button class="av-act-btn" onclick="cycleAvatar()">🎨 Choose avatar colour</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label>FIRST NAME</label>
+          <input type="text" id="p-fname" placeholder="e.g. Tankthireddy" oninput="liveAvatar()">
+        </div>
+        <div class="form-field">
+          <label>LAST NAME</label>
+          <input type="text" id="p-lname" placeholder="e.g. K.">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>KLH EMAIL</label>
+        <input type="email" id="p-email" placeholder="rollno@klh.edu.in" value="2320520034@klh.edu.in">
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label>ROLL NUMBER</label>
+          <input type="text" id="p-roll" placeholder="e.g. 2320520034">
+        </div>
+        <div class="form-field">
+          <label>DEPARTMENT</label>
+          <select id="p-dept">
+            <option>BCA — Computer Applications</option>
+            <option>BTech — CSE</option>
+            <option>BTech — ECE</option>
+            <option>MBA</option>
+            <option>MCA</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label>YEAR</label>
+          <select id="p-year">
+            <option>BCA Final Year (3rd)</option>
+            <option>BCA 2nd Year</option>
+            <option>BCA 1st Year</option>
+            <option>BTech 4th Year</option>
+            <option>Faculty</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>SECTION</label>
+          <div class="chip-group">
+            <button class="chip-sel on" onclick="pickChip(this,'section')">BCA-A</button>
+            <button class="chip-sel" onclick="pickChip(this,'section')">BCA-B</button>
+            <button class="chip-sel" onclick="pickChip(this,'section')">BCA-C</button>
+            <button class="chip-sel" onclick="pickChip(this,'section')">All</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="role-btn-row" style="margin-top:8px">
+        <button class="btn-text-blue" onclick="showScreen('s1')">Back</button>
+        <button class="btn-solid-blue" onclick="goToStep3()">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 3 — JOIN OR CREATE CLASS
+     (Teacher = Create Class, Student = Join Class)
+══════════════════════════════════ -->
+<div class="screen" id="s3">
+  <div class="progress-bar">
+    <div class="ps done"><div class="ps-num">✓</div>Role</div>
+    <div class="ps-arrow">›</div>
+    <div class="ps done"><div class="ps-num">✓</div>Profile</div>
+    <div class="ps-arrow">›</div>
+    <div class="ps active"><div class="ps-num">3</div>Class</div>
+    <div class="ps-arrow">›</div>
+    <div class="ps"><div class="ps-num">4</div>Done</div>
+  </div>
+
+  <!-- STUDENT: Join class screen -->
+  <div class="joc-wrap" id="student-join-wrap">
+    <div class="joc-card">
+      <h1>Join your first class</h1>
+      <p>Ask your teacher for the class code, then enter it here. Or choose from your enrolled KLH University courses below.</p>
+
+      <div class="joc-options">
+        <div class="joc-opt" onclick="joinByCode()">
+          <span class="joc-opt-icon">🔑</span>
+          <div class="joc-opt-title">Enter class code</div>
+          <div class="joc-opt-desc">Type the code your teacher shared with you</div>
+        </div>
+        <div class="joc-opt" onclick="joinByEmail()">
+          <span class="joc-opt-icon">📧</span>
+          <div class="joc-opt-title">From invitation</div>
+          <div class="joc-opt-desc">Accept a class invite sent to your KLH email</div>
+        </div>
+      </div>
+
+      <div class="joc-divider"></div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px">Enter class code</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:12px">Ask your teacher for the 7-character class code</div>
+        <div class="code-input-row">
+          <input class="code-input" type="text" id="class-code-inp" placeholder="e.g. klh-bca-c" maxlength="12">
+          <button class="code-join-btn" onclick="joinWithCode()">Join</button>
+        </div>
+        <div class="code-hint">
+          Class codes from your teachers: <strong style="color:var(--blue)">klh-dbms</strong> · <strong style="color:var(--blue)">klh-webdev</strong> · <strong style="color:var(--blue)">klh-se02</strong>
+        </div>
+      </div>
+
+      <div class="joc-divider"></div>
+
+      <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:12px">Or enrol in KLH courses</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:background .15s" onclick="toggleEnrol(this)" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background=''">
+          <div style="width:36px;height:36px;border-radius:4px;background:#1a73e8;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">DB</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:500">Advanced DBMS</div><div style="font-size:12px;color:var(--text3)">BCA-601 · BCA-A · T.K. Tankthireddy</div></div>
+          <div class="enrol-check" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:background .15s" onclick="toggleEnrol(this)" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background=''">
+          <div style="width:36px;height:36px;border-radius:4px;background:#7b1fa2;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">SE</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:500">Software Engineering</div><div style="font-size:12px;color:var(--text3)">BCA-602 · BCA-B · T.K. Tankthireddy</div></div>
+          <div class="enrol-check" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:background .15s" onclick="toggleEnrol(this)" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background=''">
+          <div style="width:36px;height:36px;border-radius:4px;background:#1e8e3e;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">WD</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:500">Web Development</div><div style="font-size:12px;color:var(--text3)">BCA-603 · BCA-C · T.K. Tankthireddy</div></div>
+          <div class="enrol-check" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s"></div>
+        </div>
+      </div>
+
+      <div class="role-btn-row">
+        <button class="btn-text-blue" onclick="showScreen('s2')">Back</button>
+        <button class="btn-solid-blue" onclick="goToStep4()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEACHER: Create class screen -->
+  <div class="joc-wrap hidden" id="teacher-create-wrap">
+    <div style="width:100%;max-width:560px">
+      <div class="class-setup-card">
+        <div class="csc-banner">
+          <div class="csc-banner-pattern"></div>
+          <div class="csc-banner-title" id="csc-title">New Class</div>
+          <div class="csc-banner-sub" id="csc-sub">KLH University · BCA</div>
+        </div>
+        <div class="csc-body">
+          <h1>Create your first class</h1>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label>CLASS NAME</label>
+              <input type="text" id="cc-name" placeholder="e.g. Advanced DBMS" oninput="previewClass()">
+            </div>
+            <div class="form-field">
+              <label>SECTION</label>
+              <input type="text" id="cc-section" placeholder="e.g. BCA-A" oninput="previewClass()">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label>SUBJECT</label>
+              <select id="cc-subject">
+                <option>Computer Applications</option>
+                <option>Database Management</option>
+                <option>Software Engineering</option>
+                <option>Web Development</option>
+                <option>Python Programming</option>
+                <option>Data Structures</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>ROOM</label>
+              <input type="text" id="cc-room" placeholder="e.g. Room 204 / Online">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>DESCRIPTION (optional)</label>
+            <textarea id="cc-desc" placeholder="Brief description of this course…"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label>THEME COLOUR</label>
+            <div class="chip-group">
+              <button class="chip-sel on" onclick="pickChip(this,'theme')" style="background:#e8f0fe;border-color:#1a73e8;color:#1a73e8">Blue</button>
+              <button class="chip-sel" onclick="pickChip(this,'theme')">Purple</button>
+              <button class="chip-sel" onclick="pickChip(this,'theme')">Green</button>
+              <button class="chip-sel" onclick="pickChip(this,'theme')">Orange</button>
+              <button class="chip-sel" onclick="pickChip(this,'theme')">Red</button>
+            </div>
+          </div>
+
+          <!-- Class code preview -->
+          <div class="class-code-box">
+            <div>
+              <div class="ccb-label">Class code (share with students)</div>
+              <div class="ccb-code" id="gen-code">klh-bca-a</div>
+            </div>
+            <button class="ccb-copy" onclick="copyCode()">📋 Copy</button>
+          </div>
+
+          <div class="role-btn-row">
+            <button class="btn-text-blue" onclick="showScreen('s2')">Back</button>
+            <button class="btn-solid-blue" onclick="goToStep4()">Create class</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 4 — NOTIFICATIONS & DONE
+══════════════════════════════════ -->
+<div class="screen" id="s4">
+  <div class="progress-bar">
+    <div class="ps done"><div class="ps-num">✓</div>Role</div>
+    <div class="ps-arrow">›</div>
+    <div class="ps done"><div class="ps-num">✓</div>Profile</div>
+    <div class="ps-arrow">›</div>
+    <div class="ps done"><div class="ps-num">✓</div>Class</div>
+    <div class="ps-arrow">›</div>
+    <div class="ps active"><div class="ps-num">4</div>Done</div>
+  </div>
+  <div class="done-wrap">
+    <div class="done-card">
+      <span class="done-icon">🎉</span>
+      <div class="done-title">You're all set!</div>
+      <div class="done-sub">
+        Welcome to <strong>MoonLMS</strong> — KLH University's classroom platform.<br>
+        <span id="done-name-display">Your account</span> is ready. Start learning or teaching today.
+      </div>
+
+      <!-- Notification opt-in (like GC) -->
+      <div class="notif-box">
+        <span class="notif-icon">🔔</span>
+        <div>
+          <div class="notif-title">Stay on top of your classes</div>
+          <div class="notif-desc">Get notified about new assignments, grades, announcements and live class reminders from your teachers.</div>
+          <button class="notif-btn" onclick="this.textContent='✓ Notifications enabled';this.style.background='#e6f4ea';this.style.color='#1e8e3e';this.style.borderColor='#1e8e3e'">Turn on notifications</button>
+        </div>
+      </div>
+
+      <div class="done-features">
+        <div class="df"><span class="df-icon">📚</span><span class="df-text">8 BCA courses</span></div>
+        <div class="df"><span class="df-icon">🎥</span><span class="df-text">Live video classes</span></div>
+        <div class="df"><span class="df-icon">📝</span><span class="df-text">Assignment submission</span></div>
+        <div class="df"><span class="df-icon">📊</span><span class="df-text">Real-time grades</span></div>
+        <div class="df"><span class="df-icon">🏆</span><span class="df-text">Leaderboard</span></div>
+        <div class="df"><span class="df-icon">🤖</span><span class="df-text">AI grading assist</span></div>
+        <div class="df"><span class="df-icon">⚠️</span><span class="df-text">ExamFlow integrity</span></div>
+        <div class="df"><span class="df-icon">🌙</span><span class="df-text">MoonLMS Pro — Free</span></div>
+      </div>
+
+      <button class="done-go-btn" onclick="goToApp()">Go to MoonLMS →</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ── SCREEN NAVIGATION ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── QUICK SIGN IN ──
+function quickSignIn() {
+  showScreen('s1');
+}
+
+// ── ROLE SELECTION ──
+let currentRole = 'student';
+function pickRole(role) {
+  currentRole = role;
+  document.getElementById('role-student').classList.toggle('selected', role === 'student');
+  document.getElementById('role-teacher').classList.toggle('selected', role === 'teacher');
+}
+function goFromRole() {
+  showScreen('s2');
+}
+
+// ── PROFILE ──
+const avColors = [
+  'linear-gradient(135deg,#a78bfa,#1a73e8)',
+  'linear-gradient(135deg,#f4c167,#e08030)',
+  'linear-gradient(135deg,#4ade80,#16a34a)',
+  'linear-gradient(135deg,#f87171,#b91c1c)',
+  'linear-gradient(135deg,#2dd4bf,#0f766e)',
+  'linear-gradient(135deg,#fb923c,#c2410c)',
+];
+let avIdx = 0;
+function cycleAvatar() {
+  avIdx = (avIdx + 1) % avColors.length;
+  document.getElementById('av-circle').style.background = avColors[avIdx];
+}
+function liveAvatar() {
+  const f = document.getElementById('p-fname').value.trim();
+  const l = document.getElementById('p-lname').value.trim();
+  const initials = ((f[0] || '') + (l[0] || '')).toUpperCase() || 'TK';
+  document.getElementById('av-circle').textContent = initials;
+  document.getElementById('tb-av').textContent = initials;
+}
+function goToStep3() {
+  const fname = document.getElementById('p-fname').value.trim();
+  if (!fname) { alert('Please enter your first name.'); return; }
+  // show correct step 3 panel
+  if (currentRole === 'teacher') {
+    document.getElementById('student-join-wrap').classList.add('hidden');
+    document.getElementById('teacher-create-wrap').classList.remove('hidden');
+  } else {
+    document.getElementById('student-join-wrap').classList.remove('hidden');
+    document.getElementById('teacher-create-wrap').classList.add('hidden');
+  }
+  showScreen('s3');
+}
+
+// ── CHIP SELECTION ──
+function pickChip(el, group) {
+  el.closest('.chip-group').querySelectorAll('.chip-sel').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ── STUDENT JOIN ──
+function joinByCode() {
+  document.getElementById('class-code-inp').focus();
+}
+function joinByEmail() {
+  alert('Checking your KLH email for class invitations…\n\nFound: Advanced DBMS, Software Engineering, Web Development');
+}
+function joinWithCode() {
+  const code = document.getElementById('class-code-inp').value.trim();
+  if (!code) { alert('Please enter a class code.'); return; }
+  alert('Joined class: ' + code + '\n\nYou\'re now enrolled! Click Continue to finish setup.');
+}
+function toggleEnrol(row) {
+  const check = row.querySelector('.enrol-check');
+  const enrolled = check.textContent === '✓';
+  if (enrolled) {
+    check.textContent = '';
+    check.style.background = '';
+    check.style.borderColor = 'var(--border)';
+    check.style.color = '';
+    row.style.borderColor = 'var(--border)';
+  } else {
+    check.textContent = '✓';
+    check.style.background = 'var(--green)';
+    check.style.borderColor = 'var(--green)';
+    check.style.color = '#fff';
+    row.style.borderColor = 'var(--green)';
+  }
+}
+
+// ── TEACHER CREATE ──
+function previewClass() {
+  const name = document.getElementById('cc-name').value || 'New Class';
+  const section = document.getElementById('cc-section').value;
+  document.getElementById('csc-title').textContent = name;
+  document.getElementById('csc-sub').textContent = 'KLH University · ' + (section || 'BCA');
+  // auto-generate code
+  const slug = name.toLowerCase().replace(/\s+/g,'-').slice(0,8);
+  const sec  = section.toLowerCase().replace(/\s+/g,'-').slice(0,5);
+  document.getElementById('gen-code').textContent = 'klh-' + (slug || 'class') + (sec ? '-' + sec : '');
+}
+function copyCode() {
+  const code = document.getElementById('gen-code').textContent;
+  navigator.clipboard.writeText(code).catch(()=>{});
+  alert('Class code copied: ' + code);
+}
+
+// ── STEP 4 ──
+function goToStep4() {
+  const fname = document.getElementById('p-fname').value.trim();
+  const displayName = fname || 'Tankthireddy';
+  document.getElementById('done-name-display').textContent = displayName + '\'s account';
+  showScreen('s4');
+}
+
+// ── GO TO APP ──
+function goToApp() {
+  alert('Opening MoonLMS Dashboard…\nWelcome to KLH University! 🎓');
+}
+</script>
+</body>
+</html>

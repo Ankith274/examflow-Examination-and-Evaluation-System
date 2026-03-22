@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoonLMS Live – Sign Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --z-blue:#0b5cff;
+  --z-blue-d:#0040cc;
+  --z-blue-l:#e8efff;
+  --z-blue-ll:#f0f4ff;
+  --z-green:#16a34a;
+  --z-green-l:#dcfce7;
+  --z-red:#dc2626;
+  --z-red-l:#fee2e2;
+  --z-yellow:#d97706;
+  --z-yellow-l:#fef3c7;
+  --bg:#f5f5f7;
+  --white:#ffffff;
+  --text:#1d1d1f;
+  --text2:#3a3a3c;
+  --text3:#6e6e73;
+  --text4:#aeaeb2;
+  --border:#d2d2d7;
+  --border-f:#0b5cff;
+  --hover:#f5f5f7;
+  --sh:0 2px 8px rgba(0,0,0,.08),0 0 1px rgba(0,0,0,.06);
+  --sh2:0 4px 20px rgba(0,0,0,.1),0 0 1px rgba(0,0,0,.06);
+  --font:'Inter',sans-serif;
+  --r:12px;
+}
+html,body{min-height:100vh;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:rgba(255,255,255,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(0,0,0,.06);
+  height:60px;display:flex;align-items:center;
+  padding:0 32px;position:sticky;top:0;z-index:200;
+}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex:1}
+.logo-moon{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:radial-gradient(circle at 36% 36%,#fff7df 0%,#f4c167 40%,#e08030 100%);
+  position:relative;overflow:hidden;
+}
+.logo-moon::after{content:'';position:absolute;top:4px;right:3px;width:12px;height:12px;background:rgba(255,255,255,.9);border-radius:50%}
+.logo-text{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.4px}
+.logo-text span{color:var(--z-blue)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.tb-link{font-size:13px;color:var(--text3);cursor:pointer;padding:5px 8px;border-radius:6px}
+.tb-link:hover{background:rgba(0,0,0,.05);color:var(--text)}
+.tb-signin{
+  padding:7px 16px;border-radius:8px;
+  border:1.5px solid var(--z-blue);color:var(--z-blue);
+  font-size:13px;font-weight:600;cursor:pointer;
+  background:none;font-family:var(--font);transition:all .15s;
+}
+.tb-signin:hover{background:var(--z-blue-l)}
+
+/* ── PROGRESS STEPS ── */
+.progress-wrap{
+  background:var(--white);border-bottom:1px solid rgba(0,0,0,.06);
+  padding:0 0 0;
+}
+.steps-bar{
+  display:flex;align-items:center;
+  max-width:640px;margin:0 auto;
+  padding:16px 24px;
+}
+.snode{
+  display:flex;flex-direction:column;align-items:center;
+  gap:5px;flex:1;position:relative;
+}
+.snode:not(:last-child)::after{
+  content:'';position:absolute;
+  top:12px;left:calc(50% + 15px);right:calc(-50% + 15px);
+  height:2px;background:var(--border);z-index:0;transition:background .4s;
+}
+.snode.done:not(:last-child)::after{background:var(--z-blue)}
+.sn-dot{
+  width:24px;height:24px;border-radius:50%;
+  border:2px solid var(--border);background:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:var(--text4);
+  position:relative;z-index:1;transition:all .25s;flex-shrink:0;
+}
+.snode.active .sn-dot{border-color:var(--z-blue);background:var(--z-blue);color:#fff}
+.snode.done .sn-dot{border-color:var(--z-blue);background:var(--z-blue);color:#fff}
+.sn-lbl{font-size:10px;color:var(--text4);font-weight:500;white-space:nowrap;text-align:center}
+.snode.active .sn-lbl,.snode.done .sn-lbl{color:var(--z-blue)}
+
+/* ── PAGES ── */
+.page{display:none;min-height:calc(100vh - 60px - 56px)}
+.page.active{display:flex;align-items:center;justify-content:center;padding:32px 16px;animation:pgIn .2s ease}
+@keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CARD ── */
+.card{
+  background:var(--white);border-radius:16px;
+  box-shadow:var(--sh);width:100%;
+}
+.card.sm{max-width:420px}
+.card.md{max-width:500px}
+.card.lg{max-width:580px}
+
+/* ── CARD PARTS ── */
+.card-top{
+  padding:32px 36px 24px;text-align:center;
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.ct-icon{font-size:44px;margin-bottom:12px;display:block}
+.ct-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--z-blue-l);color:var(--z-blue);
+  font-size:11px;font-weight:600;padding:3px 10px;
+  border-radius:20px;margin-bottom:10px;letter-spacing:.02em;
+}
+.ct-title{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.4px;margin-bottom:5px}
+.ct-sub{font-size:13px;color:var(--text3);line-height:1.55}
+.ct-sub strong{color:var(--text2)}
+.card-body{padding:24px 36px 28px}
+
+/* ── FORM ── */
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text3);margin-bottom:5px;letter-spacing:.03em;text-transform:uppercase}
+.field input,.field select{
+  width:100%;height:48px;padding:0 14px;
+  border:1.5px solid var(--border);border-radius:10px;
+  font-size:14px;font-family:var(--font);color:var(--text);
+  background:var(--white);outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.field input:focus,.field select:focus{
+  border-color:var(--z-blue);
+  box-shadow:0 0 0 3px rgba(11,92,255,.1);
+}
+.field input.ok{border-color:var(--z-green)}
+.field input.err{border-color:var(--z-red)}
+.field-hint{font-size:11px;margin-top:4px;color:var(--text4)}
+.field-hint.ok{color:var(--z-green)}
+.field-hint.err{color:var(--z-red)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pw-eye{
+  position:relative;
+}
+.pw-eye input{padding-right:42px}
+.pw-eye-btn{
+  position:absolute;right:13px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;font-size:16px;
+  color:var(--text4);padding:4px;
+}
+
+/* pw strength */
+.pw-bars{display:flex;gap:3px;margin-top:6px}
+.pw-bar{height:3px;flex:1;border-radius:2px;background:var(--border);transition:background .3s}
+.pw-bar.w{background:var(--z-red)}
+.pw-bar.f{background:var(--z-yellow)}
+.pw-bar.g{background:var(--z-green)}
+.pw-lbl{font-size:11px;margin-top:3px;font-weight:500}
+
+/* ── BUTTONS ── */
+.btn-primary{
+  width:100%;height:48px;
+  background:var(--z-blue);color:#fff;
+  border:none;border-radius:10px;
+  font-size:15px;font-weight:600;font-family:var(--font);
+  cursor:pointer;transition:background .15s,transform .1s;
+  margin-bottom:10px;letter-spacing:-.1px;
+}
+.btn-primary:hover{background:var(--z-blue-d)}
+.btn-primary:active{transform:scale(.99)}
+.btn-secondary{
+  width:100%;height:44px;
+  background:none;border:1.5px solid var(--border);
+  color:var(--text2);border-radius:10px;
+  font-size:14px;font-weight:500;font-family:var(--font);
+  cursor:pointer;transition:all .15s;margin-bottom:10px;
+}
+.btn-secondary:hover{border-color:#9ca3af;background:#fafafa}
+.btn-row{display:flex;gap:10px}
+.btn-row .btn-primary,.btn-row .btn-secondary{margin-bottom:0}
+
+/* ── SOCIAL ── */
+.social-btn{
+  width:100%;height:46px;
+  border:1.5px solid var(--border);border-radius:10px;
+  background:var(--white);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-family:var(--font);font-size:14px;font-weight:500;color:var(--text2);
+  transition:all .15s;margin-bottom:10px;
+}
+.social-btn:hover{background:#fafafa;border-color:#9ca3af;box-shadow:var(--sh)}
+
+/* ── DIVIDER ── */
+.divider{display:flex;align-items:center;gap:10px;margin:14px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider span{font-size:12px;color:var(--text4);white-space:nowrap}
+
+/* ── INFO BOX ── */
+.info-box{
+  border-radius:10px;padding:12px 14px;margin-bottom:16px;
+  display:flex;align-items:flex-start;gap:10px;font-size:13px;line-height:1.5;
+}
+.info-box.blue{background:var(--z-blue-ll);border:1px solid rgba(11,92,255,.2)}
+.info-box.green{background:var(--z-green-l);border:1px solid rgba(22,163,74,.25)}
+.info-box.yellow{background:var(--z-yellow-l);border:1px solid rgba(217,119,6,.25)}
+.ib-ico{font-size:16px;flex-shrink:0;margin-top:1px}
+.ib-txt{color:var(--text2)}
+.ib-txt strong{color:var(--text)}
+
+/* ── OTP ── */
+.otp-row{display:flex;gap:8px;justify-content:center;margin:16px 0 6px}
+.otp-inp{
+  width:50px;height:58px;border:1.5px solid var(--border);border-radius:10px;
+  text-align:center;font-size:22px;font-weight:700;color:var(--text);
+  font-family:var(--font);outline:none;
+  transition:border-color .15s,box-shadow .15s,background .15s;
+}
+.otp-inp:focus{border-color:var(--z-blue);box-shadow:0 0 0 3px rgba(11,92,255,.1)}
+.otp-inp.filled{border-color:var(--z-blue);background:var(--z-blue-l);color:var(--z-blue)}
+
+/* OTP generator box */
+.otp-gen-box{
+  background:#f8f9ff;border:1.5px dashed rgba(11,92,255,.3);
+  border-radius:10px;padding:16px;text-align:center;margin-bottom:14px;
+}
+.otp-gen-hint{font-size:12px;color:var(--text3);margin-bottom:10px}
+.otp-gen-code{
+  font-size:32px;font-weight:700;letter-spacing:.3em;
+  color:var(--z-blue);margin-bottom:12px;min-height:40px;
+  font-family:var(--font);
+}
+.otp-gen-actions{display:flex;gap:8px;justify-content:center}
+.gen-btn{
+  padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;
+  cursor:pointer;font-family:var(--font);border:none;transition:all .15s;
+}
+.gen-btn.blue{background:var(--z-blue);color:#fff}
+.gen-btn.blue:hover{background:var(--z-blue-d)}
+.gen-btn.outline{background:var(--white);color:var(--z-blue);border:1.5px solid var(--z-blue)}
+.gen-btn.outline:hover{background:var(--z-blue-l)}
+.resend-txt{text-align:center;font-size:13px;color:var(--text3);margin-bottom:14px}
+.resend-txt a{color:var(--z-blue);cursor:pointer;font-weight:500}
+.resend-txt a:hover{text-decoration:underline}
+
+/* ── ROLE CARDS ── */
+.role-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.rc{
+  border:2px solid var(--border);border-radius:12px;
+  padding:20px 14px;text-align:center;cursor:pointer;
+  transition:all .2s;
+}
+.rc:hover{border-color:#9ca3af;background:#fafafa}
+.rc.on{border-color:var(--z-blue);background:var(--z-blue-l)}
+.rc-icon{font-size:36px;display:block;margin-bottom:8px}
+.rc-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.rc.on .rc-name{color:var(--z-blue)}
+.rc-desc{font-size:11px;color:var(--text3);line-height:1.4}
+
+/* ── PLAN CARDS ── */
+.plans{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.plan{
+  border:2px solid var(--border);border-radius:12px;
+  padding:14px 16px;cursor:pointer;
+  display:flex;align-items:center;gap:14px;
+  transition:all .2s;position:relative;
+}
+.plan:hover{border-color:#9ca3af}
+.plan.on{border-color:var(--z-blue);background:var(--z-blue-ll)}
+.plan-radio{
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.plan.on .plan-radio{border-color:var(--z-blue);background:var(--z-blue)}
+.plan-radio::after{content:'';width:7px;height:7px;border-radius:50%;background:#fff;opacity:0;transition:opacity .15s}
+.plan.on .plan-radio::after{opacity:1}
+.plan-info{flex:1}
+.plan-name{font-size:14px;font-weight:600;color:var(--text)}
+.plan.on .plan-name{color:var(--z-blue)}
+.plan-desc{font-size:12px;color:var(--text3);margin-top:2px;line-height:1.4}
+.plan-price{font-size:14px;font-weight:700;color:var(--z-blue);text-align:right;flex-shrink:0}
+.plan-price span{font-size:10px;color:var(--text3);font-weight:400;display:block}
+.plan-badge{
+  position:absolute;top:-1px;right:14px;
+  background:var(--z-blue);color:#fff;
+  font-size:9px;font-weight:700;padding:2px 8px;
+  border-radius:0 0 6px 6px;letter-spacing:.06em;
+}
+
+/* ── CHECKBOX ── */
+.cb-row{display:flex;align-items:flex-start;gap:9px;margin-bottom:10px}
+.cb-row input{width:15px;height:15px;margin-top:2px;accent-color:var(--z-blue);flex-shrink:0;cursor:pointer}
+.cb-row label{font-size:13px;color:var(--text2);cursor:pointer;line-height:1.5}
+.cb-row label a{color:var(--z-blue)}
+
+/* ── SUCCESS ── */
+.success-ring{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--z-green-l);margin:0 auto 16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;animation:pop .4s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}
+.feat{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg);border-radius:8px;padding:9px 11px;
+}
+.feat-dot{width:6px;height:6px;border-radius:50%;background:var(--z-blue);flex-shrink:0}
+.feat-txt{font-size:12px;color:var(--text2)}
+
+/* ── BOTTOM LINK ── */
+.bl{text-align:center;font-size:13px;color:var(--text3);margin-top:8px}
+.bl a{color:var(--z-blue);cursor:pointer;font-weight:500}
+.bl a:hover{text-decoration:underline}
+
+/* ── AVATAR ── */
+.av-row{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.av-circle{
+  width:64px;height:64px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#a78bfa,#0b5cff);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:700;color:#fff;
+  cursor:pointer;border:3px solid var(--border);
+  transition:border-color .2s;font-family:var(--font);
+}
+.av-circle:hover{border-color:var(--z-blue)}
+.av-actions{display:flex;flex-direction:column;gap:7px}
+.av-btn{
+  padding:6px 14px;border-radius:7px;font-size:13px;
+  font-weight:500;cursor:pointer;font-family:var(--font);
+  border:1.5px solid var(--border);background:var(--white);color:var(--text2);
+  transition:all .15s;
+}
+.av-btn:hover{background:#fafafa;border-color:#9ca3af}
+.av-btn.blue{background:var(--z-blue);color:#fff;border-color:var(--z-blue)}
+.av-btn.blue:hover{background:var(--z-blue-d)}
+
+/* ── CHIPS ── */
+.chip-grp{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+.chip{
+  padding:6px 14px;border-radius:20px;font-size:13px;
+  border:1.5px solid var(--border);background:var(--white);
+  color:var(--text2);cursor:pointer;font-family:var(--font);
+  transition:all .15s;
+}
+.chip:hover{border-color:#9ca3af}
+.chip.on{border-color:var(--z-blue);background:var(--z-blue-l);color:var(--z-blue)}
+
+/* ── FOOTER ── */
+.footer{
+  background:var(--white);border-top:1px solid rgba(0,0,0,.06);
+  padding:12px 32px;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
+.fl{display:flex;gap:14px;flex-wrap:wrap}
+.fl a{font-size:12px;color:var(--text4);text-decoration:none}
+.fl a:hover{color:var(--text3)}
+.fc{font-size:12px;color:var(--text4)}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<header class="topbar">
+  <div class="logo" onclick="goPage(1)">
+    <div class="logo-moon"></div>
+    <span class="logo-text">Moon<span>LMS</span> Live</span>
+  </div>
+  <div class="topbar-right">
+    <span class="tb-link">Support</span>
+    <span class="tb-link">English</span>
+    <button class="tb-signin" onclick="goPage(1)">Sign In</button>
+  </div>
+</header>
+
+<!-- ── PROGRESS BAR ── -->
+<div class="progress-wrap" id="prog-wrap">
+  <div class="steps-bar">
+    <div class="snode active" id="sn1"><div class="sn-dot" id="sd1">1</div><div class="sn-lbl">Account</div></div>
+    <div class="snode" id="sn2"><div class="sn-dot" id="sd2">2</div><div class="sn-lbl">Verify</div></div>
+    <div class="snode" id="sn3"><div class="sn-dot" id="sd3">3</div><div class="sn-lbl">Profile</div></div>
+    <div class="snode" id="sn4"><div class="sn-dot" id="sd4">4</div><div class="sn-lbl">Plan</div></div>
+    <div class="snode" id="sn5"><div class="sn-dot" id="sd5">5</div><div class="sn-lbl">Done</div></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     PAGE 1 — CREATE ACCOUNT
+══════════════════════════════ -->
+<div class="page active" id="pg1">
+  <div class="card lg">
+    <div class="card-top">
+      <div class="ct-badge">🌙 MoonLMS Live · KLH University</div>
+      <div class="ct-title">Create your account</div>
+      <div class="ct-sub">Join 12,000+ students and 280+ teachers at <strong>KLH University</strong></div>
+    </div>
+    <div class="card-body">
+
+      <div class="role-cards" id="role-cards">
+        <div class="rc on" onclick="pickRole(this)">
+          <span class="rc-icon">🎓</span>
+          <div class="rc-name">Student</div>
+          <div class="rc-desc">Join classes, submit assignments &amp; track grades</div>
+        </div>
+        <div class="rc" onclick="pickRole(this)">
+          <span class="rc-icon">👨‍🏫</span>
+          <div class="rc-name">Teacher</div>
+          <div class="rc-desc">Create classes, host live sessions &amp; grade students</div>
+        </div>
+      </div>
+
+      <button class="social-btn" onclick="socialGo('Google')">
+        <span style="font-size:18px">🔵</span> Continue with Google (KLH account)
+      </button>
+      <button class="social-btn" onclick="socialGo('Microsoft')">
+        <span style="font-size:18px">🟦</span> Continue with Microsoft
+      </button>
+
+      <div class="divider"><span>or fill in your details</span></div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" id="f-fname" placeholder="e.g. Tankthireddy">
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <input type="text" id="f-lname" placeholder="e.g. K.">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>KLH University Email</label>
+        <input type="email" id="f-email" placeholder="rollno@klh.edu.in" oninput="checkEmail()">
+        <div class="field-hint" id="f-email-hint">Use your official KLH email for verified access</div>
+      </div>
+
+      <div class="field">
+        <label>Roll Number</label>
+        <input type="text" id="f-roll" placeholder="e.g. 2320520034">
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="pw-eye">
+          <input type="password" id="f-pw" placeholder="Min. 8 characters" oninput="pwStrength(this.value,'pw-bars1','pw-lbl1')">
+          <button class="pw-eye-btn" onclick="toggleEye('f-pw',this)" type="button">👁</button>
+        </div>
+        <div class="pw-bars" id="pw-bars1">
+          <div class="pw-bar"></div><div class="pw-bar"></div>
+          <div class="pw-bar"></div><div class="pw-bar"></div>
+        </div>
+        <div class="pw-lbl field-hint" id="pw-lbl1"></div>
+      </div>
+
+      <div class="field">
+        <label>Confirm Password</label>
+        <div class="pw-eye">
+          <input type="password" id="f-cpw" placeholder="Re-enter password" oninput="checkMatch('f-pw','f-cpw','cpw-hint')">
+          <button class="pw-eye-btn" onclick="toggleEye('f-cpw',this)" type="button">👁</button>
+        </div>
+        <div class="field-hint" id="cpw-hint">Must match password above</div>
+      </div>
+
+      <div class="cb-row"><input type="checkbox" id="cb-terms"><label for="cb-terms">I agree to MoonLMS <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label></div>
+      <div class="cb-row"><input type="checkbox" id="cb-notif" checked><label for="cb-notif">Send me class reminders and assignment notifications</label></div>
+
+      <button class="btn-primary" onclick="step1Next()">Create Account →</button>
+      <div class="bl">Already have an account? <a onclick="alert('Redirecting to Sign In…')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     PAGE 2 — VERIFY EMAIL (OTP)
+══════════════════════════════ -->
+<div class="page" id="pg2">
+  <div class="card md">
+    <div class="card-top">
+      <span class="ct-icon">📧</span>
+      <div class="ct-title">Verify your email</div>
+      <div class="ct-sub">We sent a code to <strong id="email-disp">rollno@klh.edu.in</strong></div>
+    </div>
+    <div class="card-body">
+
+      <div class="info-box yellow">
+        <span class="ib-ico">⏱️</span>
+        <div class="ib-txt">Code expires in <strong id="otp-timer">10:00</strong>. Check your spam folder too.</div>
+      </div>
+
+      <!-- OTP Generator -->
+      <div class="otp-gen-box">
+        <div class="otp-gen-hint">Click <strong>Generate Code</strong> to get your one-time verification code</div>
+        <div class="otp-gen-code" id="otp-code-display">——————</div>
+        <div class="otp-gen-actions">
+          <button class="gen-btn blue" onclick="generateOTP()">⚡ Generate Code</button>
+          <button class="gen-btn outline" id="otp-copy-btn" onclick="copyOTP()" style="display:none">📋 Copy</button>
+        </div>
+        <div style="font-size:11px;color:var(--text4);margin-top:8px" id="otp-gen-status">Code will auto-fill the boxes below</div>
+      </div>
+
+      <div style="font-size:12px;color:var(--text3);text-align:center;margin-bottom:8px">Enter the 6-digit code</div>
+      <div class="otp-row">
+        <input class="otp-inp" id="o1" maxlength="1" oninput="otpMove(this,'o2')" onkeydown="otpBack(event,this,'')">
+        <input class="otp-inp" id="o2" maxlength="1" oninput="otpMove(this,'o3')" onkeydown="otpBack(event,this,'o1')">
+        <input class="otp-inp" id="o3" maxlength="1" oninput="otpMove(this,'o4')" onkeydown="otpBack(event,this,'o2')">
+        <input class="otp-inp" id="o4" maxlength="1" oninput="otpMove(this,'o5')" onkeydown="otpBack(event,this,'o3')">
+        <input class="otp-inp" id="o5" maxlength="1" oninput="otpMove(this,'o6')" onkeydown="otpBack(event,this,'o4')">
+        <input class="otp-inp" id="o6" maxlength="1" oninput="otpMove(this,'')"   onkeydown="otpBack(event,this,'o5')">
+      </div>
+
+      <div class="resend-txt">Didn't get it? <a onclick="resendOTP()">Resend &amp; regenerate</a></div>
+      <button class="btn-primary" onclick="step2Next()">Verify &amp; Continue →</button>
+      <button class="btn-secondary" onclick="goPage(1)">← Back</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     PAGE 3 — PROFILE SETUP
+══════════════════════════════ -->
+<div class="page" id="pg3">
+  <div class="card lg">
+    <div class="card-top">
+      <span class="ct-icon">🧑‍🎓</span>
+      <div class="ct-title">Set up your profile</div>
+      <div class="ct-sub">Help teachers and classmates recognise you in live sessions</div>
+    </div>
+    <div class="card-body">
+
+      <!-- Avatar -->
+      <div class="av-row">
+        <div class="av-circle" id="av-circle" onclick="cycleAvColor()" title="Click to change colour">TK</div>
+        <div class="av-actions">
+          <button class="av-btn blue">📷 Upload photo</button>
+          <button class="av-btn" onclick="cycleAvColor()">🎨 Change colour</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Display Name</label>
+        <input type="text" id="p-display" placeholder="Name shown in class" value="T.K. Tankthireddy" oninput="updateAv(this.value)">
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Department</label>
+          <select>
+            <option>BCA — Computer Applications</option>
+            <option>BTech — CSE</option>
+            <option>BTech — ECE</option>
+            <option>MBA</option><option>MCA</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Year</label>
+          <select>
+            <option>BCA Final Year (3rd)</option>
+            <option>BCA 2nd Year</option>
+            <option>BCA 1st Year</option>
+            <option>Faculty</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Section</label>
+        <div class="chip-grp">
+          <button class="chip on" onclick="pickChip(this)">BCA-A</button>
+          <button class="chip" onclick="pickChip(this)">BCA-B</button>
+          <button class="chip" onclick="pickChip(this)">BCA-C</button>
+          <button class="chip" onclick="pickChip(this)">All Sections</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Time Zone</label>
+        <select>
+          <option>Asia/Kolkata (IST, UTC+5:30)</option>
+          <option>Asia/Dubai (GST, UTC+4)</option>
+          <option>Europe/London (GMT)</option>
+        </select>
+      </div>
+
+      <div class="cb-row"><input type="checkbox" id="cb-cam" checked><label for="cb-cam">Enable camera and microphone for live classes by default</label></div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goPage(2)">← Back</button>
+        <button class="btn-primary" onclick="step3Next()" style="margin-bottom:0">Save &amp; Continue →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     PAGE 4 — CHOOSE PLAN
+══════════════════════════════ -->
+<div class="page" id="pg4">
+  <div class="card lg">
+    <div class="card-top">
+      <span class="ct-icon">⭐</span>
+      <div class="ct-title">Choose your plan</div>
+      <div class="ct-sub">All plans include live video classes, recordings, and chat. <strong>KLH students get Pro free for 1 year.</strong></div>
+    </div>
+    <div class="card-body">
+
+      <div class="plans" id="plans">
+        <div class="plan" onclick="pickPlan(this)">
+          <div class="plan-radio"></div>
+          <div class="plan-info">
+            <div class="plan-name">Basic</div>
+            <div class="plan-desc">40-min limit · 100 participants · HD video · Chat</div>
+          </div>
+          <div class="plan-price">Free<span>forever</span></div>
+        </div>
+
+        <div class="plan on" onclick="pickPlan(this)">
+          <div class="plan-badge">RECOMMENDED</div>
+          <div class="plan-radio"></div>
+          <div class="plan-info">
+            <div class="plan-name">Pro — KLH Student</div>
+            <div class="plan-desc">Unlimited time · 300 participants · Recording · Breakout rooms · AI captions</div>
+          </div>
+          <div class="plan-price">Free<span>1 yr with KLH ID</span></div>
+        </div>
+
+        <div class="plan" onclick="pickPlan(this)">
+          <div class="plan-radio"></div>
+          <div class="plan-info">
+            <div class="plan-name">Business</div>
+            <div class="plan-desc">1000 participants · Admin dashboard · SSO · Priority support</div>
+          </div>
+          <div class="plan-price">₹999<span>/month</span></div>
+        </div>
+      </div>
+
+      <div class="info-box blue">
+        <span class="ib-ico">🎓</span>
+        <div class="ib-txt">Your KLH University email qualifies for <strong>Pro free for 1 year</strong>. No credit card needed.</div>
+      </div>
+
+      <div class="cb-row"><input type="checkbox" checked><label>Allow class recordings to be saved to MoonLMS cloud storage</label></div>
+      <div class="cb-row"><input type="checkbox" checked><label>Enable AI-powered live captions and transcription in classes</label></div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goPage(3)">← Back</button>
+        <button class="btn-primary" onclick="goPage(5)" style="margin-bottom:0">Continue →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     PAGE 5 — ALL DONE
+══════════════════════════════ -->
+<div class="page" id="pg5">
+  <div class="card md">
+    <div class="card-top">
+      <div class="success-ring">🎉</div>
+      <div class="ct-title">You're all set!</div>
+      <div class="ct-sub">Welcome to <strong>MoonLMS Live</strong>, <span id="welcome-name">Tankthireddy</span>!<br>Your KLH University account is ready to use.</div>
+    </div>
+    <div class="card-body">
+
+      <div class="info-box green">
+        <span class="ib-ico">✅</span>
+        <div class="ib-txt"><strong>Pro plan activated</strong> · KLH University verified · Email confirmed</div>
+      </div>
+
+      <div class="features-grid">
+        <div class="feat"><div class="feat-dot"></div><div class="feat-txt">HD live classes</div></div>
+        <div class="feat"><div class="feat-dot"></div><div class="feat-txt">Class recordings</div></div>
+        <div class="feat"><div class="feat-dot"></div><div class="feat-txt">Breakout rooms</div></div>
+        <div class="feat"><div class="feat-dot"></div><div class="feat-txt">AI live captions</div></div>
+        <div class="feat"><div class="feat-dot"></div><div class="feat-txt">Screen sharing</div></div>
+        <div class="feat"><div class="feat-dot"></div><div class="feat-txt">Hand raise &amp; polls</div></div>
+        <div class="feat"><div class="feat-dot"></div><div class="feat-txt">Chat &amp; reactions</div></div>
+        <div class="feat"><div class="feat-dot"></div><div class="feat-txt">Waiting room</div></div>
+      </div>
+
+      <button class="btn-primary" onclick="alert('Opening MoonLMS Dashboard… 🎓')">Go to MoonLMS →</button>
+      <button class="btn-secondary" onclick="alert('Download link sent to your email!')">📱 Download App</button>
+      <div class="bl">Need help? <a href="#">Contact KLH support</a></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="fl">
+    <a href="#">Privacy</a><a href="#">Terms</a>
+    <a href="#">Cookie Preferences</a><a href="#">Help</a>
+  </div>
+  <div class="fc">© 2026 MoonLMS · KLH University, Hyderabad</div>
+</footer>
+
+
+<script>
+// ── PAGE NAV ──
+let currentOTP = '';
+let avColorIdx = 0;
+const avColors = [
+  'linear-gradient(135deg,#a78bfa,#0b5cff)',
+  'linear-gradient(135deg,#f4c167,#e08030)',
+  'linear-gradient(135deg,#4ade80,#16a34a)',
+  'linear-gradient(135deg,#f87171,#b91c1c)',
+  'linear-gradient(135deg,#2dd4bf,#0f766e)',
+  'linear-gradient(135deg,#fb923c,#c2410c)',
+];
+
+function goPage(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('pg' + n).classList.add('active');
+  window.scrollTo(0, 0);
+
+  // hide progress bar on done page
+  document.getElementById('prog-wrap').style.display = n === 5 ? 'none' : '';
+
+  // update steps
+  for (let i = 1; i <= 5; i++) {
+    const sn = document.getElementById('sn' + i);
+    const sd = document.getElementById('sd' + i);
+    sn.classList.remove('active', 'done');
+    if (i < n) { sn.classList.add('done'); sd.textContent = '✓'; }
+    else if (i === n) { sn.classList.add('active'); sd.textContent = i; }
+    else { sd.textContent = i; }
+  }
+}
+
+// ── STEP 1 ──
+function step1Next() {
+  const fname = document.getElementById('f-fname').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const pw    = document.getElementById('f-pw').value;
+  const cpw   = document.getElementById('f-cpw').value;
+  const terms = document.getElementById('cb-terms').checked;
+  if (!fname) { alert('Please enter your first name.'); return; }
+  if (!email) { alert('Please enter your KLH email.'); return; }
+  if (pw.length < 8) { alert('Password must be at least 8 characters.'); return; }
+  if (pw !== cpw) { alert('Passwords do not match.'); return; }
+  if (!terms) { alert('Please accept the Terms of Service.'); return; }
+  document.getElementById('email-disp').textContent = email;
+  const initials = (fname[0] + (document.getElementById('f-lname').value.trim()[0] || '')).toUpperCase();
+  document.getElementById('av-circle').textContent = initials || 'TK';
+  const wname = fname.split(' ')[0];
+  document.getElementById('welcome-name').textContent = wname;
+  startCountdown('otp-timer', 10);
+  goPage(2);
+}
+
+function socialGo(provider) {
+  document.getElementById('f-fname').value = 'Tankthireddy';
+  document.getElementById('f-lname').value = 'K.';
+  document.getElementById('f-email').value = '2320520034@klh.edu.in';
+  document.getElementById('f-roll').value  = '2320520034';
+  document.getElementById('email-disp').textContent = '2320520034@klh.edu.in';
+  document.getElementById('av-circle').textContent = 'TK';
+  document.getElementById('welcome-name').textContent = 'Tankthireddy';
+  startCountdown('otp-timer', 10);
+  goPage(2);
+}
+
+// ── EMAIL CHECK ──
+function checkEmail() {
+  const val  = document.getElementById('f-email').value;
+  const hint = document.getElementById('f-email-hint');
+  const inp  = document.getElementById('f-email');
+  if (val.includes('@klh.edu.in')) {
+    hint.textContent = '✓ Valid KLH University email';
+    hint.className = 'field-hint ok';
+    inp.classList.add('ok'); inp.classList.remove('err');
+  } else if (val.length > 4) {
+    hint.textContent = 'Please use your @klh.edu.in email address';
+    hint.className = 'field-hint err';
+    inp.classList.add('err'); inp.classList.remove('ok');
+  } else {
+    hint.textContent = 'Use your official KLH email for verified access';
+    hint.className = 'field-hint';
+    inp.classList.remove('ok','err');
+  }
+}
+
+// ── OTP ──
+function generateOTP() {
+  currentOTP = String(Math.floor(100000 + Math.random() * 900000));
+  const display = document.getElementById('otp-code-display');
+  display.style.opacity = '0';
+  setTimeout(() => {
+    display.textContent = currentOTP;
+    display.style.transition = 'opacity .3s';
+    display.style.opacity = '1';
+  }, 120);
+  document.getElementById('otp-copy-btn').style.display = 'inline-block';
+  document.getElementById('otp-gen-status').textContent = 'Auto-filling boxes…';
+  document.getElementById('otp-gen-status').style.color = 'var(--z-blue)';
+
+  // Auto-fill boxes with animation
+  const ids = ['o1','o2','o3','o4','o5','o6'];
+  ids.forEach((id, i) => {
+    setTimeout(() => {
+      const inp = document.getElementById(id);
+      if (!inp) return;
+      inp.value = currentOTP[i];
+      inp.classList.add('filled');
+      if (i === 5) {
+        document.getElementById('otp-gen-status').textContent = '✓ Code filled — click Verify & Continue';
+        document.getElementById('otp-gen-status').style.color = 'var(--z-green)';
+      }
+    }, i * 100);
+  });
+
+  startCountdown('otp-timer', 10);
+}
+
+function copyOTP() {
+  if (!currentOTP) return;
+  navigator.clipboard.writeText(currentOTP).catch(() => {});
+  const btn = document.getElementById('otp-copy-btn');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Copied!';
+  btn.style.background = 'var(--z-green-l)';
+  btn.style.color = 'var(--z-green)';
+  btn.style.borderColor = 'var(--z-green)';
+  setTimeout(() => {
+    btn.textContent = orig;
+    btn.style.background = '';
+    btn.style.color = 'var(--z-blue)';
+    btn.style.borderColor = 'var(--z-blue)';
+  }, 2000);
+}
+
+function resendOTP() {
+  ['o1','o2','o3','o4','o5','o6'].forEach(id => {
+    const inp = document.getElementById(id);
+    if (inp) { inp.value = ''; inp.classList.remove('filled'); }
+  });
+  currentOTP = '';
+  document.getElementById('otp-code-display').textContent = '——————';
+  document.getElementById('otp-copy-btn').style.display = 'none';
+  document.getElementById('otp-gen-status').textContent = 'Code will auto-fill the boxes below';
+  document.getElementById('otp-gen-status').style.color = '';
+  generateOTP();
+}
+
+function otpMove(inp, nextId) {
+  inp.classList.toggle('filled', inp.value.length > 0);
+  if (inp.value && nextId) document.getElementById(nextId)?.focus();
+}
+function otpBack(e, inp, prevId) {
+  if (e.key === 'Backspace' && !inp.value && prevId) document.getElementById(prevId)?.focus();
+}
+
+function step2Next() {
+  const entered = ['o1','o2','o3','o4','o5','o6'].map(id => document.getElementById(id)?.value || '').join('');
+  if (entered.length < 6) { alert('Please click "⚡ Generate Code" first, then click Verify.'); return; }
+  if (currentOTP && entered !== currentOTP) { alert('Incorrect code. Please use the generated code or click Resend.'); return; }
+  goPage(3);
+}
+
+// ── STEP 3 ──
+function step3Next() {
+  const name = document.getElementById('p-display').value.trim();
+  if (!name) { alert('Please enter your display name.'); return; }
+  goPage(4);
+}
+
+function updateAv(val) {
+  const parts = val.trim().split(' ');
+  const initials = parts.map(p => p[0] || '').join('').slice(0, 2).toUpperCase();
+  document.getElementById('av-circle').textContent = initials || 'TK';
+}
+function cycleAvColor() {
+  avColorIdx = (avColorIdx + 1) % avColors.length;
+  document.getElementById('av-circle').style.background = avColors[avColorIdx];
+}
+
+// ── SHARED HELPERS ──
+function pickRole(el) {
+  document.querySelectorAll('#role-cards .rc').forEach(r => r.classList.remove('on'));
+  el.classList.add('on');
+}
+function pickChip(el) {
+  el.closest('.chip-grp').querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+function pickPlan(el) {
+  document.querySelectorAll('#plans .plan').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+}
+function pwStrength(val, barsId, lblId) {
+  let score = 0;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const bars = document.getElementById(barsId)?.querySelectorAll('.pw-bar') || [];
+  const cls = ['','w','w','f','g'];
+  const colors = ['','var(--z-red)','#d97706','var(--z-green)','var(--z-green)'];
+  const labels = ['','Weak','Fair','Good','Strong ✓'];
+  bars.forEach((b, i) => { b.className = 'pw-bar' + (i < score ? ' ' + cls[score] : ''); });
+  const lbl = document.getElementById(lblId);
+  if (lbl) { lbl.textContent = val.length ? labels[score] : ''; lbl.style.color = colors[score]; }
+}
+function checkMatch(pwId, cpwId, hintId) {
+  const pw  = document.getElementById(pwId)?.value || '';
+  const cpw = document.getElementById(cpwId)?.value || '';
+  const hint = document.getElementById(hintId);
+  const inp  = document.getElementById(cpwId);
+  if (!cpw) { if (hint) { hint.textContent = 'Must match password above'; hint.className = 'field-hint'; } return; }
+  if (pw === cpw) {
+    if (hint) { hint.textContent = '✓ Passwords match'; hint.className = 'field-hint ok'; }
+    if (inp) { inp.classList.add('ok'); inp.classList.remove('err'); }
+  } else {
+    if (hint) { hint.textContent = 'Passwords do not match'; hint.className = 'field-hint err'; }
+    if (inp) { inp.classList.add('err'); inp.classList.remove('ok'); }
+  }
+}
+function toggleEye(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+// ── TIMER ──
+const timers = {};
+function startCountdown(id, minutes) {
+  clearInterval(timers[id]);
+  let secs = minutes * 60;
+  const el = document.getElementById(id);
+  if (!el) return;
+  function tick() {
+    const m = Math.floor(secs / 60), s = secs % 60;
+    el.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    if (secs-- <= 0) { clearInterval(timers[id]); el.textContent = 'Expired'; }
+  }
+  tick();
+  timers[id] = setInterval(tick, 1000);
+}
+</script>
+</body>
+</html>

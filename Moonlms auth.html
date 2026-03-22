@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoonLMS – KLH University</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1a73e8;--blue-d:#1557b0;--blue-l:#e8f0fe;
+  --green:#1e8e3e;--green-l:#e6f4ea;
+  --red:#d93025;--red-l:#fce8e6;
+  --yellow:#f9ab00;--yellow-l:#fef7e0;
+  --bg:#f1f3f4;--white:#fff;
+  --text:#202124;--text2:#3c4043;--text3:#5f6368;--text4:#80868b;
+  --border:#dadce0;--hover:#f1f3f4;
+  --sh:0 2px 6px rgba(60,64,67,.15),0 1px 2px rgba(60,64,67,.3);
+  --sh2:0 4px 12px rgba(60,64,67,.15),0 1px 4px rgba(60,64,67,.2);
+  --font:'Google Sans','Roboto',sans-serif;
+}
+html,body{min-height:100vh;font-family:var(--font);background:var(--bg);color:var(--text)}
+
+/* ── TOP BAR ── */
+.topbar{
+  height:64px;background:var(--white);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 24px;
+  position:sticky;top:0;z-index:100;
+}
+.tb-logo{display:flex;align-items:center;gap:8px;cursor:pointer}
+.moon-orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 36% 36%,#fff3cc 0%,#f4c167 40%,#e08030 100%);position:relative;overflow:hidden}
+.moon-orb::after{content:'';position:absolute;top:4px;right:3px;width:12px;height:12px;background:var(--white);border-radius:50%}
+.tb-name{font-size:20px;font-weight:500;color:var(--text);letter-spacing:-.2px}
+.tb-name b{color:var(--blue)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:4px}
+.tb-ico{width:40px;height:40px;border-radius:50%;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--text3);transition:background .15s}
+.tb-ico:hover{background:var(--hover)}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:calc(100vh - 64px);align-items:center;justify-content:center;padding:32px 16px}
+.screen.active{display:flex;animation:pop .22s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CARD ── */
+.card{background:var(--white);border-radius:8px;box-shadow:var(--sh);width:100%;overflow:hidden}
+.card.narrow{max-width:400px}
+.card.mid{max-width:480px}
+.card.wide{max-width:520px}
+
+/* ── CARD HEADER ── */
+.card-header{padding:32px 40px 24px;text-align:center}
+.ch-icon{font-size:48px;margin-bottom:12px;display:block}
+.ch-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
+.ch-moon{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 36% 36%,#fff3cc 0%,#f4c167 40%,#e08030 100%);position:relative;overflow:hidden}
+.ch-moon::after{content:'';position:absolute;top:5px;right:4px;width:16px;height:16px;background:var(--white);border-radius:50%}
+.ch-title{font-size:24px;font-weight:400;color:var(--text);margin-bottom:6px;letter-spacing:-.3px}
+.ch-sub{font-size:14px;color:var(--text3);line-height:1.5}
+.ch-sub strong{color:var(--text2)}
+
+/* ── CARD BODY ── */
+.card-body{padding:0 40px 32px}
+
+/* ── FORM FIELDS ── */
+.field{position:relative;margin-bottom:20px}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--text3);margin-bottom:5px;letter-spacing:.02em;text-transform:uppercase}
+.field input{
+  width:100%;height:52px;padding:0 44px 0 14px;
+  border:1px solid var(--border);border-radius:4px;
+  font-size:15px;font-family:var(--font);color:var(--text);
+  outline:none;background:var(--white);transition:border-color .15s,box-shadow .15s;
+}
+.field input:focus{border-color:var(--blue);border-width:2px;box-shadow:0 0 0 3px rgba(26,115,232,.08)}
+.field input.err{border-color:var(--red);border-width:2px}
+.field input.ok{border-color:var(--green);border-width:2px}
+.field-ico{position:absolute;right:14px;top:38px;font-size:18px;color:var(--text4);cursor:pointer}
+.field-msg{font-size:12px;margin-top:4px;display:flex;align-items:center;gap:4px}
+.field-msg.err{color:var(--red)}
+.field-msg.ok{color:var(--green)}
+.field-msg.hint{color:var(--text4)}
+
+/* password strength */
+.pw-bars{display:flex;gap:3px;margin-top:6px}
+.pw-bar{height:3px;flex:1;border-radius:2px;background:var(--border);transition:background .3s}
+.pw-bar.w{background:var(--red)}
+.pw-bar.f{background:var(--yellow)}
+.pw-bar.g{background:var(--green)}
+.pw-str-lbl{font-size:11px;margin-top:3px;font-weight:500}
+
+/* ── BUTTONS ── */
+.btn{
+  width:100%;height:44px;border-radius:4px;
+  font-size:15px;font-weight:500;font-family:var(--font);
+  cursor:pointer;border:none;transition:all .15s;margin-bottom:10px;
+}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-blue:hover{background:var(--blue-d)}
+.btn-blue:active{transform:scale(.99)}
+.btn-outline{background:var(--white);color:var(--blue);border:1px solid var(--border)}
+.btn-outline:hover{background:var(--blue-l);border-color:var(--blue)}
+.btn-text{background:none;color:var(--blue);height:auto;padding:8px 0;width:auto;font-size:14px}
+.btn-text:hover{text-decoration:underline}
+.btn-row{display:flex;gap:10px}
+.btn-row .btn{margin-bottom:0}
+
+/* ── DIVIDER ── */
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider span{font-size:12px;color:var(--text4);white-space:nowrap}
+
+/* ── SOCIAL BTN ── */
+.social-btn{
+  width:100%;height:44px;
+  border:1px solid var(--border);border-radius:4px;
+  background:var(--white);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-family:var(--font);font-size:14px;font-weight:500;color:var(--text2);
+  transition:background .15s,box-shadow .15s;margin-bottom:10px;
+}
+.social-btn:hover{background:#fafafa;box-shadow:var(--sh)}
+
+/* ── INFO / STATUS BOXES ── */
+.info-box{
+  border-radius:6px;padding:14px 16px;
+  display:flex;align-items:flex-start;gap:12px;
+  margin-bottom:20px;font-size:13px;line-height:1.5;
+}
+.info-box.blue{background:var(--blue-l);border:1px solid #b3d0f5}
+.info-box.green{background:var(--green-l);border:1px solid #a8d5b5}
+.info-box.red{background:var(--red-l);border:1px solid #f5a8a8}
+.info-box.yellow{background:var(--yellow-l);border:1px solid #f5d88a}
+.ib-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.ib-text{color:var(--text2)}
+.ib-text strong{color:var(--text)}
+
+/* ── OTP ── */
+.otp-wrap{display:flex;gap:8px;justify-content:center;margin:20px 0 8px}
+.otp-inp{
+  width:48px;height:56px;border:1px solid var(--border);border-radius:6px;
+  text-align:center;font-size:22px;font-weight:600;color:var(--text);
+  font-family:var(--font);outline:none;transition:border-color .15s,box-shadow .15s;
+}
+.otp-inp:focus{border-color:var(--blue);border-width:2px;box-shadow:0 0 0 3px rgba(26,115,232,.1)}
+.otp-inp.filled{border-color:var(--blue);background:var(--blue-l)}
+.resend-row{text-align:center;font-size:13px;color:var(--text3);margin-bottom:16px}
+.resend-row a{color:var(--blue);cursor:pointer}
+.resend-row a:hover{text-decoration:underline}
+
+/* ── STEP INDICATOR ── */
+.steps{display:flex;align-items:center;justify-content:center;gap:0;padding:20px 40px 0}
+.step-node{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;position:relative}
+.step-node:not(:last-child)::after{content:'';position:absolute;top:12px;left:calc(50% + 14px);right:calc(-50% + 14px);height:2px;background:var(--border);z-index:0}
+.step-node.done:not(:last-child)::after{background:var(--blue)}
+.sn-circle{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text4);position:relative;z-index:1;transition:all .25s}
+.step-node.active .sn-circle{border-color:var(--blue);background:var(--blue);color:#fff}
+.step-node.done .sn-circle{border-color:var(--blue);background:var(--blue);color:#fff}
+.sn-label{font-size:10px;color:var(--text4);font-weight:500;text-align:center;white-space:nowrap}
+.step-node.active .sn-label,.step-node.done .sn-label{color:var(--blue)}
+
+/* ── CHECKBOX ── */
+.check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.check-row input[type=checkbox]{width:16px;height:16px;margin-top:2px;accent-color:var(--blue);flex-shrink:0;cursor:pointer}
+.check-row label{font-size:13px;color:var(--text2);cursor:pointer;line-height:1.5}
+.check-row label a{color:var(--blue)}
+
+/* ── BOTTOM LINK ── */
+.bottom-link{text-align:center;font-size:13px;color:var(--text3);margin-top:4px}
+.bottom-link a{color:var(--blue);cursor:pointer;font-weight:500}
+.bottom-link a:hover{text-decoration:underline}
+
+/* ── SUCCESS ANIMATION ── */
+.success-circle{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--green-l);margin:0 auto 16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;animation:pulse .4s ease;
+}
+@keyframes pulse{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+
+/* ── REGISTER: ROLE CARDS ── */
+.role-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.rc{
+  border:2px solid var(--border);border-radius:8px;
+  padding:20px 14px;text-align:center;cursor:pointer;
+  transition:border-color .2s,background .15s;
+}
+.rc:hover{border-color:#9ca3af;background:#fafafa}
+.rc.on{border-color:var(--blue);background:var(--blue-l)}
+.rc-icon{font-size:36px;display:block;margin-bottom:8px}
+.rc-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:3px}
+.rc.on .rc-title{color:var(--blue)}
+.rc-desc{font-size:11px;color:var(--text3);line-height:1.4}
+
+/* TABS */
+.tab-bar2{display:flex;border-bottom:1px solid var(--border);margin-bottom:24px}
+.tab2{
+  flex:1;padding:12px;text-align:center;
+  font-size:14px;font-weight:500;color:var(--text3);
+  cursor:pointer;border-bottom:3px solid transparent;
+  transition:color .15s,border-color .15s;
+}
+.tab2:hover{color:var(--text2);background:var(--hover)}
+.tab2.on{color:var(--blue);border-color:var(--blue)}
+
+/* ── FOOTER ── */
+.footer{
+  background:var(--white);border-top:1px solid var(--border);
+  padding:12px 24px;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
+.footer-links{display:flex;gap:14px;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:var(--text4);text-decoration:none}
+.footer-links a:hover{color:var(--text3)}
+.footer-copy{font-size:12px;color:var(--text4)}
+</style>
+</head>
+<body>
+
+<!-- ══ TOP BAR ══ -->
+<header class="topbar">
+  <div class="tb-logo" onclick="showScreen('login')">
+    <div class="moon-orb"></div>
+    <span class="tb-name">Moon<b>LMS</b></span>
+  </div>
+  <div class="tb-right">
+    <button class="tb-ico" title="Apps">⋮⋮</button>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════ -->
+<div class="screen active" id="login">
+  <div class="card narrow">
+    <div class="card-header">
+      <div class="ch-logo">
+        <div class="ch-moon"></div>
+      </div>
+      <div class="ch-title">Sign in to MoonLMS</div>
+      <div class="ch-sub">Use your <strong>KLH University</strong> account</div>
+    </div>
+    <div class="card-body">
+      <button class="social-btn" onclick="showScreen('login')">
+        <span style="font-size:18px">🔵</span> Continue with Google (KLH)
+      </button>
+      <button class="social-btn" onclick="showScreen('login')">
+        <span style="font-size:18px">🟦</span> Continue with Microsoft
+      </button>
+      <div class="divider"><span>or sign in with email</span></div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="rollno@klh.edu.in">
+        <span class="field-ico">✉️</span>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="login-pw" placeholder="Your password">
+        <span class="field-ico" onclick="togglePw('login-pw',this)" style="cursor:pointer">👁</span>
+      </div>
+      <button class="btn btn-blue" onclick="doLogin()">Sign In</button>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="showScreen('forgot-1')">Forgot password?</button>
+        <button class="btn btn-outline" onclick="showScreen('register-1')">Create account</button>
+      </div>
+      <div class="bottom-link" style="margin-top:12px">
+        New to KLH? <a onclick="showScreen('register-1')">Register here</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     FORGOT PASSWORD — STEP 1: ENTER EMAIL
+══════════════════════════════════════ -->
+<div class="screen" id="forgot-1">
+  <div class="card narrow">
+    <div class="steps">
+      <div class="step-node active" id="fp-s1"><div class="sn-circle">1</div><div class="sn-label">Email</div></div>
+      <div class="step-node" id="fp-s2"><div class="sn-circle">2</div><div class="sn-label">Verify</div></div>
+      <div class="step-node" id="fp-s3"><div class="sn-circle">3</div><div class="sn-label">Reset</div></div>
+      <div class="step-node" id="fp-s4"><div class="sn-circle">✓</div><div class="sn-label">Done</div></div>
+    </div>
+    <div class="card-header">
+      <span class="ch-icon">🔐</span>
+      <div class="ch-title">Forgot password?</div>
+      <div class="ch-sub">Enter your KLH email and we'll send you a reset code.</div>
+    </div>
+    <div class="card-body">
+      <div class="info-box blue">
+        <span class="ib-icon">ℹ️</span>
+        <div class="ib-text">We'll send a 6-digit reset code to your registered email. The code expires in <strong>10 minutes</strong>.</div>
+      </div>
+      <div class="field">
+        <label>KLH University Email</label>
+        <input type="email" id="fp-email" placeholder="rollno@klh.edu.in" oninput="validateFpEmail()">
+        <span class="field-ico">✉️</span>
+        <div class="field-msg hint" id="fp-email-msg">Enter your registered KLH email address</div>
+      </div>
+      <button class="btn btn-blue" onclick="sendResetCode()">Send Reset Code</button>
+      <button class="btn btn-outline" onclick="showScreen('login')">← Back to Sign In</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     FORGOT PASSWORD — STEP 2: ENTER OTP
+══════════════════════════════════════ -->
+<div class="screen" id="forgot-2">
+  <div class="card narrow">
+    <div class="steps">
+      <div class="step-node done"><div class="sn-circle">✓</div><div class="sn-label">Email</div></div>
+      <div class="step-node active"><div class="sn-circle">2</div><div class="sn-label">Verify</div></div>
+      <div class="step-node"><div class="sn-circle">3</div><div class="sn-label">Reset</div></div>
+      <div class="step-node"><div class="sn-circle">✓</div><div class="sn-label">Done</div></div>
+    </div>
+    <div class="card-header">
+      <span class="ch-icon">📩</span>
+      <div class="ch-title">Check your email</div>
+      <div class="ch-sub">We sent a 6-digit code to <strong id="fp-email-display">your@klh.edu.in</strong></div>
+    </div>
+    <div class="card-body">
+      <div class="info-box yellow">
+        <span class="ib-icon">⏱️</span>
+        <div class="ib-text">Code expires in <strong id="fp-timer">10:00</strong>. Check your spam folder if you don't see it.</div>
+      </div>
+      <div class="otp-wrap">
+        <input class="otp-inp" maxlength="1" id="fp1" oninput="otp(this,'fp2')" onkeydown="otpBk(event,this,'')">
+        <input class="otp-inp" maxlength="1" id="fp2" oninput="otp(this,'fp3')" onkeydown="otpBk(event,this,'fp1')">
+        <input class="otp-inp" maxlength="1" id="fp3" oninput="otp(this,'fp4')" onkeydown="otpBk(event,this,'fp2')">
+        <input class="otp-inp" maxlength="1" id="fp4" oninput="otp(this,'fp5')" onkeydown="otpBk(event,this,'fp3')">
+        <input class="otp-inp" maxlength="1" id="fp5" oninput="otp(this,'fp6')" onkeydown="otpBk(event,this,'fp4')">
+        <input class="otp-inp" maxlength="1" id="fp6" oninput="otp(this,'')"   onkeydown="otpBk(event,this,'fp5')">
+      </div>
+      <div class="resend-row">Didn't get it? <a onclick="resendFP()">Resend code</a></div>
+      <button class="btn btn-blue" onclick="verifyFP()">Verify Code</button>
+      <button class="btn btn-outline" onclick="showScreen('forgot-1')">← Back</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     FORGOT PASSWORD — STEP 3: NEW PASSWORD
+══════════════════════════════════════ -->
+<div class="screen" id="forgot-3">
+  <div class="card narrow">
+    <div class="steps">
+      <div class="step-node done"><div class="sn-circle">✓</div><div class="sn-label">Email</div></div>
+      <div class="step-node done"><div class="sn-circle">✓</div><div class="sn-label">Verify</div></div>
+      <div class="step-node active"><div class="sn-circle">3</div><div class="sn-label">Reset</div></div>
+      <div class="step-node"><div class="sn-circle">✓</div><div class="sn-label">Done</div></div>
+    </div>
+    <div class="card-header">
+      <span class="ch-icon">🔑</span>
+      <div class="ch-title">Create new password</div>
+      <div class="ch-sub">Choose a strong password for your MoonLMS account.</div>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label>New Password</label>
+        <input type="password" id="fp-newpw" placeholder="Min. 8 characters" oninput="checkPwStrength(this.value,'fp-bars','fp-str-lbl')">
+        <span class="field-ico" onclick="togglePw('fp-newpw',this)" style="cursor:pointer">👁</span>
+        <div class="pw-bars" id="fp-bars">
+          <div class="pw-bar"></div><div class="pw-bar"></div>
+          <div class="pw-bar"></div><div class="pw-bar"></div>
+        </div>
+        <div class="pw-str-lbl field-msg hint" id="fp-str-lbl"></div>
+      </div>
+      <div class="field">
+        <label>Confirm New Password</label>
+        <input type="password" id="fp-confirmpw" placeholder="Re-enter password" oninput="checkConfirm('fp-newpw','fp-confirmpw','fp-confirm-msg')">
+        <span class="field-ico" onclick="togglePw('fp-confirmpw',this)" style="cursor:pointer">👁</span>
+        <div class="field-msg hint" id="fp-confirm-msg">Must match new password</div>
+      </div>
+      <div class="info-box blue">
+        <span class="ib-icon">💡</span>
+        <div class="ib-text">Use at least <strong>8 characters</strong> with a mix of letters, numbers and symbols for a strong password.</div>
+      </div>
+      <button class="btn btn-blue" onclick="resetPassword()">Reset Password</button>
+      <button class="btn btn-outline" onclick="showScreen('forgot-2')">← Back</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     FORGOT PASSWORD — STEP 4: SUCCESS
+══════════════════════════════════════ -->
+<div class="screen" id="forgot-4">
+  <div class="card narrow">
+    <div class="card-header" style="padding-bottom:16px">
+      <div class="success-circle">✓</div>
+      <div class="ch-title">Password reset!</div>
+      <div class="ch-sub">Your MoonLMS password has been updated successfully. You can now sign in with your new password.</div>
+    </div>
+    <div class="card-body">
+      <div class="info-box green">
+        <span class="ib-icon">✅</span>
+        <div class="ib-text">For security, all other active sessions have been <strong>signed out</strong>.</div>
+      </div>
+      <button class="btn btn-blue" onclick="showScreen('login')">Sign In Now →</button>
+      <div class="bottom-link">
+        Need help? <a href="#">Contact KLH support</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     REGISTER — STEP 1: ROLE + DETAILS
+══════════════════════════════════════ -->
+<div class="screen" id="register-1">
+  <div class="card mid">
+    <div class="steps">
+      <div class="step-node active"><div class="sn-circle">1</div><div class="sn-label">Account</div></div>
+      <div class="step-node"><div class="sn-circle">2</div><div class="sn-label">Verify</div></div>
+      <div class="step-node"><div class="sn-circle">3</div><div class="sn-label">Profile</div></div>
+      <div class="step-node"><div class="sn-circle">✓</div><div class="sn-label">Done</div></div>
+    </div>
+    <div class="card-header">
+      <div class="ch-logo"><div class="ch-moon"></div></div>
+      <div class="ch-title">Create your account</div>
+      <div class="ch-sub">Join 12,000+ students at <strong>KLH University</strong></div>
+    </div>
+    <div class="card-body">
+
+      <!-- Role selection -->
+      <div style="font-size:12px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">I am a…</div>
+      <div class="role-cards" id="role-cards">
+        <div class="rc on" onclick="pickRole(this)">
+          <span class="rc-icon">🎓</span>
+          <div class="rc-title">Student</div>
+          <div class="rc-desc">Join classes, submit assignments &amp; track grades</div>
+        </div>
+        <div class="rc" onclick="pickRole(this)">
+          <span class="rc-icon">👨‍🏫</span>
+          <div class="rc-title">Teacher</div>
+          <div class="rc-desc">Create classes, post assignments &amp; grade students</div>
+        </div>
+      </div>
+
+      <div class="divider"><span>or continue with</span></div>
+      <button class="social-btn" onclick="goRegStep2()">
+        <span style="font-size:18px">🔵</span> Sign up with Google (KLH account)
+      </button>
+
+      <div class="divider"><span>fill in your details</span></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" id="r-fname" placeholder="Tankthireddy">
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <input type="text" id="r-lname" placeholder="K.">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>KLH Email</label>
+        <input type="email" id="r-email" placeholder="rollno@klh.edu.in">
+        <span class="field-ico">✉️</span>
+        <div class="field-msg hint">Use your official KLH University email</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field">
+          <label>Roll Number</label>
+          <input type="text" id="r-roll" placeholder="2320520034">
+        </div>
+        <div class="field">
+          <label>Department</label>
+          <select id="r-dept" style="width:100%;height:52px;padding:0 12px;border:1px solid var(--border);border-radius:4px;font-size:14px;font-family:var(--font);color:var(--text);outline:none;background:var(--white)">
+            <option>BCA</option><option>BTech CSE</option><option>BTech ECE</option><option>MBA</option><option>MCA</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="r-pw" placeholder="Min. 8 characters" oninput="checkPwStrength(this.value,'r-bars','r-str-lbl')">
+        <span class="field-ico" onclick="togglePw('r-pw',this)" style="cursor:pointer">👁</span>
+        <div class="pw-bars" id="r-bars">
+          <div class="pw-bar"></div><div class="pw-bar"></div>
+          <div class="pw-bar"></div><div class="pw-bar"></div>
+        </div>
+        <div class="pw-str-lbl field-msg hint" id="r-str-lbl"></div>
+      </div>
+
+      <div class="field">
+        <label>Confirm Password</label>
+        <input type="password" id="r-cpw" placeholder="Re-enter password" oninput="checkConfirm('r-pw','r-cpw','r-confirm-msg')">
+        <span class="field-ico" onclick="togglePw('r-cpw',this)" style="cursor:pointer">👁</span>
+        <div class="field-msg hint" id="r-confirm-msg">Must match password above</div>
+      </div>
+
+      <div class="check-row">
+        <input type="checkbox" id="terms-cb">
+        <label for="terms-cb">I agree to the MoonLMS <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. I confirm I am a KLH University student or staff.</label>
+      </div>
+      <div class="check-row">
+        <input type="checkbox" id="notif-cb" checked>
+        <label for="notif-cb">Send me class reminders, assignment alerts and grade notifications</label>
+      </div>
+
+      <button class="btn btn-blue" onclick="goRegStep2()" style="margin-top:4px">Create Account →</button>
+      <div class="bottom-link">Already have an account? <a onclick="showScreen('login')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     REGISTER — STEP 2: VERIFY EMAIL
+══════════════════════════════════════ -->
+<div class="screen" id="register-2">
+  <div class="card narrow">
+    <div class="steps">
+      <div class="step-node done"><div class="sn-circle">✓</div><div class="sn-label">Account</div></div>
+      <div class="step-node active"><div class="sn-circle">2</div><div class="sn-label">Verify</div></div>
+      <div class="step-node"><div class="sn-circle">3</div><div class="sn-label">Profile</div></div>
+      <div class="step-node"><div class="sn-circle">✓</div><div class="sn-label">Done</div></div>
+    </div>
+    <div class="card-header">
+      <span class="ch-icon">📧</span>
+      <div class="ch-title">Verify your email</div>
+      <div class="ch-sub">We sent a 6-digit code to <strong id="reg-email-display">rollno@klh.edu.in</strong></div>
+    </div>
+    <div class="card-body">
+      <div class="info-box blue">
+        <span class="ib-icon">ℹ️</span>
+        <div class="ib-text">Check your inbox and spam. Code expires in <strong id="reg-timer">10:00</strong>.</div>
+      </div>
+
+      <!-- OTP Generator box -->
+      <div id="reg-otp-box" style="background:#f8f9fa;border:1.5px dashed var(--border);border-radius:8px;padding:16px;margin-bottom:16px;text-align:center">
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Click <strong>Generate Code</strong> to get your one-time verification code</div>
+        <div style="font-size:36px;font-weight:700;letter-spacing:.28em;color:var(--blue);margin-bottom:12px;min-height:44px;line-height:1" id="reg-otp-generated">——————</div>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <button onclick="generateRegOTP()" style="padding:8px 20px;background:var(--blue);color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)">⚡ Generate Code</button>
+          <button onclick="copyRegOTP()" id="reg-copy-btn" style="padding:8px 16px;background:var(--white);color:var(--blue);border:1px solid var(--blue);border-radius:4px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:none">📋 Copy</button>
+        </div>
+        <div style="font-size:11px;color:var(--text4);margin-top:8px" id="reg-otp-hint">Code will auto-fill the boxes below</div>
+      </div>
+
+      <!-- OTP input boxes -->
+      <div style="font-size:12px;color:var(--text3);text-align:center;margin-bottom:8px">Enter the 6-digit code</div>
+      <div class="otp-wrap">
+        <input class="otp-inp" maxlength="1" id="rg1" oninput="otp(this,'rg2')" onkeydown="otpBk(event,this,'')">
+        <input class="otp-inp" maxlength="1" id="rg2" oninput="otp(this,'rg3')" onkeydown="otpBk(event,this,'rg1')">
+        <input class="otp-inp" maxlength="1" id="rg3" oninput="otp(this,'rg4')" onkeydown="otpBk(event,this,'rg2')">
+        <input class="otp-inp" maxlength="1" id="rg4" oninput="otp(this,'rg5')" onkeydown="otpBk(event,this,'rg3')">
+        <input class="otp-inp" maxlength="1" id="rg5" oninput="otp(this,'rg6')" onkeydown="otpBk(event,this,'rg4')">
+        <input class="otp-inp" maxlength="1" id="rg6" oninput="otp(this,'')"   onkeydown="otpBk(event,this,'rg5')">
+      </div>
+
+      <div class="resend-row">Didn't get it? <a onclick="resendReg()">Resend &amp; regenerate</a></div>
+      <button class="btn btn-blue" onclick="verifyReg()">Verify &amp; Continue →</button>
+      <button class="btn btn-outline" onclick="showScreen('register-1')">← Back</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     REGISTER — STEP 3: PROFILE SETUP
+══════════════════════════════════════ -->
+<div class="screen" id="register-3">
+  <div class="card mid">
+    <div class="steps">
+      <div class="step-node done"><div class="sn-circle">✓</div><div class="sn-label">Account</div></div>
+      <div class="step-node done"><div class="sn-circle">✓</div><div class="sn-label">Verify</div></div>
+      <div class="step-node active"><div class="sn-circle">3</div><div class="sn-label">Profile</div></div>
+      <div class="step-node"><div class="sn-circle">✓</div><div class="sn-label">Done</div></div>
+    </div>
+    <div class="card-header">
+      <span class="ch-icon">🧑‍🎓</span>
+      <div class="ch-title">Complete your profile</div>
+      <div class="ch-sub">Help teachers and classmates recognise you in class</div>
+    </div>
+    <div class="card-body">
+      <!-- Avatar -->
+      <div style="display:flex;align-items:center;gap:18px;margin-bottom:20px">
+        <div id="reg-av" onclick="cycleAv()" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#1a73e8);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:#fff;cursor:pointer;border:3px solid var(--border);flex-shrink:0;transition:border-color .2s" title="Click to change colour">TK</div>
+        <div>
+          <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px">Profile photo</div>
+          <div style="display:flex;gap:8px">
+            <button style="padding:6px 14px;border:1px solid var(--border);border-radius:4px;background:var(--white);font-size:13px;color:var(--blue);cursor:pointer;font-family:var(--font)" onclick="cycleAv()">🎨 Change colour</button>
+            <button style="padding:6px 14px;border:1px solid var(--border);border-radius:4px;background:var(--white);font-size:13px;color:var(--text2);cursor:pointer;font-family:var(--font)">📷 Upload</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Display Name (shown in class)</label>
+        <input type="text" id="reg-display" placeholder="e.g. Tankthireddy K." value="Tankthireddy K." oninput="updateRegAv(this.value)">
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field">
+          <label>Year / Semester</label>
+          <select style="width:100%;height:52px;padding:0 12px;border:1px solid var(--border);border-radius:4px;font-size:14px;font-family:var(--font);color:var(--text);outline:none;background:var(--white)">
+            <option>BCA Final Year (3rd)</option>
+            <option>BCA 2nd Year</option>
+            <option>BCA 1st Year</option>
+            <option>Faculty</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Section</label>
+          <select style="width:100%;height:52px;padding:0 12px;border:1px solid var(--border);border-radius:4px;font-size:14px;font-family:var(--font);color:var(--text);outline:none;background:var(--white)">
+            <option>BCA-A</option><option>BCA-B</option><option>BCA-C</option><option>All Sections</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Phone Number (optional)</label>
+        <input type="tel" placeholder="+91 98765 43210">
+        <span class="field-ico">📱</span>
+      </div>
+
+      <div class="field">
+        <label>Bio (optional)</label>
+        <input type="text" placeholder="e.g. BCA Final Year · Passionate about web dev">
+      </div>
+
+      <button class="btn btn-blue" onclick="goRegDone()">Finish Setup →</button>
+      <button class="btn btn-outline" onclick="showScreen('register-2')">← Back</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     REGISTER — STEP 4: DONE
+══════════════════════════════════════ -->
+<div class="screen" id="register-4">
+  <div class="card mid">
+    <div class="card-header" style="padding-bottom:16px">
+      <div class="success-circle">🎉</div>
+      <div class="ch-title">Welcome to MoonLMS!</div>
+      <div class="ch-sub">Your <strong>KLH University</strong> account is ready. You're now part of 12,000+ students on MoonLMS.</div>
+    </div>
+    <div class="card-body">
+      <div class="info-box green">
+        <span class="ib-icon">✅</span>
+        <div class="ib-text">Account verified · Pro plan activated · KLH University member</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+        <div style="background:var(--bg);border-radius:6px;padding:12px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">📚</span><span style="font-size:13px;color:var(--text2)">8 BCA courses</span></div>
+        <div style="background:var(--bg);border-radius:6px;padding:12px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">🎥</span><span style="font-size:13px;color:var(--text2)">Live video classes</span></div>
+        <div style="background:var(--bg);border-radius:6px;padding:12px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">📝</span><span style="font-size:13px;color:var(--text2)">Assignment submission</span></div>
+        <div style="background:var(--bg);border-radius:6px;padding:12px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">📊</span><span style="font-size:13px;color:var(--text2)">Real-time grades</span></div>
+        <div style="background:var(--bg);border-radius:6px;padding:12px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">🏆</span><span style="font-size:13px;color:var(--text2)">Class leaderboard</span></div>
+        <div style="background:var(--bg);border-radius:6px;padding:12px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">🤖</span><span style="font-size:13px;color:var(--text2)">AI grading assist</span></div>
+      </div>
+
+      <!-- Next steps -->
+      <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:20px">
+        <div style="padding:10px 16px;background:var(--bg);font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Next steps</div>
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background=''">
+          <span style="font-size:18px">🔑</span>
+          <div><div style="font-size:14px;font-weight:500">Join your first class</div><div style="font-size:12px;color:var(--text3)">Enter a class code from your teacher</div></div>
+          <span style="margin-left:auto;color:var(--blue);font-size:14px">›</span>
+        </div>
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background=''">
+          <span style="font-size:18px">📱</span>
+          <div><div style="font-size:14px;font-weight:500">Download the MoonLMS app</div><div style="font-size:12px;color:var(--text3)">Available on Android &amp; iOS</div></div>
+          <span style="margin-left:auto;color:var(--blue);font-size:14px">›</span>
+        </div>
+        <div style="padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background=''">
+          <span style="font-size:18px">🔔</span>
+          <div><div style="font-size:14px;font-weight:500">Turn on notifications</div><div style="font-size:12px;color:var(--text3)">Never miss an assignment deadline</div></div>
+          <span style="margin-left:auto;color:var(--blue);font-size:14px">›</span>
+        </div>
+      </div>
+
+      <button class="btn btn-blue" onclick="alert('Opening MoonLMS Dashboard… 🎓')">Go to MoonLMS →</button>
+      <div class="bottom-link">Trouble signing in? <a href="#">Contact KLH IT support</a></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#">Privacy</a><a href="#">Terms</a>
+    <a href="#">Help Centre</a><a href="#">KLH University</a>
+  </div>
+  <div class="footer-copy">© 2026 MoonLMS · KLH University, Hyderabad</div>
+</footer>
+
+<script>
+// ── SCREEN NAV ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const sc = document.getElementById(id);
+  if (sc) { sc.classList.add('active'); window.scrollTo(0,0); }
+}
+
+// ── LOGIN ──
+function doLogin() {
+  const em = document.getElementById('login-email').value.trim();
+  const pw = document.getElementById('login-pw').value;
+  if (!em || !pw) { alert('Please enter your email and password.'); return; }
+  alert('Signing in as ' + em + '…\n\n(Demo: redirecting to MoonLMS dashboard)');
+}
+
+// ── FORGOT PW ──
+function validateFpEmail() {
+  const val = document.getElementById('fp-email').value;
+  const msg = document.getElementById('fp-email-msg');
+  if (val.includes('@klh.edu.in')) {
+    msg.textContent = '✓ Valid KLH email'; msg.className = 'field-msg ok';
+    document.getElementById('fp-email').className = 'ok';
+  } else if (val.length > 3) {
+    msg.textContent = 'Please use your @klh.edu.in email'; msg.className = 'field-msg err';
+    document.getElementById('fp-email').className = 'err';
+  } else {
+    msg.textContent = 'Enter your registered KLH email address'; msg.className = 'field-msg hint';
+    document.getElementById('fp-email').className = '';
+  }
+}
+function sendResetCode() {
+  const em = document.getElementById('fp-email').value.trim();
+  if (!em) { alert('Please enter your KLH email.'); return; }
+  document.getElementById('fp-email-display').textContent = em;
+  startTimer('fp-timer', 10);
+  showScreen('forgot-2');
+}
+function resendFP() { startTimer('fp-timer', 10); alert('New code sent!'); }
+function verifyFP() {
+  const code = ['fp1','fp2','fp3','fp4','fp5','fp6'].map(id => (document.getElementById(id)||{}).value||'').join('');
+  if (code.length < 6) { alert('Enter the full 6-digit code.\n\n(Demo: type any 6 digits)'); return; }
+  showScreen('forgot-3');
+}
+function resetPassword() {
+  const pw  = document.getElementById('fp-newpw').value;
+  const cpw = document.getElementById('fp-confirmpw').value;
+  if (pw.length < 8) { alert('Password must be at least 8 characters.'); return; }
+  if (pw !== cpw) { alert('Passwords do not match.'); return; }
+  showScreen('forgot-4');
+}
+
+// ── REGISTER ──
+function pickRole(el) {
+  document.querySelectorAll('#role-cards .rc').forEach(r => r.classList.remove('on'));
+  el.classList.add('on');
+}
+function goRegStep2() {
+  const fname = document.getElementById('r-fname').value.trim();
+  const email = document.getElementById('r-email').value.trim();
+  const pw    = document.getElementById('r-pw').value;
+  const terms = document.getElementById('terms-cb').checked;
+  if (!fname) { alert('Please enter your first name.'); return; }
+  if (!email)  { alert('Please enter your KLH email.'); return; }
+  if (pw && pw.length < 8) { alert('Password must be at least 8 characters.'); return; }
+  if (!terms)  { alert('Please accept the Terms of Service to continue.'); return; }
+  const em = email || 'rollno@klh.edu.in';
+  document.getElementById('reg-email-display').textContent = em;
+  startTimer('reg-timer', 10);
+  // update avatar initials
+  const f = fname[0] || 'T';
+  const l = (document.getElementById('r-lname').value.trim()[0] || 'K');
+  document.getElementById('reg-av').textContent = (f + l).toUpperCase();
+  showScreen('register-2');
+}
+function resendReg() { startTimer('reg-timer', 10); alert('New code sent!'); }
+function verifyReg() {
+  const entered = ['rg1','rg2','rg3','rg4','rg5','rg6'].map(id => (document.getElementById(id)||{}).value||'').join('');
+  if (entered.length < 6) { alert('Please generate and enter a 6-digit code first.\n\nClick "⚡ Generate Code" to get your code.'); return; }
+  if (currentRegOTP && entered !== currentRegOTP) { alert('Incorrect code. Please use the generated code or click Resend.'); return; }
+  showScreen('register-3');
+}
+function goRegDone() { showScreen('register-4'); }
+
+// ── AVATAR ──
+const avColors = [
+  'linear-gradient(135deg,#a78bfa,#1a73e8)',
+  'linear-gradient(135deg,#f4c167,#e08030)',
+  'linear-gradient(135deg,#4ade80,#16a34a)',
+  'linear-gradient(135deg,#f87171,#b91c1c)',
+  'linear-gradient(135deg,#2dd4bf,#0f766e)',
+  'linear-gradient(135deg,#fb923c,#c2410c)',
+  'linear-gradient(135deg,#60a5fa,#1d4ed8)',
+];
+let avIdx = 0;
+function cycleAv() {
+  avIdx = (avIdx + 1) % avColors.length;
+  document.getElementById('reg-av').style.background = avColors[avIdx];
+}
+function updateRegAv(val) {
+  const parts = val.trim().split(' ');
+  const initials = parts.map(p => p[0] || '').join('').slice(0,2).toUpperCase();
+  document.getElementById('reg-av').textContent = initials || 'TK';
+}
+
+// ── OTP HELPERS ──
+function otp(inp, nextId) {
+  inp.classList.toggle('filled', inp.value.length > 0);
+  if (inp.value && nextId) document.getElementById(nextId)?.focus();
+}
+function otpBk(e, inp, prevId) {
+  if (e.key === 'Backspace' && !inp.value && prevId) document.getElementById(prevId)?.focus();
+}
+
+// ── PASSWORD STRENGTH ──
+function checkPwStrength(val, barsId, lblId) {
+  let score = 0;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const bars = document.getElementById(barsId)?.querySelectorAll('.pw-bar') || [];
+  const cls  = ['','w','w','f','g'];
+  const clrs = ['','#dc2626','#f59e0b','#1e8e3e','#1e8e3e'];
+  const lbls = ['','Weak — add uppercase, numbers & symbols','Fair — add numbers or symbols','Good — strong password','Strong password ✓'];
+  bars.forEach((b, i) => { b.className = 'pw-bar' + (i < score ? ' ' + cls[score] : ''); });
+  const lbl = document.getElementById(lblId);
+  if (lbl) { lbl.textContent = val.length ? lbls[score] : ''; lbl.style.color = clrs[score]; }
+}
+
+// ── CONFIRM PASSWORD ──
+function checkConfirm(pwId, cpwId, msgId) {
+  const pw  = (document.getElementById(pwId)||{}).value || '';
+  const cpw = (document.getElementById(cpwId)||{}).value || '';
+  const msg = document.getElementById(msgId);
+  const inp = document.getElementById(cpwId);
+  if (!cpw) { if (msg) { msg.textContent = 'Must match password above'; msg.className = 'field-msg hint'; } return; }
+  if (pw === cpw) {
+    if (msg) { msg.textContent = '✓ Passwords match'; msg.className = 'field-msg ok'; }
+    if (inp) inp.className = 'ok';
+  } else {
+    if (msg) { msg.textContent = 'Passwords do not match'; msg.className = 'field-msg err'; }
+    if (inp) inp.className = 'err';
+  }
+}
+
+// ── TOGGLE PASSWORD VISIBILITY ──
+function togglePw(inputId, iconEl) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  if (inp.type === 'password') { inp.type = 'text'; iconEl.textContent = '🙈'; }
+  else { inp.type = 'password'; iconEl.textContent = '👁'; }
+}
+
+// ── OTP GENERATOR ──
+let currentRegOTP = '';
+function generateRegOTP() {
+  // Generate random 6-digit code
+  currentRegOTP = String(Math.floor(100000 + Math.random() * 900000));
+
+  // Show it in the display box with animation
+  const display = document.getElementById('reg-otp-generated');
+  display.style.opacity = '0';
+  setTimeout(() => {
+    display.textContent = currentRegOTP;
+    display.style.transition = 'opacity .3s';
+    display.style.opacity = '1';
+  }, 150);
+
+  // Show copy button
+  document.getElementById('reg-copy-btn').style.display = 'inline-block';
+  document.getElementById('reg-otp-hint').textContent = 'Auto-filling boxes…';
+
+  // Auto-fill the 6 input boxes one by one
+  const ids = ['rg1','rg2','rg3','rg4','rg5','rg6'];
+  ids.forEach((id, i) => {
+    setTimeout(() => {
+      const inp = document.getElementById(id);
+      if (inp) {
+        inp.value = currentRegOTP[i];
+        inp.classList.add('filled');
+        inp.style.borderColor = 'var(--blue)';
+        inp.style.background = 'var(--blue-l)';
+      }
+      if (i === 5) {
+        document.getElementById('reg-otp-hint').textContent = '✓ Code filled — click Verify & Continue';
+        document.getElementById('reg-otp-hint').style.color = 'var(--green)';
+      }
+    }, i * 120);
+  });
+
+  // Restart timer
+  startTimer('reg-timer', 10);
+}
+
+function copyRegOTP() {
+  if (!currentRegOTP) return;
+  navigator.clipboard.writeText(currentRegOTP).catch(() => {});
+  const btn = document.getElementById('reg-copy-btn');
+  btn.textContent = '✓ Copied!';
+  btn.style.background = 'var(--green-l)';
+  btn.style.color = 'var(--green)';
+  btn.style.borderColor = 'var(--green)';
+  setTimeout(() => {
+    btn.textContent = '📋 Copy';
+    btn.style.background = '';
+    btn.style.color = 'var(--blue)';
+    btn.style.borderColor = 'var(--blue)';
+  }, 2000);
+}
+
+function resendReg() {
+  // Clear boxes
+  ['rg1','rg2','rg3','rg4','rg5','rg6'].forEach(id => {
+    const inp = document.getElementById(id);
+    if (inp) { inp.value = ''; inp.classList.remove('filled'); inp.style.borderColor = ''; inp.style.background = ''; }
+  });
+  currentRegOTP = '';
+  document.getElementById('reg-otp-generated').textContent = '——————';
+  document.getElementById('reg-copy-btn').style.display = 'none';
+  document.getElementById('reg-otp-hint').textContent = 'Code will auto-fill the boxes below';
+  document.getElementById('reg-otp-hint').style.color = '';
+  generateRegOTP();
+}
+
+
+const timers = {};
+function startTimer(id, minutes) {
+  clearInterval(timers[id]);
+  let total = minutes * 60;
+  const el = document.getElementById(id);
+  if (!el) return;
+  function tick() {
+    const m = Math.floor(total / 60), s = total % 60;
+    el.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    if (total-- <= 0) { clearInterval(timers[id]); el.textContent = 'Expired'; }
+  }
+  tick();
+  timers[id] = setInterval(tick, 1000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ExamFlow{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  {% block navbar %}
+  <nav class="navbar">
+    <div class="navbar-brand">
+      ExamFlow
+      <span class="dot">·</span>
+      <span class="navbar-sub">{% block nav_sub %}Portal{% endblock %}</span>
+    </div>
+    <div class="navbar-nav">
+      {% block nav_links %}{% endblock %}
+    </div>
+    <div class="navbar-user" id="nav-user"></div>
+  </nav>
+  {% endblock %}
+
+  <div id="global-alert" class="alert" style="display:none;position:fixed;top:80px;right:24px;z-index:999;max-width:360px"></div>
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+  <script>
+    document.addEventListener("DOMContentLoaded", () => { renderNavUser(); });
+  </script>
+</body>
+</html>

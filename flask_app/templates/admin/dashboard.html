@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+  {% include "admin/sidebar.html" %}
+  <div class="admin-content">
+    <div class="page-header">
+      <h1 class="page-title">Admin Dashboard</h1>
+      <p  class="page-subtitle" id="admin-sub">KLH University · ExamFlow</p>
+    </div>
+
+    <div class="stats-grid mb-3">
+      <div class="stat-card" style="--accent:var(--gold)"><div class="stat-label">Total Exams</div><div class="stat-value" id="s-exams">—</div></div>
+      <div class="stat-card" style="--accent:var(--blue)"><div class="stat-label">Students</div><div class="stat-value" id="s-students">—</div></div>
+      <div class="stat-card" style="--accent:var(--green)"><div class="stat-label">Attempts</div><div class="stat-value" id="s-attempts">—</div></div>
+      <div class="stat-card" style="--accent:var(--purple)"><div class="stat-label">Pass Rate</div><div class="stat-value" id="s-passrate">—</div></div>
+    </div>
+
+    <div class="content-grid wide">
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-display" style="font-size:1.1rem;font-weight:600">Recent Exams</h2>
+          <a href="/admin/exams/create" class="btn btn-primary btn-sm">+ Create</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Title</th><th>Subject</th><th>Status</th><th>Marks</th><th>Start</th><th></th></tr></thead>
+            <tbody id="exams-tbody"><tr><td colspan="6" class="text-center"><div class="spinner"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h2 class="text-display" style="font-size:1.1rem;font-weight:600;margin-bottom:16px">Quick Actions</h2>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <a href="/admin/exams/create" class="btn btn-primary">+ Create New Exam</a>
+          <a href="/admin/exams"        class="btn btn-secondary">📋 Manage Exams</a>
+          <a href="/admin/users"        class="btn btn-secondary">👥 Students</a>
+          <a href="/admin/results"      class="btn btn-secondary">📊 Analytics</a>
+        </div>
+        <div class="card mt-3">
+          <div class="card-title" style="font-size:0.9rem">Top Exams</div>
+          <div id="top-exams" class="mt-2"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  if (!Auth.requireAdmin()) throw "";
+  document.getElementById("admin-sub").textContent = `Logged in as ${Auth.user().name} · Admin`;
+
+  async function init() {
+    try {
+      const [examsRes, usersRes, resultsRes, analyticsRes] = await Promise.allSettled([
+        API.exams(), API.users(), API.results(), API.analytics()
+      ]);
+      const exams     = examsRes.value?.data    || [];
+      const users     = usersRes.value?.data?.users || [];
+      const results   = resultsRes.value?.data  || [];
+      const analytics = analyticsRes.value?.data || {};
+
+      const total  = results.length;
+      const passed = results.filter(r=>r.is_passed).length;
+      document.getElementById("s-exams").textContent    = exams.length;
+      document.getElementById("s-students").textContent = users.filter(u=>u.role==="student").length;
+      document.getElementById("s-attempts").textContent = total;
+      document.getElementById("s-passrate").textContent = total ? `${Math.round((passed/total)*100)}%` : "—";
+
+      document.getElementById("exams-tbody").innerHTML = exams.slice(0,8).map(e => `
+        <tr>
+          <td class="fw-semi truncate" style="max-width:160px">${e.title}</td>
+          <td class="text-muted">${e.subject}</td>
+          <td>${statusBadge(e.status)}</td>
+          <td>${e.total_marks}</td>
+          <td class="text-muted" style="font-size:0.8rem">${formatDate(e.start_time)}</td>
+          <td><a href="/admin/exams" class="btn btn-ghost btn-sm">Manage</a></td>
+        </tr>`).join("") || `<tr><td colspan="6" class="text-center text-muted">No exams</td></tr>`;
+
+      const top = (analytics.per_exam || []).slice(0,4);
+      document.getElementById("top-exams").innerHTML = top.length
+        ? top.map(e => `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem">
+            <div class="fw-semi truncate">${e.exam_title}</div>
+            <div class="flex justify-between mt-1">
+              <span class="text-muted">${e.total} attempts</span>
+              <span class="text-${pctColor(e.avg_percentage)}">${Math.round(e.avg_percentage)}% avg</span>
+            </div></div>`).join("")
+        : '<div class="text-muted" style="font-size:0.85rem">No data yet</div>';
+    } catch (err) { Toast.error("Failed to load: " + err.message); }
+  }
+  init();
+</script>
+{% endblock %}

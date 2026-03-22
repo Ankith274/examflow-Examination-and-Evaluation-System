@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block navbar %}{% endblock %}
+{% block content %}
+<div class="admin-layout">
+  {% include "admin/sidebar.html" %}
+  <div class="admin-content">
+    <div class="page-header flex justify-between items-center">
+      <div><h1 class="page-title">Manage Exams</h1><p class="page-subtitle">Create, publish and manage exams</p></div>
+      <a href="/admin/exams/create" class="btn btn-primary">+ Create Exam</a>
+    </div>
+    <div class="flex gap-2 mb-3" style="flex-wrap:wrap">
+      <input class="form-control" style="max-width:260px" id="search-input" placeholder="Search exams…" oninput="filterExams()">
+      <select class="form-control" style="max-width:160px" id="status-filter" onchange="filterExams()">
+        <option value="">All Status</option>
+        <option value="active">Active</option><option value="upcoming">Upcoming</option>
+        <option value="ended">Ended</option><option value="draft">Draft</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Title</th><th>Subject</th><th>Duration</th><th>Marks</th><th>Status</th><th>Start</th><th>Actions</th></tr></thead>
+        <tbody id="exams-tbody"><tr><td colspan="7" class="text-center"><div class="spinner"></div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="del-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="del-title">Delete Exam?</div><button class="modal-close">✕</button></div>
+    <p class="text-muted">This will deactivate the exam permanently.</p>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('del-modal')">Cancel</button>
+      <button class="btn btn-danger" id="confirm-del">Delete</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  if (!Auth.requireAdmin()) throw "";
+  let allExams = [];
+  async function loadExams() {
+    try {
+      const { data } = await API.exams(); allExams = data; renderTable(allExams);
+    } catch (err) { document.getElementById("exams-tbody").innerHTML = `<tr><td colspan="7"><div class="alert alert-error">${err.message}</div></td></tr>`; }
+  }
+  function renderTable(exams) {
+    document.getElementById("exams-tbody").innerHTML = exams.length
+      ? exams.map(e => `<tr>
+          <td class="fw-semi truncate" style="max-width:200px">${e.title}</td>
+          <td class="text-muted">${e.subject}</td>
+          <td class="text-muted">${e.duration} min</td>
+          <td>${e.total_marks} / ${e.passing_marks} pass</td>
+          <td>${statusBadge(e.status)}</td>
+          <td class="text-muted" style="font-size:0.8rem">${formatDate(e.start_time)}</td>
+          <td><div class="flex gap-1">
+            ${e.status==="draft"?`<button class="btn btn-success btn-sm" onclick="publishExam('${e.id}')">Publish</button>`:""}
+            <button class="btn btn-danger btn-sm" onclick="deleteExam('${e.id}','${e.title.replace(/'/g,"\\'")}')">Delete</button>
+          </div></td>
+        </tr>`).join("")
+      : `<tr><td colspan="7" class="text-center text-muted">No exams found</td></tr>`;
+  }
+  function filterExams() {
+    const q = document.getElementById("search-input").value.toLowerCase();
+    const s = document.getElementById("status-filter").value;
+    renderTable(allExams.filter(e => (!q||e.title.toLowerCase().includes(q)||e.subject.toLowerCase().includes(q))&&(!s||e.status===s)));
+  }
+  async function publishExam(id) { try { await API.publishExam(id); Toast.success("Published!"); loadExams(); } catch(err){Toast.error(err.message);} }
+  let pendingId = null;
+  function deleteExam(id, title) {
+    pendingId = id; document.getElementById("del-title").textContent = `Delete "${title}"?`; openModal("del-modal");
+    document.getElementById("confirm-del").onclick = async () => {
+      try { await API.deleteExam(pendingId); closeModal("del-modal"); Toast.success("Deleted"); loadExams(); } catch(err){Toast.error(err.message);}
+    };
+  }
+  loadExams();
+</script>
+{% endblock %}

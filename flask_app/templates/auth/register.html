@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-box slide-up">
+    <div class="auth-logo">
+      <div class="auth-logo-text">ExamFlow</div>
+      <div class="auth-logo-sub">KLH University · BCA 2023–2026</div>
+    </div>
+    <h1 class="auth-title">Create account</h1>
+    <p  class="auth-subtitle">Register as a student</p>
+
+    <div id="reg-alert" style="display:none"></div>
+
+    <form id="register-form">
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input class="form-control" type="text" id="name" placeholder="Ankith Reddy" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Roll Number</label>
+          <input class="form-control" type="text" id="roll_number" placeholder="2320520034">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input class="form-control" type="email" id="email" placeholder="you@klh.edu.in" required>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Section</label>
+          <select class="form-control" id="section">
+            <option value="">Select</option>
+            <option value="BCA-A">BCA-A</option>
+            <option value="BCA-B">BCA-B</option>
+            <option value="BCA-C">BCA-C</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Year</label>
+          <select class="form-control" id="year">
+            <option value="1">1st Year</option>
+            <option value="2" selected>2nd Year</option>
+            <option value="3">3rd Year</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password *</label>
+        <input class="form-control" type="password" id="password" placeholder="Min. 6 characters" required>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg mt-2" type="submit" id="reg-btn">Create Account</button>
+    </form>
+
+    <div class="auth-footer mt-2">Already have an account? <a href="/">Sign in</a></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  if (Auth.isLoggedIn()) window.location.href = "/dashboard";
+
+  document.getElementById("register-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn   = document.getElementById("reg-btn");
+    const alert = document.getElementById("reg-alert");
+    alert.style.display = "none";
+    setLoading(btn, true, "Creating account…");
+    try {
+      const data = await API.register({
+        name:        document.getElementById("name").value.trim(),
+        email:       document.getElementById("email").value.trim(),
+        password:    document.getElementById("password").value,
+        roll_number: document.getElementById("roll_number").value.trim(),
+        section:     document.getElementById("section").value,
+        year:        parseInt(document.getElementById("year").value),
+        role:        "student",
+      });
+      Auth.save(data.data.access_token, data.data.user);
+      window.location.href = "/dashboard";
+    } catch (err) {
+      alert.className     = "alert alert-error";
+      alert.textContent   = err.message || "Registration failed";
+      alert.style.display = "block";
+      setLoading(btn, false);
+    }
+  });
+</script>
+{% endblock %}

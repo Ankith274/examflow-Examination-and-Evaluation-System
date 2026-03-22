@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block nav_sub %}Results{% endblock %}
+{% block nav_links %}<a href="/dashboard" class="nav-link">← Dashboard</a>{% endblock %}
+
+{% block content %}
+<div id="loading-state" class="loading-page"><div class="spinner"></div><span>Loading result…</span></div>
+
+<div id="result-ui" style="display:none">
+  <div class="container" style="padding-top:32px;padding-bottom:48px">
+    <div class="result-hero slide-up">
+      <div class="result-grade" id="r-grade">—</div>
+      <div class="result-score" id="r-score">— / —</div>
+      <div class="result-label" id="r-status"></div>
+      <div class="result-label text-muted mt-1" id="r-exam-title"></div>
+    </div>
+
+    <div class="stats-grid mb-3" id="result-stats"></div>
+
+    <div class="card mb-3">
+      <div class="card-header">
+        <div class="card-title">Question Breakdown</div>
+        <div class="card-subtitle" id="breakdown-sub"></div>
+      </div>
+      <div id="questions-breakdown"></div>
+    </div>
+
+    <div class="flex gap-2 justify-between" style="flex-wrap:wrap">
+      <a href="/dashboard" class="btn btn-secondary">← Dashboard</a>
+      <button class="btn btn-primary" onclick="viewLeaderboard()">🏆 Leaderboard</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="lb-modal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">🏆 Leaderboard</div><button class="modal-close">✕</button></div>
+      <div id="lb-content"><div class="loading-page"><div class="spinner"></div></div></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  if (!Auth.requireAuth()) throw "";
+  const RESULT_ID = "{{ result_id }}";
+
+  async function init() {
+    try {
+      const { data: r } = await API.result(RESULT_ID);
+      document.getElementById("loading-state").style.display = "none";
+      document.getElementById("result-ui").style.display     = "block";
+
+      document.getElementById("r-grade").textContent      = r.grade;
+      document.getElementById("r-score").textContent      = `${r.score} / ${r.total_marks}`;
+      document.getElementById("r-exam-title").textContent = r.exam_title || "";
+      const sEl = document.getElementById("r-status");
+      sEl.textContent = r.is_passed ? "✓ Passed" : "✗ Failed";
+      sEl.className   = "result-label " + (r.is_passed ? "result-passed" : "result-failed");
+
+      const correct = (r.answers||[]).filter(a=>a.is_correct).length;
+      const wrong   = (r.answers||[]).filter(a=>!a.is_correct && a.selected!==-1).length;
+      const skipped = (r.answers||[]).filter(a=>a.selected===-1).length;
+
+      document.getElementById("result-stats").innerHTML = `
+        <div class="stat-card" style="--accent:var(--gold)"><div class="stat-label">Percentage</div><div class="stat-value">${r.percentage}%</div></div>
+        <div class="stat-card" style="--accent:var(--green)"><div class="stat-label">Correct</div><div class="stat-value text-green">${correct}</div></div>
+        <div class="stat-card" style="--accent:var(--red)"><div class="stat-label">Wrong</div><div class="stat-value text-red">${wrong}</div></div>
+        <div class="stat-card" style="--accent:var(--text3)"><div class="stat-label">Skipped</div><div class="stat-value text-muted">${skipped}</div></div>`;
+
+      document.getElementById("breakdown-sub").textContent = `${(r.answers||[]).length} questions reviewed`;
+      const labels = ["A","B","C","D"];
+      document.getElementById("questions-breakdown").innerHTML = (r.answers||[]).map((a,i) => {
+        const q=a.question||{}; const skip=a.selected===-1;
+        const icon=skip?"⬜":(a.is_correct?"✅":"❌");
+        const cls=skip?"":(a.is_correct?"correct":"wrong");
+        return `<div style="padding:20px 0;border-bottom:1px solid var(--border)">
+          <div style="display:flex;gap:12px">
+            <span style="font-size:1.2rem;margin-top:2px">${icon}</span>
+            <div style="flex:1">
+              <div style="font-size:0.78rem;color:var(--text3);margin-bottom:4px">Q${i+1} · ${a.marks_gained>=0?"+":""}${a.marks_gained} marks</div>
+              <div style="font-size:0.95rem;margin-bottom:12px">${q.text||"—"}</div>
+              ${(q.options||[]).map((opt,oi)=>`
+                <div class="option-item ${oi===a.selected?cls:""} ${oi===q.correct?"correct":""}"
+                     style="margin-bottom:6px;cursor:default;pointer-events:none">
+                  <span class="option-bullet">${labels[oi]}</span><span>${opt}</span>
+                  ${oi===q.correct?'<span style="margin-left:auto;font-size:0.75rem;color:var(--green)">Correct</span>':""}
+                  ${oi===a.selected&&!a.is_correct?'<span style="margin-left:auto;font-size:0.75rem;color:var(--red)">Your answer</span>':""}
+                </div>`).join("")}
+              ${q.explanation?`<div style="margin-top:10px;padding:10px;background:rgba(200,169,110,0.08);border-radius:8px;font-size:0.85rem;color:var(--gold)">💡 ${q.explanation}</div>`:""}
+            </div>
+          </div>
+        </div>`;
+      }).join("");
+    } catch(err) {
+      document.getElementById("loading-state").innerHTML =
+        `<div class="alert alert-error">${err.message}</div><a href="/dashboard" class="btn btn-secondary mt-2">← Back</a>`;
+    }
+  }
+
+  async function viewLeaderboard() {
+    openModal("lb-modal");
+    try {
+      const { data: r }  = await API.result(RESULT_ID);
+      const { data: lb } = await API.leaderboard(r.exam_id);
+      document.getElementById("lb-content").innerHTML = `<div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Student</th><th>Score</th><th>Grade</th><th>Time</th></tr></thead>
+        <tbody>${lb.map(r=>`<tr>
+          <td class="fw-bold ${r.rank<=3?"text-gold":""}">${r.rank}</td>
+          <td>${r.student_name||"—"}<br><span class="text-faint" style="font-size:0.75rem">${r.roll_number||""}</span></td>
+          <td><span class="text-${pctColor(r.percentage)}">${r.score}/${r.total_marks}</span></td>
+          <td><span class="badge badge-${gradeColor(r.grade)}">${r.grade}</span></td>
+          <td class="text-mono text-muted" style="font-size:0.8rem">${formatTime(r.time_taken)}</td>
+        </tr>`).join("")}</tbody>
+      </table></div>`;
+    } catch(err) {
+      document.getElementById("lb-content").innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+    }
+  }
+  init();
+</script>
+{% endblock %}

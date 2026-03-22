@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block navbar %}
+<div class="exam-topbar">
+  <div>
+    <div class="exam-topbar-title" id="exam-title">Loading…</div>
+    <div style="font-size:0.78rem;color:var(--text3)" id="exam-meta"></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <div class="timer-box" style="padding:8px 16px">
+      <div class="timer-label">Time Left</div>
+      <div class="timer-value" id="timer">--:--</div>
+    </div>
+    <div id="violation-count" style="display:none;font-size:0.78rem;color:var(--red)">⚠ <span id="v-count">0</span> warnings</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .exam-topbar { background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 24px;
+    display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100; }
+  .exam-topbar-title { font-family:var(--font-display);font-size:1.1rem;font-weight:600; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="loading-state" class="loading-page"><div class="spinner"></div><span>Preparing exam…</span></div>
+<div id="exam-ui" style="display:none">
+  <div class="exam-layout">
+    <div class="exam-main">
+      <div class="question-card" id="question-card">
+        <div class="question-num" id="q-num">Question 1 of —</div>
+        <div class="question-text" id="q-text"></div>
+        <div class="options-list" id="q-options"></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-secondary" onclick="prevQ()">← Previous</button>
+        <button class="btn btn-secondary" onclick="nextQ()">Next →</button>
+        <div style="flex:1"></div>
+        <button class="btn btn-danger" onclick="confirmSubmit()">Submit Exam</button>
+      </div>
+    </div>
+    <div class="exam-sidebar">
+      <div class="card">
+        <div class="card-title" style="font-size:0.9rem;margin-bottom:12px">Navigator</div>
+        <div class="qnav-grid" id="qnav"></div>
+        <div class="divider"></div>
+        <div style="font-size:0.78rem;color:var(--text3)">🟡 Current · 🟢 Answered</div>
+      </div>
+      <div class="card mt-2">
+        <div class="card-title" style="font-size:0.9rem;margin-bottom:8px">Progress</div>
+        <div id="progress-text" style="font-size:0.85rem;color:var(--text2);margin-bottom:6px"></div>
+        <div class="progress"><div class="progress-bar" id="ans-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="submit-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Submit Exam?</div><button class="modal-close">✕</button></div>
+    <div id="submit-summary" style="color:var(--text2);font-size:0.9rem;line-height:1.8"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('submit-modal')">Continue</button>
+      <button class="btn btn-danger" onclick="submitExam()">Submit Now</button>
+    </div>
+  </div>
+</div>
+<div id="v-toast" class="violation-toast" style="display:none"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  if (!Auth.requireAuth()) throw "";
+  const EXAM_ID = "{{ exam_id }}";
+  let exam, questions, currentQ = 0, answers = {}, timerInterval, timeLeft = 0, violations = 0;
+
+  async function init() {
+    try {
+      await API.startExam(EXAM_ID);
+      const { data } = await API.exam(EXAM_ID);
+      exam      = data;
+      questions = data.questions || [];
+      timeLeft  = exam.duration * 60;
+
+      document.getElementById("exam-title").textContent = exam.title;
+      document.getElementById("exam-meta").textContent  = `${exam.subject} · ${questions.length} questions · ${exam.total_marks} marks`;
+      document.title = exam.title + " | ExamFlow";
+
+      buildNav(); renderQ(0); startTimer();
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) { violations++; showViolation("Tab switch detected!"); updateViolations(); }
+      });
+      document.getElementById("loading-state").style.display = "none";
+      document.getElementById("exam-ui").style.display       = "block";
+    } catch (err) {
+      document.getElementById("loading-state").innerHTML = `<div class="alert alert-error">${err.message}</div><a href="/dashboard" class="btn btn-secondary mt-2">← Back</a>`;
+    }
+  }
+
+  function startTimer() {
+    updateTimer();
+    timerInterval = setInterval(() => { timeLeft--; updateTimer(); if (timeLeft <= 0) { clearInterval(timerInterval); submitExam(); } }, 1000);
+  }
+  function updateTimer() {
+    const el = document.getElementById("timer");
+    el.textContent = formatTime(Math.max(0, timeLeft));
+    el.className = "timer-value" + (timeLeft <= 60 ? " danger" : timeLeft <= 300 ? " warning" : "");
+  }
+
+  function renderQ(idx) {
+    currentQ = idx;
+    const q  = questions[idx]; if (!q) return;
+    const labels = ["A","B","C","D"];
+    document.getElementById("q-num").textContent  = `Question ${idx+1} of ${questions.length}`;
+    document.getElementById("q-text").textContent = q.text;
+    document.getElementById("q-options").innerHTML = (q.options||[]).map((opt, i) => `
+      <div class="option-item ${answers[q.id] === i ? "selected" : ""}" onclick="selectAns('${q.id}', ${i}, this.closest('.options-list'))">
+        <span class="option-bullet">${labels[i]}</span><span>${opt}</span>
+      </div>`).join("");
+
+    const answered = Object.keys(answers).length;
+    document.getElementById("ans-bar").style.width = `${(answered/questions.length)*100}%`;
+    document.getElementById("progress-text").textContent = `${answered} of ${questions.length} answered`;
+    updateNav();
+  }
+
+  function selectAns(qId, idx, list) {
+    answers[qId] = idx;
+    list.querySelectorAll(".option-item").forEach((el, i) => {
+      el.classList.toggle("selected", i === idx);
+      el.querySelector(".option-bullet").textContent = ["A","B","C","D"][i];
+    });
+    updateNav();
+    const answered = Object.keys(answers).length;
+    document.getElementById("ans-bar").style.width = `${(answered/questions.length)*100}%`;
+    document.getElementById("progress-text").textContent = `${answered} of ${questions.length} answered`;
+  }
+
+  function buildNav() {
+    document.getElementById("qnav").innerHTML = questions.map((q, i) => `
+      <button class="qnav-btn ${i===0?"current":""}" id="qn-${i}" onclick="renderQ(${i})">${i+1}</button>`).join("");
+  }
+  function updateNav() {
+    questions.forEach((q, i) => {
+      const b = document.getElementById(`qn-${i}`);
+      if (b) b.className = "qnav-btn" + (i===currentQ?" current":"") + (answers[q.id]!==undefined?" answered":"");
+    });
+  }
+  function prevQ() { if (currentQ > 0) renderQ(currentQ - 1); }
+  function nextQ() { renderQ(Math.min(currentQ+1, questions.length-1)); }
+
+  function confirmSubmit() {
+    const answered = Object.keys(answers).length;
+    document.getElementById("submit-summary").innerHTML = `
+      <div>Total: <strong>${questions.length}</strong></div>
+      <div>Answered: <strong class="text-green">${answered}</strong></div>
+      <div>Unanswered: <strong class="${questions.length-answered?"text-red":"text-green"}">${questions.length-answered}</strong></div>
+      <div>Warnings: <strong class="${violations?"text-red":"text-green"}">${violations}</strong></div>
+      <div class="mt-2 text-muted" style="font-size:0.82rem">Cannot change answers after submission.</div>`;
+    openModal("submit-modal");
+  }
+
+  async function submitExam() {
+    clearInterval(timerInterval); closeModal("submit-modal");
+    try {
+      const payload = {
+        answers: questions.map(q => ({ question_id: q.id, selected: answers[q.id]??-1, time_taken: 0 })),
+        violations,
+      };
+      const res = await API.submitExam(EXAM_ID, payload);
+      window.location.href = `/result/${res.data.id}`;
+    } catch (err) { Toast.error(err.message || "Submission failed"); startTimer(); }
+  }
+
+  function showViolation(msg) {
+    const el = document.getElementById("v-toast");
+    el.textContent = `⚠ ${msg}`; el.style.display = "block";
+    setTimeout(() => { el.style.display = "none"; }, 3000);
+  }
+  function updateViolations() {
+    document.getElementById("v-count").textContent = violations;
+    document.getElementById("violation-count").style.display = violations ? "block" : "none";
+  }
+
+  init();
+</script>
+{% endblock %}

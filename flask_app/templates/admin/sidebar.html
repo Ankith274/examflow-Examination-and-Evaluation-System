@@ -1,0 +1,33 @@
+<!-- flask_app/templates/admin/sidebar.html -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-brand-text">ExamFlow</div>
+    <div style="font-size:0.72rem;color:var(--text3);margin-top:2px">Admin Panel · KLH University</div>
+  </div>
+
+  <div class="sidebar-label">Overview</div>
+  <a href="/admin"              class="sidebar-link" id="sl-dashboard">📊 Dashboard</a>
+
+  <div class="sidebar-label">Exam Management</div>
+  <a href="/admin/exams"        class="sidebar-link" id="sl-exams">📋 All Exams</a>
+  <a href="/admin/exams/create" class="sidebar-link" id="sl-create">+ Create Exam</a>
+
+  <div class="sidebar-label">Users</div>
+  <a href="/admin/users"        class="sidebar-link" id="sl-users">👥 Students</a>
+
+  <div class="sidebar-label">Reports</div>
+  <a href="/admin/results"      class="sidebar-link" id="sl-results">📈 Results</a>
+
+  <div style="position:absolute;bottom:24px;left:0;right:0;padding:0 16px">
+    <div style="font-size:0.78rem;color:var(--text3);margin-bottom:8px" id="sidebar-user"></div>
+    <button class="btn btn-ghost btn-sm" onclick="Auth.logout()" style="border-color:var(--border);width:100%">⎋ Sign Out</button>
+  </div>
+</aside>
+
+<script>
+  const path = window.location.pathname;
+  const map  = { "/admin":"sl-dashboard","/admin/exams":"sl-exams","/admin/exams/create":"sl-create","/admin/users":"sl-users","/admin/results":"sl-results" };
+  if (map[path]) document.getElementById(map[path])?.classList.add("active");
+  const u = Auth.user();
+  if (u) { const el = document.getElementById("sidebar-user"); if(el) el.textContent = `${u.name} · ${u.role}`; }
+</script>

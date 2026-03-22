@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block navbar %}{% endblock %}
+{% block content %}
+<div class="admin-layout">
+  {% include "admin/sidebar.html" %}
+  <div class="admin-content">
+    <div class="page-header"><h1 class="page-title">Results & Analytics</h1><p class="page-subtitle">All attempts and performance data</p></div>
+
+    <div class="stats-grid mb-3">
+      <div class="stat-card" style="--accent:var(--gold)"><div class="stat-label">Total Attempts</div><div class="stat-value" id="a-total">—</div></div>
+      <div class="stat-card" style="--accent:var(--green)"><div class="stat-label">Pass Rate</div><div class="stat-value" id="a-pass">—</div></div>
+      <div class="stat-card" style="--accent:var(--blue)"><div class="stat-label">Avg Score</div><div class="stat-value" id="a-avg">—</div></div>
+      <div class="stat-card" style="--accent:var(--purple)"><div class="stat-label">Unique Students</div><div class="stat-value" id="a-students">—</div></div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-title mb-3">Performance by Exam</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Exam</th><th>Subject</th><th>Attempts</th><th>Avg %</th><th>Pass Rate</th><th>Highest</th><th>Lowest</th></tr></thead>
+          <tbody id="exam-stats-tbody"><tr><td colspan="7" class="text-center"><div class="spinner"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flex justify-between items-center mb-3">
+        <div class="card-title">All Attempts</div>
+        <input class="form-control" style="max-width:260px" id="result-search" placeholder="Search student or exam…" oninput="filterResults()">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Exam</th><th>Score</th><th>Grade</th><th>Result</th><th>Violations</th><th>Date</th><th></th></tr></thead>
+          <tbody id="results-tbody"><tr><td colspan="8" class="text-center"><div class="spinner"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  if (!Auth.requireAdmin()) throw "";
+  let allResults = [];
+
+  async function init() {
+    try {
+      const [rRes, aRes] = await Promise.all([API.results(), API.analytics()]);
+      allResults = rRes.data || [];
+      const analytics = aRes.data || {};
+      const overall   = analytics.overall || {};
+
+      document.getElementById("a-total").textContent    = overall.total    || 0;
+      document.getElementById("a-pass").textContent     = overall.total ? `${Math.round(overall.pass_rate)}%` : "—";
+      document.getElementById("a-avg").textContent      = overall.total ? `${Math.round(overall.avg_percentage)}%` : "—";
+      document.getElementById("a-students").textContent = new Set(allResults.map(r=>r.student_id)).size;
+
+      document.getElementById("exam-stats-tbody").innerHTML = (analytics.per_exam||[]).length
+        ? (analytics.per_exam||[]).map(e => `<tr>
+            <td class="fw-semi">${e.exam_title}</td>
+            <td class="text-muted">${e.exam_subject||"—"}</td>
+            <td>${e.total}</td>
+            <td><span class="text-${pctColor(e.avg_percentage)}">${Math.round(e.avg_percentage)}%</span></td>
+            <td>
+              <div class="flex items-center gap-1">
+                <div class="progress" style="width:80px"><div class="progress-bar ${pctColor(e.pass_rate)}" style="width:${Math.round(e.pass_rate)}%"></div></div>
+                <span>${Math.round(e.pass_rate)}%</span>
+              </div>
+            </td>
+            <td class="text-green">${Math.round(e.highest)}%</td>
+            <td class="text-red">${Math.round(e.lowest)}%</td>
+          </tr>`).join("")
+        : `<tr><td colspan="7" class="text-center text-muted">No data yet</td></tr>`;
+
+      renderResults(allResults);
+    } catch (err) { Toast.error("Failed: " + err.message); }
+  }
+
+  function renderResults(results) {
+    document.getElementById("results-tbody").innerHTML = results.length
+      ? results.slice(0,50).map(r => `<tr>
+          <td><div class="fw-semi">${r.student_name||"—"}</div><div class="text-faint" style="font-size:0.75rem">${r.roll_number||""}</div></td>
+          <td class="truncate" style="max-width:160px">${r.exam_title||"—"}</td>
+          <td><span class="text-${pctColor(r.percentage)}">${r.score}/${r.total_marks}</span><div class="text-faint" style="font-size:0.75rem">${r.percentage}%</div></td>
+          <td><span class="badge badge-${gradeColor(r.grade)}">${r.grade}</span></td>
+          <td>${r.is_passed?'<span class="badge badge-green">Passed</span>':'<span class="badge badge-red">Failed</span>'}</td>
+          <td class="${r.violations>0?"text-red":"text-muted"}">${r.violations||0}</td>
+          <td class="text-muted" style="font-size:0.8rem">${formatDate(r.submitted_at)}</td>
+          <td><a href="/result/${r.id}" class="btn btn-ghost btn-sm">View</a></td>
+        </tr>`).join("")
+      : `<tr><td colspan="8" class="text-center text-muted">No results yet</td></tr>`;
+  }
+
+  function filterResults() {
+    const q = document.getElementById("result-search").value.toLowerCase();
+    renderResults(allResults.filter(r =>
+      (r.student_name||"").toLowerCase().includes(q) ||
+      (r.exam_title||"").toLowerCase().includes(q)   ||
+      (r.roll_number||"").toLowerCase().includes(q)
+    ));
+  }
+  init();
+</script>
+{% endblock %}

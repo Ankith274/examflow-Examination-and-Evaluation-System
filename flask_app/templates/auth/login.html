@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-box slide-up">
+    <div class="auth-logo">
+      <div class="auth-logo-text">ExamFlow</div>
+      <div class="auth-logo-sub">KLH University · BCA 2023–2026</div>
+    </div>
+    <h1 class="auth-title">Welcome back</h1>
+    <p  class="auth-subtitle">Sign in to access your exams</p>
+
+    <div id="login-alert" style="display:none"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-group">
+          <span class="input-icon">✉</span>
+          <input class="form-control" type="email" id="email" placeholder="you@klh.edu.in" required autocomplete="email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input class="form-control" type="password" id="password" placeholder="••••••••" required>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg mt-2" type="submit" id="login-btn">Sign In</button>
+    </form>
+
+    <div class="auth-divider">or</div>
+    <div class="auth-footer">Don't have an account? <a href="/register">Register here</a></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  if (Auth.isLoggedIn()) {
+    window.location.href = Auth.isAdmin() ? "/admin" : "/dashboard";
+  }
+  document.getElementById("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn   = document.getElementById("login-btn");
+    const alert = document.getElementById("login-alert");
+    alert.style.display = "none";
+    setLoading(btn, true, "Signing in…");
+    try {
+      const data = await API.login({
+        email:    document.getElementById("email").value.trim(),
+        password: document.getElementById("password").value,
+      });
+      Auth.save(data.data.access_token, data.data.user);
+      window.location.href = data.data.user.role === "admin" ? "/admin" : "/dashboard";
+    } catch (err) {
+      alert.className     = "alert alert-error";
+      alert.textContent   = err.message || "Invalid credentials";
+      alert.style.display = "block";
+      setLoading(btn, false);
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block nav_sub %}Student Portal{% endblock %}
+{% block nav_links %}
+  <a href="/dashboard" class="nav-link active">Dashboard</a>
+  <a href="#exams"     class="nav-link">Exams</a>
+  <a href="#results"   class="nav-link">Results</a>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:32px;padding-bottom:48px">
+  <div class="page-header flex justify-between items-center" style="flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 class="page-title" id="welcome-title">Dashboard</h1>
+      <p  class="page-subtitle" id="welcome-sub">Loading…</p>
+    </div>
+    <span id="user-badge" class="badge badge-gold" style="display:none"></span>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card" style="--accent:var(--gold)"><div class="stat-label">Exams Taken</div><div class="stat-value" id="s-total">—</div></div>
+    <div class="stat-card" style="--accent:var(--green)"><div class="stat-label">Passed</div><div class="stat-value" id="s-passed">—</div></div>
+    <div class="stat-card" style="--accent:var(--blue)"><div class="stat-label">Avg Score</div><div class="stat-value" id="s-avg">—</div></div>
+    <div class="stat-card" style="--accent:var(--purple)"><div class="stat-label">Active Now</div><div class="stat-value" id="s-active">—</div></div>
+  </div>
+
+  <section id="exams" class="mt-4 mb-3">
+    <div class="flex justify-between items-center mb-2">
+      <h2 class="text-display" style="font-size:1.2rem;font-weight:600">Available Exams</h2>
+      <button class="btn btn-ghost btn-sm" onclick="loadExams()">↻ Refresh</button>
+    </div>
+    <div id="exams-container"><div class="loading-page"><div class="spinner"></div></div></div>
+  </section>
+
+  <section id="results">
+    <h2 class="text-display" style="font-size:1.2rem;font-weight:600;margin-bottom:16px">Recent Results</h2>
+    <div id="results-container"><div class="loading-page"><div class="spinner"></div></div></div>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  if (!Auth.requireAuth()) throw "";
+  if (Auth.isAdmin()) { window.location.href = "/admin"; throw ""; }
+
+  const user = Auth.user();
+  document.getElementById("welcome-title").textContent = `Welcome, ${user.name.split(" ")[0]}`;
+  document.getElementById("welcome-sub").textContent   = `${user.roll_number || "Student"} · ${user.section || "KLH University"}`;
+  if (user.roll_number) {
+    const b = document.getElementById("user-badge");
+    b.textContent = user.roll_number; b.style.display = "inline-flex";
+  }
+
+  async function loadDashboard() {
+    try {
+      const { data } = await API.dashboard();
+      const s = data.stats || {};
+      document.getElementById("s-total").textContent  = s.total_exams  || 0;
+      document.getElementById("s-passed").textContent = s.total_passed || 0;
+      document.getElementById("s-avg").textContent    = s.avg_score ? `${Math.round(s.avg_score)}%` : "—";
+    } catch {}
+  }
+
+  async function loadExams() {
+    const c = document.getElementById("exams-container");
+    c.innerHTML = '<div class="loading-page"><div class="spinner"></div></div>';
+    try {
+      const { data } = await API.exams();
+      const active = data.filter(e => ["active","upcoming"].includes(e.status));
+      document.getElementById("s-active").textContent = active.filter(e=>e.status==="active").length;
+      if (!active.length) { c.innerHTML = '<div class="card text-center text-muted" style="padding:40px">No exams available.</div>'; return; }
+      c.innerHTML = `<div class="exam-grid">${active.map(examCard).join("")}</div>`;
+    } catch (err) { c.innerHTML = `<div class="alert alert-error">${err.message}</div>`; }
+  }
+
+  function examCard(e) {
+    const isActive = e.status === "active";
+    return `<div class="exam-card" onclick="window.location.href='/exam/${e.id}'">
+      <div class="exam-card-subject">${e.subject}</div>
+      <div class="exam-card-title">${e.title}</div>
+      <div class="exam-card-meta">
+        <span>⏱ ${e.duration} min</span>
+        <span>📝 ${e.total_marks} marks</span>
+        <span>✅ Pass: ${e.passing_marks}</span>
+      </div>
+      <div class="exam-card-footer">
+        ${statusBadge(e.status)}
+        ${isActive ? `<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();startExam('${e.id}')">Start →</button>`
+                   : `<span class="text-faint" style="font-size:0.8rem">Starts ${formatDate(e.start_time)}</span>`}
+      </div>
+    </div>`;
+  }
+
+  async function startExam(id) {
+    try { await API.startExam(id); window.location.href = `/exam/${id}`; }
+    catch (err) { Toast.error(err.message); }
+  }
+
+  async function loadResults() {
+    const c = document.getElementById("results-container");
+    try {
+      const { data } = await API.results();
+      const recent = (data || []).slice(0, 5);
+      if (!recent.length) { c.innerHTML = '<div class="card text-center text-muted" style="padding:32px">No results yet.</div>'; return; }
+      c.innerHTML = `<div class="table-wrap"><table>
+        <thead><tr><th>Exam</th><th>Score</th><th>Grade</th><th>Status</th><th>Date</th><th></th></tr></thead>
+        <tbody>${recent.map(r => `<tr>
+          <td class="fw-semi">${r.exam_title||"—"}</td>
+          <td><span class="text-${pctColor(r.percentage)}">${r.score}/${r.total_marks}</span></td>
+          <td><span class="badge badge-${gradeColor(r.grade)}">${r.grade}</span></td>
+          <td>${r.is_passed ? '<span class="badge badge-green">Passed</span>' : '<span class="badge badge-red">Failed</span>'}</td>
+          <td class="text-muted" style="font-size:0.8rem">${formatDate(r.submitted_at)}</td>
+          <td><a href="/result/${r.id}" class="btn btn-ghost btn-sm">View →</a></td>
+        </tr>`).join("")}</tbody>
+      </table></div>`;
+    } catch (err) { c.innerHTML = `<div class="alert alert-error">${err.message}</div>`; }
+  }
+
+  loadDashboard(); loadExams(); loadResults();
+</script>
+{% endblock %}

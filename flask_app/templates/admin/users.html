@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block navbar %}{% endblock %}
+{% block content %}
+<div class="admin-layout">
+  {% include "admin/sidebar.html" %}
+  <div class="admin-content">
+    <div class="page-header flex justify-between items-center">
+      <div><h1 class="page-title">Students</h1><p class="page-subtitle" id="user-count">Loading…</p></div>
+    </div>
+    <div class="flex gap-2 mb-3" style="flex-wrap:wrap">
+      <input class="form-control" style="max-width:300px" id="search-input" placeholder="Search name, email, roll…" oninput="filterUsers()">
+      <select class="form-control" style="max-width:160px" id="role-filter" onchange="filterUsers()">
+        <option value="">All Roles</option><option value="student">Students</option><option value="admin">Admins</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Roll No</th><th>Email</th><th>Section</th><th>Year</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+        <tbody id="users-tbody"><tr><td colspan="8" class="text-center"><div class="spinner"></div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  if (!Auth.requireAdmin()) throw "";
+  let allUsers = [];
+  async function loadUsers() {
+    try {
+      const { data } = await API.users(); allUsers = data.users || [];
+      document.getElementById("user-count").textContent = `${allUsers.filter(u=>u.role==="student").length} students`;
+      renderTable(allUsers);
+    } catch (err) { document.getElementById("users-tbody").innerHTML = `<tr><td colspan="8"><div class="alert alert-error">${err.message}</div></td></tr>`; }
+  }
+  function renderTable(users) {
+    document.getElementById("users-tbody").innerHTML = users.length
+      ? users.map(u => `<tr>
+          <td><div class="fw-semi">${u.name}</div><div class="text-faint" style="font-size:0.75rem">${u.role==="admin"?"👑 Admin":"🎓 Student"}</div></td>
+          <td class="text-mono text-muted">${u.roll_number||"—"}</td>
+          <td class="text-muted" style="font-size:0.85rem">${u.email}</td>
+          <td class="text-muted">${u.section||"—"}</td>
+          <td class="text-muted">${u.year?"Year "+u.year:"—"}</td>
+          <td>${u.is_active?'<span class="badge badge-green">Active</span>':'<span class="badge badge-red">Inactive</span>'}</td>
+          <td class="text-muted" style="font-size:0.8rem">${formatDate(u.created_at)}</td>
+          <td>${u.is_active&&u.role!=="admin"?`<button class="btn btn-danger btn-sm" onclick="deactivate('${u.id}','${u.name.replace(/'/g,"\\'")}')">Deactivate</button>`:""}</td>
+        </tr>`).join("")
+      : `<tr><td colspan="8" class="text-center text-muted">No users found</td></tr>`;
+  }
+  function filterUsers() {
+    const q = document.getElementById("search-input").value.toLowerCase();
+    const r = document.getElementById("role-filter").value;
+    renderTable(allUsers.filter(u => (!q||u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q)||(u.roll_number||"").toLowerCase().includes(q))&&(!r||u.role===r)));
+  }
+  async function deactivate(id, name) {
+    if (!confirm(`Deactivate ${name}?`)) return;
+    try { await API.delete(`/users/${id}`); Toast.success(`${name} deactivated`); loadUsers(); }
+    catch (err) { Toast.error(err.message); }
+  }
+  loadUsers();
+</script>
+{% endblock %}

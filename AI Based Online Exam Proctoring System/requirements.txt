@@ -1,0 +1,7 @@
+Flask==3.0.0
+flask-socketio
+opencv-python
+numpy
+mediapipe
+ultralytics
+eventlet

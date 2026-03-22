@@ -1,0 +1,18 @@
+.group { display: flex; flex-direction: column; gap: 6px; }
+.label { font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--tx2); }
+.input {
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--bd);
+  border-radius: 9px;
+  color: var(--tx);
+  font-size: 13px;
+  padding: 10px 13px;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+  width: 100%;
+}
+.input:focus    { border-color: var(--a); box-shadow: 0 0 0 3px rgba(79,126,248,.12); }
+.input::placeholder { color: var(--mu); }
+.hasError       { border-color: var(--danger) !important; }
+.error          { font-size: 10.5px; color: var(--danger); }
+.hint           { font-size: 10px; color: var(--tx2); }

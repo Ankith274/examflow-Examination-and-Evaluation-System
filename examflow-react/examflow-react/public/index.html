@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ExamFlow — BCA 2023-2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Karla:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04070e;--bg2:#070c16;--sf:#0b1221;--sf2:#0f1a2e;
+  --bd:rgba(255,255,255,0.06);--bd2:rgba(255,255,255,0.12);
+  --tx:#d8e4f8;--tx2:#6b7f9a;--mu:#2e3d52;
+  --a:#4f7ef8;--a2:#7aa2fb;--tl:#0fb8a4;
+  --safe:#1db854;--warn:#f0a500;--danger:#e8404a;
+  --ds:#4f7ef8;--os:#0fb8a4;--js:#e8c848;--dsa:#a855f7;--ml:#f97316;
+  --r:12px;--fn:'Karla',sans-serif;--dp:'Syne',sans-serif;--mn:'JetBrains Mono',monospace;
+}
+html{font-size:14px}
+body{font-family:var(--fn);background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+button{font-family:var(--fn);cursor:pointer;border:none;outline:none}
+input,select{font-family:var(--fn)}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 40% at 20% 10%,rgba(79,126,248,0.07),transparent),
+             radial-gradient(ellipse 50% 30% at 80% 80%,rgba(15,184,164,0.05),transparent)}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:160px}
+.page{display:none;position:relative;z-index:1}
+.page.active{display:flex}
+#loginPage,#registerPage{min-height:100vh;align-items:center;justify-content:center;padding:24px}
+.auth-wrap{display:grid;grid-template-columns:1fr 1fr;max-width:920px;width:100%;background:var(--sf);border:1px solid var(--bd);border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6);animation:authIn .5s cubic-bezier(.22,1,.36,1)}
+@keyframes authIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+.auth-left{background:linear-gradient(145deg,#060d1e,#0a1428);padding:48px 40px;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--bd);position:relative;overflow:hidden}
+.auth-left::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(79,126,248,0.12),transparent 70%);pointer-events:none}
+.auth-left::after{content:'';position:absolute;bottom:-60px;left:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(15,184,164,0.08),transparent 70%);pointer-events:none}
+.auth-brand{position:relative;z-index:1}
+.brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.brand-mk{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;box-shadow:0 0 20px rgba(79,126,248,.4)}
+.brand-nm{font-family:var(--dp);font-size:22px;font-weight:800;letter-spacing:-.02em}
+.brand-nm em{font-style:normal;color:var(--a2)}
+.auth-tagline{font-family:var(--dp);font-size:24px;font-weight:700;line-height:1.35;letter-spacing:-.02em;margin-bottom:10px}
+.auth-sub{font-size:12.5px;color:var(--tx2);line-height:1.7;margin-bottom:28px}
+.auth-features{display:flex;flex-direction:column;gap:9px;position:relative;z-index:1}
+.af-item{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--tx2)}
+.af-icon{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.bca-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(15,184,164,.12);border:1px solid rgba(15,184,164,.3);border-radius:8px;padding:7px 12px;margin-bottom:16px;font-size:11px;color:var(--tl);font-weight:600;font-family:var(--mn)}
+.auth-subjects{margin-top:auto;padding-top:28px;position:relative;z-index:1}
+.as-label{font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--tx2);margin-bottom:8px}
+.as-pills{display:flex;flex-wrap:wrap;gap:5px}
+.as-pill{font-family:var(--dp);font-size:9px;font-weight:600;padding:3px 9px;border-radius:100px;border:1px solid currentColor;letter-spacing:.06em;text-transform:uppercase}
+.auth-right{padding:44px 40px;display:flex;flex-direction:column;justify-content:center;overflow-y:auto;max-height:100vh}
+.auth-form-title{font-family:var(--dp);font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:5px}
+.auth-form-sub{font-size:12px;color:var(--tx2);margin-bottom:24px;line-height:1.6}
+.form-row{display:flex;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;flex:1}
+.form-label{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx2)}
+.form-input{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:9px;color:var(--tx);font-size:13px;padding:10px 13px;transition:border-color .2s,box-shadow .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(79,126,248,.12)}
+.form-input::placeholder{color:var(--mu)}
+.form-input.err{border-color:var(--danger)}
+.form-err{font-size:10.5px;color:var(--danger);margin-top:-10px;margin-bottom:4px;display:none}
+.form-select{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:9px;color:var(--tx);font-size:13px;padding:10px 13px;outline:none;width:100%;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7f9a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:border-color .2s}
+.form-select:focus{border-color:var(--a)}
+.form-select option{background:#0b1221}
+.form-divider{display:flex;align-items:center;gap:12px;margin:14px 0}
+.fd-line{flex:1;height:1px;background:var(--bd)}.fd-txt{font-size:10px;color:var(--tx2)}
+.btn-primary{width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;font-size:13px;font-weight:700;box-shadow:0 4px 16px rgba(79,126,248,.35);transition:all .2s;letter-spacing:.02em}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(79,126,248,.5)}
+.btn-secondary{width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--bd2);color:var(--tx2);font-size:13px;font-weight:500;transition:all .2s}
+.btn-secondary:hover{background:rgba(255,255,255,.08);color:var(--tx)}
+.auth-switch{text-align:center;font-size:12px;color:var(--tx2);margin-top:16px}
+.auth-switch a{color:var(--a2);cursor:pointer;font-weight:600}
+.remember-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-size:12px}
+.check-wrap{display:flex;align-items:center;gap:7px;cursor:pointer}
+.check-box{width:16px;height:16px;border-radius:4px;border:1px solid var(--bd2);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;font-size:10px;color:#fff}
+.check-box.on{background:var(--a);border-color:var(--a)}
+.check-label{color:var(--tx2)}
+.strength-bar{height:3px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-top:3px}
+.strength-fill{height:100%;border-radius:3px;transition:width .3s,background .3s;width:0}
+.strength-txt{font-size:9.5px;margin-top:3px;transition:color .3s}
+.avatar-pick{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+.av-opt{width:34px;height:34px;border-radius:9px;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.03)}
+.av-opt:hover{border-color:var(--a2)}
+.av-opt.sel{border-color:var(--a);background:rgba(79,126,248,.15);box-shadow:0 0 0 2px rgba(79,126,248,.2)}
+.toast-c{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:8px;padding:10px 15px;border-radius:10px;border:1px solid currentColor;backdrop-filter:blur(20px);font-size:11.5px;font-weight:600;animation:tI .3s ease;min-width:200px;max-width:320px}
+.toast.info{color:#7aa2fb;background:rgba(79,126,248,.18);border-color:rgba(79,126,248,.35)}
+.toast.warn{color:var(--warn);background:rgba(240,165,0,.18);border-color:rgba(240,165,0,.35)}
+.toast.err2{color:var(--danger);background:rgba(232,64,74,.18);border-color:rgba(232,64,74,.35)}
+.toast.ok{color:var(--safe);background:rgba(29,184,84,.15);border-color:rgba(29,184,84,.35)}
+@keyframes tI{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+#dashPage{flex-direction:column;min-height:100vh}
+.dash-nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:14px;background:rgba(4,7,14,.92);backdrop-filter:blur(22px);border-bottom:1px solid var(--bd)}
+.dash-logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.dl-mk{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;box-shadow:0 0 14px rgba(79,126,248,.4)}
+.dl-nm{font-family:var(--dp);font-size:17px;font-weight:800;letter-spacing:-.02em}
+.dl-nm em{font-style:normal;color:var(--a2)}
+.dash-nav-r{display:flex;align-items:center;gap:9px}
+.user-pill{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:100px;border:1px solid var(--bd);background:rgba(255,255,255,.04)}
+.up-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.up-name{font-size:11.5px;font-weight:600}.up-roll{font-family:var(--mn);font-size:8.5px;color:var(--tx2)}
+.logout-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:8px;background:rgba(232,64,74,.1);border:1px solid rgba(232,64,74,.25);color:var(--danger);font-size:11.5px;font-weight:600;transition:all .2s}
+.logout-btn:hover{background:rgba(232,64,74,.18)}
+.dash-body{padding:32px 28px;flex:1}
+.dash-welcome{margin-bottom:26px}
+.dw-greeting{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx2);margin-bottom:5px;font-family:var(--mn)}
+.dw-name{font-family:var(--dp);font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:5px}
+.dw-name span{color:var(--a2)}
+.dw-sub{font-size:12.5px;color:var(--tx2)}
+.dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.dstat{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden;transition:border-color .2s}
+.dstat:hover{border-color:var(--bd2)}
+.dstat::after{content:'';position:absolute;top:-30px;right:-30px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,var(--sc,rgba(79,126,248,.15)),transparent 70%);pointer-events:none}
+.ds-icon{font-size:18px}.ds-val{font-family:var(--mn);font-size:22px;font-weight:700}
+.ds-label{font-size:10px;color:var(--tx2)}.ds-change{font-family:var(--mn);font-size:9px;color:var(--safe);margin-top:1px}
+.dash-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.dash-card-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--bd)}
+.dch-title{font-family:var(--dp);font-size:14.5px;font-weight:700}.dch-sub{font-size:10px;color:var(--tx2);margin-top:2px}
+.dch-action{font-size:11px;color:var(--a2);cursor:pointer;padding:5px 12px;border-radius:7px;border:1px solid rgba(79,126,248,.25);background:rgba(79,126,248,.08);font-weight:600;transition:all .2s}
+.dch-action:hover{background:rgba(79,126,248,.16)}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}
+.exam-list{display:flex;flex-direction:column}
+.exam-item{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;border-bottom:1px solid var(--bd);gap:12px;transition:background .18s}
+.exam-item:last-child{border-bottom:none}
+.exam-item:hover{background:rgba(255,255,255,.02)}
+.ei-left{display:flex;align-items:center;gap:11px}
+.ei-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
+.ei-title{font-size:12.5px;font-weight:600}.ei-meta{display:flex;align-items:center;gap:5px;margin-top:3px;font-size:9.5px;color:var(--tx2);flex-wrap:wrap}
+.ei-dot{width:3px;height:3px;border-radius:50%;background:var(--mu)}
+.ei-badge{font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:100px;font-family:var(--dp);letter-spacing:.04em;text-transform:uppercase;border:1px solid currentColor}
+.start-btn{padding:7px 15px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;font-size:10.5px;font-weight:700;box-shadow:0 3px 10px rgba(79,126,248,.3);transition:all .2s;white-space:nowrap;flex-shrink:0}
+.start-btn:hover{transform:translateY(-1px)}
+.profile-card{padding:20px;display:flex;flex-direction:column;gap:14px}
+.pc-top{display:flex;align-items:center;gap:13px}
+.pc-av{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;box-shadow:0 6px 16px rgba(79,126,248,.3)}
+.pc-name{font-family:var(--dp);font-size:15px;font-weight:700}.pc-roll{font-family:var(--mn);font-size:9.5px;color:var(--a2);margin-top:2px}
+.pc-rows{display:flex;flex-direction:column;gap:7px}
+.pc-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:7px 11px;background:rgba(255,255,255,.03);border-radius:7px;border:1px solid var(--bd)}
+.pc-k{color:var(--tx2)}.pc-v{font-family:var(--mn);font-size:10.5px;color:var(--tx)}
+.pc-v.a{color:var(--a2)}.pc-v.t{color:var(--tl)}
+.subject-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;padding:14px 20px 20px}
+.sub-tile{border-radius:9px;padding:12px 10px;display:flex;flex-direction:column;gap:7px;cursor:pointer;transition:all .2s;border:1px solid transparent}
+.sub-tile:hover{transform:translateY(-2px)}
+.st-icon{font-size:16px;font-weight:600}.st-name{font-size:9.5px;font-weight:700;font-family:var(--dp);letter-spacing:.04em;text-transform:uppercase}
+.st-count{font-family:var(--mn);font-size:9px;opacity:.8}
+.st-bar{height:3px;background:rgba(255,255,255,.12);border-radius:100px;overflow:hidden;margin-top:2px}
+.st-fill{height:100%;border-radius:100px}
+#examPage{flex-direction:column;min-height:100vh}
+.nb{position:sticky;top:0;z-index:100;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px;background:rgba(4,7,14,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd)}
+.nb::after{content:'';position:absolute;bottom:0;left:0;height:2px;width:var(--pg,0%);background:linear-gradient(90deg,var(--a),var(--tl));transition:width .5s ease;pointer-events:none}
+.nb-l,.nb-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nb-c{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
+.logo2{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo2-mk{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.logo2-nm{font-family:var(--dp);font-size:16px;font-weight:800;letter-spacing:-.02em}
+.logo2-nm em{font-style:normal;color:var(--a2)}
+.nb-title{font-family:var(--dp);font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
+.nb-meta{display:flex;align-items:center;gap:6px;font-family:var(--mn);font-size:8px;color:var(--tx2)}
+.nb-meta .s{color:var(--mu)}
+.tc{display:flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;border:1px solid currentColor;font-family:var(--mn);font-size:10px;font-weight:500;white-space:nowrap;transition:all .4s}
+.tc.safe{color:var(--safe);background:rgba(29,184,84,.08)}
+.tc.warning{color:var(--warn);background:rgba(240,165,0,.10)}
+.tc.critical{color:var(--danger);background:rgba(232,64,74,.10);animation:critP 1.2s ease-in-out infinite}
+@keyframes critP{0%,100%{box-shadow:0 0 0 0 rgba(232,64,74,.3)}50%{box-shadow:0 0 0 4px rgba(232,64,74,0)}}
+.submit-nb{display:flex;align-items:center;gap:5px;padding:6px 13px;background:linear-gradient(135deg,var(--a),var(--tl));border-radius:8px;color:#fff;font-size:11px;font-weight:700;box-shadow:0 3px 12px rgba(79,126,248,.35);transition:all .2s}
+.submit-nb:hover{transform:translateY(-1px)}
+.av-nb{display:flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;border-radius:100px;border:1px solid var(--bd);background:rgba(255,255,255,.04)}
+.av-nb-c{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.av-nb-n{font-size:11px;font-weight:600}.av-nb-r{font-family:var(--mn);font-size:7.5px;color:var(--tx2)}
+.pw{position:relative;margin-right:40px}
+.pb{width:60px;height:4px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--a),var(--tl));border-radius:100px;transition:width .5s}
+.pl{position:absolute;top:50%;right:-38px;transform:translateY(-50%);font-family:var(--mn);font-size:8px;color:var(--tx2);white-space:nowrap}
+.sub-tabs{display:flex;align-items:center;padding:0 20px;background:rgba(4,7,14,.8);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none}
+.sub-tabs::-webkit-scrollbar{display:none}
+.stab{display:flex;align-items:center;gap:6px;padding:9px 15px;font-size:10.5px;font-weight:600;color:var(--tx2);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;letter-spacing:.02em;text-transform:uppercase;font-family:var(--dp)}
+.stab:hover{color:var(--tx)}
+.stab.active{color:var(--sc,var(--a));border-bottom-color:var(--sc,var(--a))}
+.stab .dot{width:7px;height:7px;border-radius:50%;background:var(--sc,var(--a))}
+.stab .cnt{font-family:var(--mn);font-size:8.5px;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.08)}
+.stab.active .cnt{background:var(--sc,var(--a));color:#fff}
+.layout{display:grid;grid-template-columns:215px 1fr 260px;min-height:calc(100vh - 98px);position:relative;z-index:1}
+.sl{background:var(--bg2);border-right:1px solid var(--bd);padding:14px 11px;display:flex;flex-direction:column;gap:13px;position:sticky;top:98px;height:calc(100vh - 98px);overflow-y:auto}
+.sl::-webkit-scrollbar{width:3px}.sl::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+.slt{font-size:7.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2)}
+.sc-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:11px;display:flex;flex-direction:column;gap:8px}
+.sc-top{display:flex;align-items:center;gap:8px}
+.sc-av{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 4px 10px rgba(79,126,248,.3)}
+.sc-n{font-size:11.5px;font-weight:700}.sc-rn{font-family:var(--mn);font-size:8.5px;color:var(--a2)}
+.sc-rows{display:flex;flex-direction:column;gap:3px}
+.sc-row2{display:flex;justify-content:space-between;font-size:9px}
+.sc-k{color:var(--tx2)}.sc-v2{font-family:var(--mn);color:var(--tx);font-size:9px}
+.sub-prog{display:flex;flex-direction:column;gap:7px}
+.sp-row{display:flex;flex-direction:column;gap:2px}
+.sp-label{display:flex;justify-content:space-between;align-items:center;font-size:9px}
+.sp-name{font-weight:600}.sp-cnt{font-family:var(--mn);font-size:8px;color:var(--tx2)}
+.sp-bar{height:4px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden}
+.sp-fill{height:100%;border-radius:100px;transition:width .5s}
+.legend{display:flex;flex-direction:column;gap:4px}
+.leg-i{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--tx2)}
+.leg-d{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.leg-d.ans{background:var(--a)}.leg-d.cur{background:var(--tl);outline:2px solid var(--tl);outline-offset:2px}
+.leg-d.flg{background:var(--warn)}.leg-d.una{background:rgba(255,255,255,.07);border:1px solid var(--bd2)}
+.qg{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.qb{aspect-ratio:1;border-radius:5px;font-family:var(--mn);font-size:8.5px;font-weight:500;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border:1px solid var(--bd);color:var(--tx2);cursor:pointer;transition:all .18s;position:relative;line-height:1}
+.qb:hover{background:rgba(255,255,255,.09)}
+.qb.ans{background:rgba(79,126,248,.22);border-color:rgba(79,126,248,.4);color:var(--a2)}
+.qb.cur{background:rgba(15,184,164,.32);border-color:var(--tl);color:#fff;box-shadow:0 0 7px rgba(15,184,164,.4)}
+.qb.flg{background:rgba(240,165,0,.18);border-color:rgba(240,165,0,.4);color:var(--warn)}
+.qb.flg::after{content:'F';position:absolute;top:-2px;right:0;font-size:6px}
+.qb.ans.os{background:rgba(15,184,164,.22);border-color:rgba(15,184,164,.4);color:#0fb8a4}
+.qb.ans.js{background:rgba(232,200,72,.18);border-color:rgba(232,200,72,.4);color:#e8c848}
+.qb.ans.dsa{background:rgba(168,85,247,.2);border-color:rgba(168,85,247,.4);color:#a855f7}
+.qb.ans.ml{background:rgba(249,115,22,.2);border-color:rgba(249,115,22,.4);color:#f97316}
+.mini-grid-wrap{max-height:185px;overflow-y:auto}
+.mini-grid-wrap::-webkit-scrollbar{width:3px}.mini-grid-wrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+.sts{display:flex;flex-direction:column;gap:5px}
+.sr2x{display:flex;justify-content:space-between;align-items:center;font-size:9.5px}
+.sk{color:var(--tx2)}.sv{font-family:var(--mn);font-weight:600;color:var(--tx)}
+.sv.g{color:var(--safe)}.sv.y{color:var(--warn)}.sv.r{color:var(--danger)}
+.main{padding:20px 26px;display:flex;flex-direction:column;gap:14px}
+.sub-header{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r)}
+.sub-icon2{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.sub-name-h{font-family:var(--dp);font-size:13.5px;font-weight:700}
+.sub-desc-h{font-size:10px;color:var(--tx2);margin-top:1px}
+.sub-badge-h{margin-left:auto;font-family:var(--mn);font-size:8.5px;padding:2px 8px;border-radius:100px;border:1px solid currentColor;opacity:.8}
+.qc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;box-shadow:0 6px 32px rgba(0,0,0,.4);animation:cI .25s ease}
+@keyframes cI{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.qh{padding:12px 16px 9px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.qbadge{font-family:var(--mn);font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:100px;flex-shrink:0;border:1px solid currentColor;opacity:.9}
+.qtags{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.qtag{font-size:8px;font-weight:600;padding:2px 7px;border-radius:100px;border:1px solid var(--bd2);color:var(--tx2);font-family:var(--dp);letter-spacing:.04em;text-transform:uppercase}
+.qtag.easy{border-color:rgba(29,184,84,.3);color:var(--safe)}
+.qtag.medium{border-color:rgba(240,165,0,.3);color:var(--warn)}
+.qtag.hard{border-color:rgba(232,64,74,.3);color:var(--danger)}
+.fb{background:none;border:1px solid var(--bd);border-radius:6px;color:var(--tx2);font-size:10px;padding:3px 9px;transition:all .18s}
+.fb:hover,.fb.on{border-color:rgba(240,165,0,.5);color:var(--warn);background:rgba(240,165,0,.08)}
+.qbody{padding:18px 16px}
+.qt{font-family:var(--dp);font-size:14px;font-weight:600;line-height:1.65;color:var(--tx);margin-bottom:16px;letter-spacing:-.01em}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:10px 13px;border-radius:8px;border:1px solid var(--bd);background:rgba(255,255,255,.02);cursor:pointer;transition:all .2s;user-select:none}
+.opt:hover{border-color:rgba(79,126,248,.3);background:rgba(79,126,248,.05)}
+.opt.sel{border-color:var(--a);background:rgba(79,126,248,.12);box-shadow:0 0 0 1px rgba(79,126,248,.2)}
+.ol{width:23px;height:23px;border-radius:6px;flex-shrink:0;border:1px solid var(--bd2);color:var(--tx2);display:flex;align-items:center;justify-content:center;font-family:var(--mn);font-size:9px;font-weight:600;transition:all .2s}
+.opt.sel .ol{background:var(--a);border-color:var(--a);color:#fff}
+.ot{font-size:12px;line-height:1.55;padding-top:1px}
+.qf{padding:11px 16px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.nbbs{display:flex;gap:6px}
+.nb2{padding:6px 14px;border-radius:7px;font-size:10.5px;font-weight:500;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--tx2);transition:all .18s}
+.nb2:hover{background:rgba(255,255,255,.08);color:var(--tx)}
+.nb2:disabled{opacity:.3;cursor:not-allowed}
+.nb2.p{background:linear-gradient(135deg,var(--a),var(--tl));border:none;color:#fff;font-weight:700;box-shadow:0 3px 10px rgba(79,126,248,.3)}
+.nb2.p:hover{transform:translateY(-1px)}
+.cb{font-size:9.5px;color:var(--tx2);background:none;border:none;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.qnav{display:flex;align-items:center;gap:5px}
+.qn-input{font-family:var(--mn);font-size:10.5px;background:rgba(255,255,255,.06);border:1px solid var(--bd2);border-radius:6px;color:var(--tx);padding:4px 7px;width:48px;text-align:center;outline:none}
+.qn-input:focus{border-color:var(--a)}
+.qn-go{padding:4px 9px;border-radius:6px;font-size:10px;font-weight:600;background:rgba(79,126,248,.18);border:1px solid rgba(79,126,248,.35);color:var(--a2);cursor:pointer}
+.sr3{background:var(--bg2);border-left:1px solid var(--bd);padding:13px 11px;display:flex;flex-direction:column;gap:11px;position:sticky;top:98px;height:calc(100vh - 98px);overflow-y:auto}
+.sr3::-webkit-scrollbar{width:3px}.sr3::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+.tmc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:13px 11px;display:flex;flex-direction:column;align-items:center;gap:9px;position:relative;overflow:hidden;transition:border-color .5s}
+.tmc::before{content:'';position:absolute;inset:-40px;background:radial-gradient(circle at 50% 50%,var(--tc,#1db854),transparent 65%);opacity:.05;pointer-events:none;z-index:0}
+.tmc>*{position:relative;z-index:1}
+.tmc.warning{border-color:rgba(240,165,0,.25)}
+.tmc.critical{border-color:rgba(232,64,74,.3);animation:tG 1.4s ease-in-out infinite alternate}
+@keyframes tG{from{box-shadow:none}to{box-shadow:0 0 18px rgba(232,64,74,.25)}}
+.tl2{font-size:7.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2)}
+.trw{position:relative;width:88px;height:88px;display:flex;align-items:center;justify-content:center}
+.tr2{transform:rotate(-90deg);position:absolute;top:0;left:0}
+.rt{fill:none;stroke:rgba(255,255,255,.06);stroke-width:5}
+.rp{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .5s}
+.td{display:flex;align-items:center;gap:1px;font-family:var(--mn);font-size:20px;font-weight:700;letter-spacing:-1px;transition:color .5s}
+.db{display:flex;flex-direction:column;align-items:center;gap:1px}
+.dv{min-width:2ch;text-align:center}
+.ds3{font-family:var(--fn);font-size:6px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2)}
+.dsep{font-size:16px;font-weight:300;color:var(--mu);margin-bottom:5px;opacity:.5}
+.tb{font-size:8.5px;font-weight:600;padding:2px 9px;border-radius:100px;border:1px solid currentColor;opacity:.85}
+.tb.safe{color:var(--safe);background:rgba(29,184,84,.08)}
+.tb.warning{color:var(--warn);background:rgba(240,165,0,.10)}
+.tb.critical{color:var(--danger);background:rgba(232,64,74,.10)}
+.cam-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.cam-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;background:var(--sf2);border-bottom:1px solid var(--bd)}
+.cam-hdr-l{display:flex;align-items:center;gap:6px}
+.rec-wrap{display:flex;align-items:center;gap:4px}
+.rec-d{width:6px;height:6px;border-radius:50%;background:var(--danger);animation:recB 1s step-start infinite}
+@keyframes recB{50%{opacity:0}}
+.rec-l{font-family:var(--mn);font-size:8px;color:var(--danger);letter-spacing:.12em}
+.live-b{font-size:8px;font-weight:700;padding:2px 7px;border-radius:100px;border:1px solid rgba(29,184,84,.4);color:var(--safe);background:rgba(29,184,84,.1);animation:liveP 2s ease-in-out infinite}
+@keyframes liveP{0%,100%{box-shadow:0 0 0 0 rgba(29,184,84,.3)}50%{box-shadow:0 0 0 3px rgba(29,184,84,0)}}
+.cam-sname{font-family:var(--mn);font-size:8px;color:var(--tx2)}
+.cam-area{position:relative;background:#000;aspect-ratio:4/3;overflow:hidden}
+.cam-vid{width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1)}
+.cam-scan{position:absolute;inset:0;pointer-events:none;z-index:2;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(0,0,0,.07) 3px,rgba(0,0,0,.07) 4px)}
+.cam-cors{position:absolute;inset:0;pointer-events:none;z-index:3}
+.co{position:absolute;width:11px;height:11px;border-color:rgba(15,184,164,.55);border-style:solid}
+.co.tl{top:6px;left:6px;border-width:2px 0 0 2px}.co.tr{top:6px;right:6px;border-width:2px 2px 0 0}
+.co.bl{bottom:6px;left:6px;border-width:0 0 2px 2px}.co.br{bottom:6px;right:6px;border-width:0 2px 2px 0}
+.face-box{position:absolute;top:14%;left:22%;width:56%;height:66%;border:1.5px solid rgba(15,184,164,.55);border-radius:4px;z-index:4;pointer-events:none;transition:border-color .3s}
+.face-lbl{position:absolute;top:-13px;left:0;font-family:var(--mn);font-size:7px;color:rgba(15,184,164,.9);text-transform:uppercase;letter-spacing:.08em;transition:color .3s}
+.cam-ph{position:absolute;inset:0;background:rgba(4,7,14,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5}
+.cam-ph .ph-ico{font-size:26px;opacity:.5}.cam-ph .ph-txt{font-size:10px;color:var(--tx2);text-align:center;padding:0 12px}
+.cam-ph .ph-warn{font-size:9.5px;color:var(--warn);text-align:center;padding:0 10px}
+.cam-on-btn{background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;font-family:var(--fn);font-size:10px;font-weight:700;border-radius:7px;padding:7px 16px;cursor:pointer;border:none;transition:opacity .2s}
+.cam-on-btn:hover{opacity:.85}
+@keyframes camPulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+@keyframes shake{0%,100%{transform:none}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.cam-status{font-family:var(--mn);font-size:8px;padding:3px 9px;border-radius:100px;border:1px solid currentColor;margin-top:2px}
+.cam-status.ok{color:var(--safe);background:rgba(29,184,84,.1);border-color:rgba(29,184,84,.3)}
+.cam-status.off2{color:var(--warn);background:rgba(240,165,0,.1);border-color:rgba(240,165,0,.3)}
+.cam-status.err3{color:var(--danger);background:rgba(232,64,74,.1);border-color:rgba(232,64,74,.3)}
+.cam-ctrls{display:flex;align-items:center;gap:5px;padding:6px 11px;background:var(--sf2);border-top:1px solid var(--bd)}
+.cam-btn{width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;cursor:pointer;transition:background .18s}
+.cam-btn:hover{background:rgba(255,255,255,.09)}
+.cam-btn.off{background:rgba(232,64,74,.12);border-color:rgba(232,64,74,.3)}
+.cam-elapsed{font-family:var(--mn);font-size:8px;color:var(--tx2);margin-left:auto}
+.viol-strip{display:none;align-items:center;gap:6px;padding:5px 11px;background:rgba(232,64,74,.1);border-top:1px solid rgba(232,64,74,.2);font-size:10px;color:#f87171;font-weight:600;animation:vS .3s ease}
+@keyframes vS{from{opacity:0}to{opacity:1}}
+.score-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:11px 13px;display:flex;flex-direction:column;gap:9px}
+.score-t{font-size:7.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2)}
+.score-big{display:flex;align-items:baseline;gap:4px;justify-content:center}
+.score-n{font-family:var(--mn);font-size:28px;font-weight:700;color:var(--a2)}
+.score-d{font-family:var(--mn);font-size:13px;color:var(--tx2)}
+.score-pct{font-family:var(--mn);font-size:10.5px;color:var(--tl);background:rgba(15,184,164,.1);border:1px solid rgba(15,184,164,.25);padding:2px 8px;border-radius:100px;text-align:center}
+.sub-scores{display:flex;flex-direction:column;gap:5px}
+.ss-row{display:flex;align-items:center;gap:6px;font-size:9.5px}
+.ss-dot{width:6px;height:6px;border-radius:2px;flex-shrink:0}
+.ss-name{flex:1;color:var(--tx2)}.ss-val{font-family:var(--mn);font-size:9px;color:var(--tx)}
+.ic{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:10px 11px;display:flex;flex-direction:column;gap:6px}
+.it{font-size:7.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--tx2)}
+.ir{display:flex;justify-content:space-between;align-items:center;font-size:9.5px}
+.ik{color:var(--tx2)}.iv{font-family:var(--mn);color:var(--tx);font-size:9px}
+.iv.a{color:var(--a2)}.iv.t{color:var(--tl)}
+.ihr{height:1px;background:var(--bd)}
+.mov{position:fixed;inset:0;z-index:500;background:rgba(4,7,14,.92);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:16px}
+.mov.open{display:flex;animation:mF .25s ease}
+@keyframes mF{from{opacity:0}to{opacity:1}}
+.modal{background:var(--sf);border:1px solid rgba(255,255,255,.1);border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,.75);padding:24px;max-width:440px;width:100%;animation:mS .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto}
+@keyframes mS{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.mi{font-size:34px;text-align:center;margin-bottom:7px}
+.mt{font-family:var(--dp);font-size:18px;font-weight:800;text-align:center;margin-bottom:5px}
+.ms{font-size:11.5px;color:var(--tx2);text-align:center;line-height:1.65;margin-bottom:12px}
+.mst{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:9px;padding:9px 12px;margin-bottom:13px}
+.mav{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--tl));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.mname{font-size:12px;font-weight:700;color:var(--tx)}.mroll{font-family:var(--mn);font-size:9px;color:var(--tx2);margin-top:1px}
+.mstats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.mstat{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:8px;padding:8px 4px;text-align:center}
+.msv{font-family:var(--mn);font-size:14px;font-weight:700;color:var(--tx)}
+.msk{font-size:8px;color:var(--tx2);margin-top:2px}
+.msub-scores{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.msub-item{display:flex;align-items:center;gap:6px;padding:6px 9px;background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:7px}
+.msub-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.msub-n{font-size:9.5px;color:var(--tx2);flex:1}.msub-v{font-family:var(--mn);font-size:9.5px;font-weight:600;color:var(--tx)}
+.mbtns{display:flex;gap:7px}
+.mc{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:500;background:rgba(255,255,255,.05);border:1px solid var(--bd);color:var(--tx2);cursor:pointer}
+.mcf{flex:2;padding:9px;border-radius:8px;font-size:12px;font-weight:700;background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;border:none;box-shadow:0 3px 10px rgba(79,126,248,.35);transition:all .2s;cursor:pointer}
+.mcf:hover{transform:translateY(-1px)}
+.viol-count{font-size:10px;color:var(--warn);font-family:var(--mn);text-align:center;margin-bottom:8px}
+#resultPage{flex-direction:column;min-height:100vh}
+.rp2{display:flex;flex-direction:column;align-items:center;gap:18px;padding:40px 20px;text-align:center;max-width:680px;margin:0 auto;width:100%}
+.rb{font-size:56px;animation:bP .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes bP{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.rt2{font-family:var(--dp);font-size:26px;font-weight:800;letter-spacing:-.02em}
+.rs{font-size:12.5px;color:var(--tx2);max-width:380px;line-height:1.75}
+.rcs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:520px}
+.rca{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px 8px;text-align:center}
+.rv{font-family:var(--mn);font-size:22px;font-weight:700}.rk{font-size:9px;color:var(--tx2);margin-top:3px}
+.rsubs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;width:100%;max-width:580px}
+.rsub{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:12px 6px;text-align:center}
+.rsub-val{font-family:var(--mn);font-size:16px;font-weight:700}
+.rsub-name{font-size:8.5px;color:var(--tx2);margin-top:3px;font-family:var(--dp);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.r-score-ring{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.r-ring-txt{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.r-ring-pct{font-family:var(--mn);font-size:24px;font-weight:700;color:var(--a2)}
+.r-ring-lbl{font-size:9px;color:var(--tx2);margin-top:1px}
+.grade-badge{font-family:var(--dp);font-size:18px;font-weight:700;padding:6px 20px;border-radius:100px;border:2px solid currentColor}
+.back-dash-btn{padding:11px 28px;border-radius:10px;background:linear-gradient(135deg,var(--a),var(--tl));color:#fff;font-size:13px;font-weight:700;box-shadow:0 4px 16px rgba(79,126,248,.35);transition:all .2s;cursor:pointer;border:none;letter-spacing:.02em}
+.back-dash-btn:hover{transform:translateY(-1px)}
+.result-detail{width:100%;max-width:600px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.rd-hdr{padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.rd-title{font-family:var(--dp);font-size:13px;font-weight:700}
+.rd-rows{display:flex;flex-direction:column}
+.rd-row{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-bottom:1px solid var(--bd);font-size:11px}
+.rd-row:last-child{border-bottom:none}
+.rd-k{color:var(--tx2)}.rd-v{font-family:var(--mn);font-size:10px;font-weight:600}
+@media(max-width:1150px){.layout{grid-template-columns:195px 1fr 240px}.dash-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:960px){.auth-wrap{grid-template-columns:1fr}.auth-left{display:none}.layout{grid-template-columns:1fr}.sl,.sr3{display:none}.main{padding:16px}.dash-grid{grid-template-columns:1fr}.subject-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:580px){.pw,.submit-nb{display:none}.dash-stats{grid-template-columns:repeat(2,1fr)}.rcs{grid-template-columns:repeat(2,1fr)}.rsubs{grid-template-columns:repeat(3,1fr)}}
+
+/* ── Violation Log (in sidebar) ── */
+.viol-log{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.vl-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;background:var(--sf2);border-bottom:1px solid var(--bd)}
+.vl-title{font-size:7.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--tx2)}
+.vl-count{font-family:var(--mn);font-size:8px;color:var(--danger);font-weight:600}
+.vl-items{max-height:110px;overflow-y:auto;display:flex;flex-direction:column}
+.vl-items::-webkit-scrollbar{width:3px}.vl-items::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+.vl-empty{font-size:10px;color:var(--tx2);padding:10px 11px;text-align:center;opacity:.6}
+.vl-item{display:flex;align-items:flex-start;gap:7px;padding:6px 10px;border-bottom:1px solid var(--bd);animation:vlI .25s ease}
+.vl-item:last-child{border-bottom:none}
+@keyframes vlI{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+.vl-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.vl-dot.high{background:var(--danger)}.vl-dot.med{background:var(--warn)}.vl-dot.low{background:var(--a2)}
+.vl-text{font-size:9px;color:var(--tx2);line-height:1.45;flex:1}
+.vl-text strong{color:var(--tx);font-weight:600;display:block;font-size:9.5px}
+.vl-time{font-family:var(--mn);font-size:8px;color:var(--mu);white-space:nowrap;margin-top:1px}
+
+/* ── Floating Violation Alert ── */
+.viol-alert{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:999;
+  display:none;align-items:center;gap:10px;
+  padding:10px 18px 10px 12px;
+  background:rgba(10,5,5,.92);
+  border:1px solid var(--danger);
+  border-radius:12px;
+  box-shadow:0 0 0 1px rgba(232,64,74,.2),0 8px 32px rgba(232,64,74,.25);
+  backdrop-filter:blur(20px);
+  min-width:280px;max-width:480px;
+  animation:vaIn .3s cubic-bezier(.34,1.56,.64,1)}
+.viol-alert.show{display:flex}
+@keyframes vaIn{from{opacity:0;transform:translateX(-50%) translateY(-12px) scale(.94)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+.va-icon{width:32px;height:32px;border-radius:9px;background:rgba(232,64,74,.18);border:1px solid rgba(232,64,74,.35);
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.va-body{flex:1;min-width:0}
+.va-title{font-size:11.5px;font-weight:700;color:#f87171;margin-bottom:2px}
+.va-msg{font-size:10px;color:rgba(255,255,255,.6);line-height:1.4}
+.va-badge{font-family:var(--mn);font-size:9px;font-weight:600;padding:2px 8px;border-radius:100px;
+  background:rgba(232,64,74,.2);border:1px solid rgba(232,64,74,.4);color:#f87171;white-space:nowrap;flex-shrink:0}
+.va-close{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.08);border:none;
+  color:var(--tx2);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.va-close:hover{background:rgba(255,255,255,.15);color:var(--tx)}
+
+/* ── Motion detection overlay badge ── */
+.motion-badge{position:absolute;bottom:6px;left:6px;z-index:10;
+  font-family:var(--mn);font-size:7px;font-weight:600;
+  padding:2px 7px;border-radius:100px;letter-spacing:.06em;
+  border:1px solid currentColor;transition:all .4s}
+.motion-badge.clear{color:rgba(29,184,84,.8);background:rgba(29,184,84,.1);border-color:rgba(29,184,84,.3)}
+.motion-badge.motion{color:var(--warn);background:rgba(240,165,0,.12);border-color:rgba(240,165,0,.35);animation:mbP .6s ease-in-out infinite alternate}
+.motion-badge.alert{color:var(--danger);background:rgba(232,64,74,.15);border-color:rgba(232,64,74,.4);animation:mbP .3s ease-in-out infinite alternate}
+@keyframes mbP{from{opacity:.7}to{opacity:1}}
+
+/* ── Object detection boxes (canvas overlay) ── */
+.detect-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:8}
+</style>
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div class="page active" id="loginPage">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <div class="brand-logo"><div class="brand-mk">E</div><span class="brand-nm">Exam<em>Flow</em></span></div>
+        <div class="bca-badge">BCA Programme 2023-2026</div>
+        <div class="auth-tagline">Your gateway to academic excellence.</div>
+        <div class="auth-sub">Secure, proctored online examinations for BCA students. Complete 200-question assessment with real-time camera monitoring.</div>
+        <div class="auth-features">
+          <div class="af-item"><div class="af-icon" style="background:rgba(79,126,248,.15);color:var(--ds)">200</div>200 MCQ across 5 subjects</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(15,184,164,.15);color:var(--os)">CAM</div>Live camera proctoring required</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(168,85,247,.15);color:var(--dsa)">120</div>120-minute timed examination</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(249,115,22,.15);color:var(--ml)">LIVE</div>Live score tracking per subject</div>
+        </div>
+      </div>
+      <div class="auth-subjects">
+        <div class="as-label">Exam Subjects</div>
+        <div class="as-pills">
+          <span class="as-pill" style="color:var(--ds);border-color:rgba(79,126,248,.3)">Data Science</span>
+          <span class="as-pill" style="color:var(--os);border-color:rgba(15,184,164,.3)">OS</span>
+          <span class="as-pill" style="color:var(--js);border-color:rgba(232,200,72,.3)">JavaScript</span>
+          <span class="as-pill" style="color:var(--dsa);border-color:rgba(168,85,247,.3)">Data Structures</span>
+          <span class="as-pill" style="color:var(--ml);border-color:rgba(249,115,22,.3)">ML &amp; Algorithms</span>
+        </div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-title">Welcome back</div>
+      <div class="auth-form-sub">Sign in to your BCA 2023-2026 examination portal.</div>
+
+      <div style="margin-bottom:18px">
+        <div class="form-label" style="margin-bottom:9px">Demo Accounts — Click to Login Instantly</div>
+        <div id="demoTiles" style="display:grid;grid-template-columns:1fr 1fr;gap:7px"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Roll Number / Email</label>
+        <input class="form-input" id="loginId" placeholder="e.g. 2320520034" type="text"/>
+        <div class="form-err" id="loginIdErr">Please enter your roll number or email</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="loginPwd" placeholder="Enter your password" type="password"/>
+        <div class="form-err" id="loginPwdErr">Incorrect password</div>
+      </div>
+      <div class="remember-row">
+        <div class="check-wrap" id="remWrap"><div class="check-box on" id="remCk">+</div><span class="check-label">Remember me</span></div>
+        <span class="forgot-link" id="forgotLink" style="color:var(--a2);cursor:pointer;font-size:11px">Forgot password?</span>
+      </div>
+      <button id="signInBtn" class="btn-primary">Sign In</button>
+      <div class="form-divider"><div class="fd-line"></div><span class="fd-txt">OR</span><div class="fd-line"></div></div>
+      <button id="demoBtn" class="btn-secondary" style="font-weight:700;color:var(--a2)">One-Click Demo Login (Ankith Reddy)</button>
+      <div class="auth-switch" style="margin-top:14px">New student? <span id="createAccLink" style="color:var(--a2);font-weight:700;cursor:pointer;text-decoration:underline">Create account</span></div>
+    </div>    </div>
+  </div>
+</div>
+
+<!-- ════ REGISTER ════ -->
+<div class="page" id="registerPage">
+  <div class="auth-wrap" style="max-width:940px">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <div class="brand-logo"><div class="brand-mk">E</div><span class="brand-nm">Exam<em>Flow</em></span></div>
+        <div class="bca-badge">BCA Programme 2023-2026</div>
+        <div class="auth-tagline">Join BCA 2023-2026.</div>
+        <div class="auth-sub">Register your student account for the Comprehensive MCQ Examination.</div>
+        <div class="auth-features">
+          <div class="af-item"><div class="af-icon" style="background:rgba(79,126,248,.15);color:var(--ds)">OK</div>Free account for enrolled students</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(15,184,164,.15);color:var(--os)">SEC</div>Encrypted data — exam secured</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(168,85,247,.15);color:var(--dsa)">CAM</div>Camera required during exam</div>
+          <div class="af-item"><div class="af-icon" style="background:rgba(249,115,22,.15);color:var(--ml)">DATA</div>Real-time analytics &amp; results</div>
+        </div>
+      </div>
+      <div class="auth-subjects" style="margin-top:auto;padding-top:24px;position:relative;z-index:1">
+        <div class="as-label">Batch Information</div>
+        <div style="font-size:11px;color:var(--tx2);line-height:1.9">Programme: BCA<br/>Batch: 2023-2026<br/>Duration: 3 Years<br/>Exam: Semester Assessment</div>
+      </div>
+    </div>
+    <div class="auth-right" style="padding-top:32px;padding-bottom:32px">
+      <div class="auth-form-title">Create Account</div>
+      <div class="auth-form-sub">Register as a BCA 2023-2026 student to access ExamFlow.</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">First Name</label><input class="form-input" id="regFirst" placeholder="Ankith" type="text"/></div>
+        <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" id="regLast" placeholder="Reddy" type="text"/></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Roll Number</label>
+        <input class="form-input" id="regRoll" placeholder="2320520034" type="text" maxlength="10"/>
+        <div class="form-err" id="regRollErr">Roll number must be 10 digits</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" id="regEmail" placeholder="ankith@college.edu" type="email"/>
+        <div class="form-err" id="regEmailErr">Enter a valid email address</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Programme</label>
+          <select class="form-select" id="regBranch">
+            <option value="BCA" selected>BCA</option>
+            <option value="BCA-DS">BCA (Data Science)</option>
+            <option value="BCA-AI">BCA (AI &amp; ML)</option>
+            <option value="BSc-CS">BSc Computer Science</option>
+            <option value="BSc-IT">BSc IT</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Batch</label>
+          <select class="form-select" id="regBatch">
+            <option value="2023-2026" selected>2023-2026</option>
+            <option value="2022-2025">2022-2025</option>
+            <option value="2024-2027">2024-2027</option>
+            <option value="2021-2024">2021-2024</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Choose Avatar</label>
+        <div class="avatar-pick" id="avPick">
+          <div class="av-opt sel" data-av="ST" onclick="pickAv(this)">ST</div>
+          <div class="av-opt" data-av="AR" onclick="pickAv(this)">AR</div>
+          <div class="av-opt" data-av="DR" onclick="pickAv(this)">DR</div>
+          <div class="av-opt" data-av="EN" onclick="pickAv(this)">EN</div>
+          <div class="av-opt" data-av="FX" onclick="pickAv(this)">FX</div>
+          <div class="av-opt" data-av="GO" onclick="pickAv(this)">GO</div>
+          <div class="av-opt" data-av="LN" onclick="pickAv(this)">LN</div>
+          <div class="av-opt" data-av="TG" onclick="pickAv(this)">TG</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="regPwd" placeholder="Min 8 characters" type="password" oninput="chkStrength(this.value)"/>
+        <div class="strength-bar"><div class="strength-fill" id="strF"></div></div>
+        <div class="strength-txt" id="strT" style="color:var(--tx2)"></div>
+        <div class="form-err" id="regPwdErr">Password must be at least 8 characters</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input class="form-input" id="regPwd2" placeholder="Repeat password" type="password"/>
+        <div class="form-err" id="regPwd2Err">Passwords do not match</div>
+      </div>
+      <div class="check-wrap" style="margin-bottom:16px" onclick="toggleChk('termsCk')">
+        <div class="check-box" id="termsCk"></div>
+        <span class="check-label" style="font-size:11px">I agree to the <a style="color:var(--a2)">Terms of Service</a> and permit camera access during exams</span>
+      </div>
+      <button class="btn-primary" onclick="doRegister()">Create BCA Account</button>
+      <div class="auth-switch" style="margin-top:12px">Already registered? <a onclick="showPage('loginPage')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ DASHBOARD ════ -->
+<div class="page" id="dashPage">
+  <nav class="dash-nav">
+    <a class="dash-logo" href="#"><div class="dl-mk">E</div><span class="dl-nm">Exam<em>Flow</em></span></a>
+    <div style="font-family:var(--mn);font-size:9px;color:var(--tl);background:rgba(15,184,164,.1);border:1px solid rgba(15,184,164,.25);padding:3px 10px;border-radius:100px;letter-spacing:.06em">BCA 2023-2026</div>
+    <div class="dash-nav-r">
+      <div class="user-pill"><div class="up-av" id="dashAv">AR</div><div><div class="up-name" id="dashName">Ankith Reddy</div><div class="up-roll" id="dashRoll">2320520034</div></div></div>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </nav>
+  <div class="dash-body">
+    <div class="dash-welcome">
+      <div class="dw-greeting">BCA 2023-2026 Portal</div>
+      <div class="dw-name">Hello, <span id="welcomeName">Ankith</span>!</div>
+      <div class="dw-sub">Your comprehensive MCQ exam is ready. Camera proctoring is required — make sure your webcam is available.</div>
+    </div>
+    <div class="dash-stats">
+      <div class="dstat" style="--sc:rgba(79,126,248,.15)"><div class="ds-icon">2</div><div class="ds-val">2</div><div class="ds-label">Exams Available</div><div class="ds-change">Ready now</div></div>
+      <div class="dstat" style="--sc:rgba(15,184,164,.12)"><div class="ds-icon">Q</div><div class="ds-val">200</div><div class="ds-label">Total Questions</div><div class="ds-change">5 subjects</div></div>
+      <div class="dstat" style="--sc:rgba(249,115,22,.12)"><div class="ds-icon">T</div><div class="ds-val">120</div><div class="ds-label">Minutes Allowed</div><div class="ds-change">2 hours</div></div>
+      <div class="dstat" style="--sc:rgba(232,64,74,.12)"><div class="ds-icon">CAM</div><div class="ds-val">Live</div><div class="ds-label">Camera Proctoring</div><div class="ds-change">Required</div></div>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="dash-card-hdr"><div><div class="dch-title">Available Exams</div><div class="dch-sub">Camera access required to start</div></div></div>
+        <div class="exam-list">
+          <div class="exam-item">
+            <div class="ei-left">
+              <div class="ei-icon" style="background:linear-gradient(135deg,rgba(79,126,248,.2),rgba(15,184,164,.15))">EX</div>
+              <div>
+                <div class="ei-title">BCA Comprehensive MCQ Exam</div>
+                <div class="ei-meta">
+                  <span>200 Questions</span><span class="ei-dot"></span><span>5 Subjects</span><span class="ei-dot"></span><span>120 min</span><span class="ei-dot"></span>
+                  <span class="ei-badge" style="color:var(--safe);border-color:rgba(29,184,84,.3)">Available</span>
+                  <span class="ei-badge" style="color:var(--warn);border-color:rgba(240,165,0,.3)">Camera</span>
+                </div>
+              </div>
+            </div>
+            <button class="start-btn" onclick="startExam()">Start</button>
+          </div>
+          <div class="exam-item">
+            <div class="ei-left">
+              <div class="ei-icon" style="background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(249,115,22,.15))">M2</div>
+              <div>
+                <div class="ei-title">Mock Test Series — Session 2</div>
+                <div class="ei-meta">
+                  <span>100 Questions</span><span class="ei-dot"></span><span>5 Subjects</span><span class="ei-dot"></span><span>60 min</span><span class="ei-dot"></span>
+                  <span class="ei-badge" style="color:var(--safe);border-color:rgba(29,184,84,.3)">Available</span>
+                  <span class="ei-badge" style="color:var(--a2);border-color:rgba(79,126,248,.3)">Mock</span>
+                </div>
+              </div>
+            </div>
+            <button class="start-btn" onclick="startMock()">Start</button>
+          </div>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-hdr"><div><div class="dch-title">Student Profile</div><div class="dch-sub">BCA 2023-2026 enrollment</div></div></div>
+        <div class="profile-card">
+          <div class="pc-top"><div class="pc-av" id="pcAv">AR</div><div><div class="pc-name" id="pcName">Ankith Reddy</div><div class="pc-roll" id="pcRoll">2320520034</div></div></div>
+          <div class="pc-rows">
+            <div class="pc-row"><span class="pc-k">Programme</span><span class="pc-v t" id="pcBranch">BCA</span></div>
+            <div class="pc-row"><span class="pc-k">Batch</span><span class="pc-v" id="pcBatch">2023-2026</span></div>
+            <div class="pc-row"><span class="pc-k">Email</span><span class="pc-v a" id="pcEmail">—</span></div>
+            <div class="pc-row"><span class="pc-k">Camera</span><span class="pc-v" style="color:var(--warn)">Required</span></div>
+            <div class="pc-row"><span class="pc-k">Status</span><span class="pc-v" style="color:var(--safe)">Active</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-hdr"><div><div class="dch-title">Exam Subjects Overview</div><div class="dch-sub">BCA 2023-2026 — 40 questions per subject</div></div><button class="dch-action" onclick="startExam()">Start Exam</button></div>
+      <div class="subject-grid">
+        <div class="sub-tile" style="background:rgba(79,126,248,.1);border-color:rgba(79,126,248,.2)"><div class="st-icon" style="color:var(--ds)">DS</div><div class="st-name" style="color:var(--ds)">Data Science</div><div class="st-count" style="color:var(--ds)">40 MCQs</div><div class="st-bar"><div class="st-fill" style="width:82%;background:var(--ds)"></div></div></div>
+        <div class="sub-tile" style="background:rgba(15,184,164,.08);border-color:rgba(15,184,164,.2)"><div class="st-icon" style="color:var(--os)">OS</div><div class="st-name" style="color:var(--os)">Oper. Systems</div><div class="st-count" style="color:var(--os)">40 MCQs</div><div class="st-bar"><div class="st-fill" style="width:76%;background:var(--os)"></div></div></div>
+        <div class="sub-tile" style="background:rgba(232,200,72,.07);border-color:rgba(232,200,72,.2)"><div class="st-icon" style="color:var(--js)">JS</div><div class="st-name" style="color:var(--js)">JavaScript</div><div class="st-count" style="color:var(--js)">40 MCQs</div><div class="st-bar"><div class="st-fill" style="width:70%;background:var(--js)"></div></div></div>
+        <div class="sub-tile" style="background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.2)"><div class="st-icon" style="color:var(--dsa)">DSA</div><div class="st-name" style="color:var(--dsa)">Data Structures</div><div class="st-count" style="color:var(--dsa)">40 MCQs</div><div class="st-bar"><div class="st-fill" style="width:80%;background:var(--dsa)"></div></div></div>
+        <div class="sub-tile" style="background:rgba(249,115,22,.08);border-color:rgba(249,115,22,.2)"><div class="st-icon" style="color:var(--ml)">ML</div><div class="st-name" style="color:var(--ml)">ML &amp; Algorithms</div><div class="st-count" style="color:var(--ml)">40 MCQs</div><div class="st-bar"><div class="st-fill" style="width:72%;background:var(--ml)"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ EXAM PAGE ════ -->
+<div class="page" id="examPage">
+  <nav class="nb" id="examNb" style="--pg:0%">
+    <div class="nb-l"><a class="logo2" href="#"><div class="logo2-mk">E</div><span class="logo2-nm">Exam<em>Flow</em></span></a></div>
+    <div class="nb-c">
+      <div class="nb-title">BCA Comprehensive MCQ — 2023-2026</div>
+      <div class="nb-meta"><span>Q <span id="nCQ">1</span><span class="s">/</span>200</span><span class="s">·</span><span><span id="nAns">0</span> answered</span><span class="s">·</span><span id="nbStudent">Ankith Reddy — 2320520034</span></div>
+    </div>
+    <div class="nb-r">
+      <div class="pw"><div class="pb"><div class="pf" id="nP" style="width:0%"></div></div><span class="pl" id="nPL">0/200</span></div>
+      <div class="tc safe" id="nChip"><span id="nTD">120:00</span></div>
+      <button class="submit-nb" onclick="oM()">Submit</button>
+      <div class="av-nb"><div class="av-nb-c" id="examNbAv">AR</div><div><div class="av-nb-n" id="examNbName">Ankith</div><div class="av-nb-r" id="examNbRoll">2320520034</div></div></div>
+    </div>
+  </nav>
+  <div class="sub-tabs" id="subTabs">
+    <div class="stab active" style="--sc:var(--ds)" onclick="goSub(0)" id="tab0"><span class="dot"></span>Data Science<span class="cnt" id="tc0">0/40</span></div>
+    <div class="stab" style="--sc:var(--os)" onclick="goSub(1)" id="tab1"><span class="dot" style="background:var(--os)"></span>Operating Systems<span class="cnt" id="tc1">0/40</span></div>
+    <div class="stab" style="--sc:var(--js)" onclick="goSub(2)" id="tab2"><span class="dot" style="background:var(--js)"></span>JavaScript<span class="cnt" id="tc2">0/40</span></div>
+    <div class="stab" style="--sc:var(--dsa)" onclick="goSub(3)" id="tab3"><span class="dot" style="background:var(--dsa)"></span>Data Structures<span class="cnt" id="tc3">0/40</span></div>
+    <div class="stab" style="--sc:var(--ml)" onclick="goSub(4)" id="tab4"><span class="dot" style="background:var(--ml)"></span>ML &amp; Algorithms<span class="cnt" id="tc4">0/40</span></div>
+  </div>
+  <div class="layout">
+    <aside class="sl">
+      <div class="sc-card">
+        <div class="sc-top"><div class="sc-av" id="examScAv">AR</div><div><div class="sc-n" id="examScName">Ankith Reddy</div><div class="sc-rn" id="examScRoll">2320520034</div></div></div>
+        <div class="sc-rows">
+          <div class="sc-row2"><span class="sc-k">Programme</span><span class="sc-v2">BCA</span></div>
+          <div class="sc-row2"><span class="sc-k">Batch</span><span class="sc-v2" id="examScBatch">2023-2026</span></div>
+          <div class="sc-row2"><span class="sc-k">Total Q</span><span class="sc-v2">200 MCQ</span></div>
+        </div>
+      </div>
+      <div class="slt">Subject Progress</div>
+      <div class="sub-prog">
+        <div class="sp-row"><div class="sp-label"><span class="sp-name" style="color:var(--ds)">Data Science</span><span class="sp-cnt" id="spDS">0/40</span></div><div class="sp-bar"><div class="sp-fill" id="sfDS" style="width:0%;background:var(--ds)"></div></div></div>
+        <div class="sp-row"><div class="sp-label"><span class="sp-name" style="color:var(--os)">Op. Systems</span><span class="sp-cnt" id="spOS">0/40</span></div><div class="sp-bar"><div class="sp-fill" id="sfOS" style="width:0%;background:var(--os)"></div></div></div>
+        <div class="sp-row"><div class="sp-label"><span class="sp-name" style="color:var(--js)">JavaScript</span><span class="sp-cnt" id="spJS">0/40</span></div><div class="sp-bar"><div class="sp-fill" id="sfJS" style="width:0%;background:var(--js)"></div></div></div>
+        <div class="sp-row"><div class="sp-label"><span class="sp-name" style="color:var(--dsa)">Data Structures</span><span class="sp-cnt" id="spDSA">0/40</span></div><div class="sp-bar"><div class="sp-fill" id="sfDSA" style="width:0%;background:var(--dsa)"></div></div></div>
+        <div class="sp-row"><div class="sp-label"><span class="sp-name" style="color:var(--ml)">ML &amp; Algo</span><span class="sp-cnt" id="spML">0/40</span></div><div class="sp-bar"><div class="sp-fill" id="sfML" style="width:0%;background:var(--ml)"></div></div></div>
+      </div>
+      <div class="slt">Legend</div>
+      <div class="legend">
+        <div class="leg-i"><span class="leg-d ans"></span>Answered</div>
+        <div class="leg-i"><span class="leg-d cur"></span>Current</div>
+        <div class="leg-i"><span class="leg-d flg"></span>Flagged</div>
+        <div class="leg-i"><span class="leg-d una"></span>Unanswered</div>
+      </div>
+      <div class="slt">Navigator</div>
+      <div class="mini-grid-wrap"><div class="qg" id="qG"></div></div>
+      <div style="height:1px;background:var(--bd)"></div>
+      <div class="sts">
+        <div class="slt">Summary</div>
+        <div class="sr2x"><span class="sk">Total</span><span class="sv">200</span></div>
+        <div class="sr2x"><span class="sk">Answered</span><span class="sv g" id="stA">0</span></div>
+        <div class="sr2x"><span class="sk">Flagged</span><span class="sv y" id="stF">0</span></div>
+        <div class="sr2x"><span class="sk">Remaining</span><span class="sv r" id="stR">200</span></div>
+      </div>
+    </aside>
+    <main class="main" id="mainArea">
+      <div class="sub-header">
+        <div class="sub-icon2" id="subIcon" style="background:rgba(79,126,248,.15);color:var(--ds)">DS</div>
+        <div><div class="sub-name-h" id="subNameMain" style="color:var(--ds)">Data Science</div><div class="sub-desc-h" id="subDesc">Statistics · Pandas · NumPy · Visualization · Probability</div></div>
+        <div class="sub-badge-h" id="subBadge" style="color:var(--ds);border-color:rgba(79,126,248,.3)">Q 1–40</div>
+      </div>
+      <div class="qc" id="qC">
+        <div class="qh">
+          <span class="qbadge" id="qBadge" style="color:var(--ds);border-color:rgba(79,126,248,.3)">Q1</span>
+          <div class="qtags"><span class="qtag medium" id="qDiff">Medium</span><span class="qtag" id="qTopic">Topic</span><span class="qtag">1 mark</span></div>
+          <button class="fb" id="fBtn" onclick="tFlag()">Flag</button>
+        </div>
+        <div class="qbody"><div class="qt" id="qT"></div><div class="opts" id="oList"></div></div>
+        <div class="qf">
+          <div class="nbbs"><button class="nb2" id="pBtn" onclick="prevQ()" disabled>Prev</button><button class="nb2 p" id="nBtn" onclick="nextQ()">Next</button></div>
+          <div class="qnav"><input class="qn-input" id="qnI" type="number" min="1" max="200" placeholder="Go#"/><button class="qn-go" onclick="goQ()">Go</button></div>
+          <button class="cb" onclick="cAns()">Clear</button>
+        </div>
+      </div>
+    </main>
+    <aside class="sr3">
+      <div class="tmc safe" id="tC">
+        <div class="tl2">Time Remaining</div>
+        <div class="trw">
+          <svg class="tr2" width="88" height="88" viewBox="0 0 88 88">
+            <circle class="rt" cx="44" cy="44" r="37"/>
+            <circle class="rp" id="rP" cx="44" cy="44" r="37" stroke="#1db854" stroke-dasharray="232.48" stroke-dashoffset="0"/>
+          </svg>
+          <div class="td" id="tDig" style="color:#1db854">
+            <span class="db"><span class="dv" id="tM">120</span><span class="ds3">min</span></span>
+            <span class="dsep">:</span>
+            <span class="db"><span class="dv" id="tS">00</span><span class="ds3">sec</span></span>
+          </div>
+        </div>
+        <div class="tb safe" id="tB">In Progress</div>
+      </div>
+      <div class="cam-card">
+        <div class="cam-hdr">
+          <div class="cam-hdr-l">
+            <div class="rec-wrap" id="recW" style="display:none"><div class="rec-d"></div><span class="rec-l">REC</span></div>
+            <span class="live-b" id="liveB" style="display:none">LIVE</span>
+          </div>
+          <span class="cam-sname" id="camSname">Ankith — 2320520034</span>
+        </div>
+        <div class="cam-area">
+          <video id="camVid" class="cam-vid" autoplay playsinline muted style="display:none"></video>
+          <div class="cam-scan"></div>
+          <div class="cam-cors"><div class="co tl"></div><div class="co tr"></div><div class="co bl"></div><div class="co br"></div></div>
+          <canvas class="detect-canvas" id="detectCanvas"></canvas>
+          <div class="motion-badge clear" id="motionBadge">CLEAR</div>
+          <div class="face-box" id="faceBox" style="display:none"><span class="face-lbl" id="faceLbl">Face Detected</span></div>
+          <div class="cam-ph" id="camPh">
+            <div class="ph-ico" id="camPhIco" style="font-size:22px;animation:camPulse 1.2s ease-in-out infinite">⬤</div>
+            <div class="ph-txt" id="camPhTxt" style="color:var(--a2)">Connecting camera...</div>
+            <div class="ph-warn" id="camPhWarn">Setting up proctoring</div>
+          </div>
+        </div>
+        <div class="cam-ctrls">
+          <button class="cam-btn" id="muteBtn" onclick="toggleMute()" title="Mute/Unmute">MIC</button>
+          <button class="cam-btn" id="camBtn" onclick="toggleCam()" title="Camera on/off">CAM</button>
+          <button class="cam-btn" onclick="retryCam()" title="Retry camera connection" style="font-size:8px">↺</button>
+          <div class="cam-status off2" id="camStatus">Connecting...</div>
+          <span class="cam-elapsed" id="camElapsed" style="display:none">00:00</span>
+        </div>
+        <div class="viol-log" id="violLog">
+          <div class="vl-hdr"><span class="vl-title">Proctoring Log</span><span class="vl-count" id="vlCount">0 violations</span></div>
+          <div class="vl-items" id="vlItems"><div class="vl-empty">No violations recorded</div></div>
+        </div>
+      </div>
+      <div class="score-card">
+        <div class="score-t">Live Score Tracker</div>
+        <div class="score-big"><span class="score-n" id="liveScore">0</span><span class="score-d">/200</span></div>
+        <div class="score-pct" id="livePct">0% Complete</div>
+        <div class="sub-scores">
+          <div class="ss-row"><div class="ss-dot" style="background:var(--ds)"></div><span class="ss-name">Data Science</span><span class="ss-val" id="ssDS">0/40</span></div>
+          <div class="ss-row"><div class="ss-dot" style="background:var(--os)"></div><span class="ss-name">OS</span><span class="ss-val" id="ssOS">0/40</span></div>
+          <div class="ss-row"><div class="ss-dot" style="background:var(--js)"></div><span class="ss-name">JavaScript</span><span class="ss-val" id="ssJS">0/40</span></div>
+          <div class="ss-row"><div class="ss-dot" style="background:var(--dsa)"></div><span class="ss-name">Data Structures</span><span class="ss-val" id="ssDSA">0/40</span></div>
+          <div class="ss-row"><div class="ss-dot" style="background:var(--ml)"></div><span class="ss-name">ML &amp; Algorithms</span><span class="ss-val" id="ssML">0/40</span></div>
+        </div>
+      </div>
+      <div class="ic">
+        <div class="it">Exam Details</div>
+        <div class="ir"><span class="ik">Student</span><span class="iv t" id="examInfoName">Ankith Reddy</span></div><div class="ihr"></div>
+        <div class="ir"><span class="ik">Roll No.</span><span class="iv a" id="examInfoRoll">2320520034</span></div><div class="ihr"></div>
+        <div class="ir"><span class="ik">Programme</span><span class="iv">BCA</span></div><div class="ihr"></div>
+        <div class="ir"><span class="ik">Batch</span><span class="iv">2023-2026</span></div><div class="ihr"></div>
+        <div class="ir"><span class="ik">Total Q</span><span class="iv">200</span></div><div class="ihr"></div>
+        <div class="ir"><span class="ik">Duration</span><span class="iv">120 min</span></div><div class="ihr"></div>
+        <div class="ir"><span class="ik">Passing</span><span class="iv">100/200 (50%)</span></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ════ RESULT PAGE ════ -->
+<div class="page" id="resultPage">
+  <nav class="dash-nav">
+    <a class="dash-logo" href="#"><div class="dl-mk">E</div><span class="dl-nm">Exam<em>Flow</em></span></a>
+    <div style="font-family:var(--mn);font-size:9px;color:var(--tl);background:rgba(15,184,164,.1);border:1px solid rgba(15,184,164,.25);padding:3px 10px;border-radius:100px;letter-spacing:.06em">Result</div>
+    <div class="dash-nav-r">
+      <div class="user-pill"><div class="up-av" id="resAv">AR</div><div><div class="up-name" id="resName">Ankith Reddy</div><div class="up-roll" id="resRoll">2320520034</div></div></div>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </nav>
+  <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center">
+    <div class="rp2">
+      <div class="rb" id="resEmoji">🎉</div>
+      <div class="rt2" id="resTitle">Exam Submitted!</div>
+      <div class="rs" id="resSubtitle">Here is your performance summary for the BCA 2023-2026 Comprehensive MCQ Examination.</div>
+      <div class="r-score-ring">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="8"/>
+          <circle id="resRingFill" cx="70" cy="70" r="60" fill="none" stroke="var(--a)" stroke-width="8" stroke-linecap="round" stroke-dasharray="376.99" stroke-dashoffset="376.99" transform="rotate(-90 70 70)" style="transition:stroke-dashoffset 1.5s ease"/>
+        </svg>
+        <div class="r-ring-txt">
+          <div class="r-ring-pct" id="resPctNum">0%</div>
+          <div class="r-ring-lbl">Score</div>
+        </div>
+      </div>
+      <div class="grade-badge" id="resGradeBadge" style="color:var(--safe);border-color:var(--safe)">Grade A</div>
+      <div class="rcs">
+        <div class="rca"><div class="rv" id="rcCorrect" style="color:var(--safe)">—</div><div class="rk">Correct</div></div>
+        <div class="rca"><div class="rv" id="rcWrong" style="color:var(--danger)">—</div><div class="rk">Wrong</div></div>
+        <div class="rca"><div class="rv" id="rcSkipped" style="color:var(--warn)">—</div><div class="rk">Skipped</div></div>
+        <div class="rca"><div class="rv" id="rcTime" style="color:var(--a2)">—</div><div class="rk">Time Used</div></div>
+      </div>
+      <div class="rsubs" id="resSubCards"></div>
+      <div class="result-detail">
+        <div class="rd-hdr"><div class="rd-title">Exam Summary</div></div>
+        <div class="rd-rows" id="resDetailRows"></div>
+      </div>
+      <button class="back-dash-btn" onclick="goToDash()">Back to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SUBMIT MODAL ════ -->
+<div class="mov" id="modal">
+  <div class="modal">
+    <div class="mi">📋</div>
+    <div class="mt">Submit Examination?</div>
+    <div class="ms">You are about to submit all 200 answers. This action cannot be undone.</div>
+    <div class="mst">
+      <div class="mav" id="modalAv">AR</div>
+      <div><div class="mname" id="modalName">Ankith Reddy</div><div class="mroll" id="modalRoll">Roll No. 2320520034 — BCA 2023-2026</div></div>
+    </div>
+    <div class="mstats">
+      <div class="mstat"><div class="msv" id="msA">0</div><div class="msk">Answered</div></div>
+      <div class="mstat"><div class="msv" id="msF" style="color:var(--warn)">0</div><div class="msk">Flagged</div></div>
+      <div class="mstat"><div class="msv" id="msU" style="color:var(--danger)">200</div><div class="msk">Unanswered</div></div>
+      <div class="mstat"><div class="msv" id="msT" style="color:var(--tl)">—</div><div class="msk">Time Left</div></div>
+    </div>
+    <div class="viol-count" id="violCountTxt" style="display:none"></div>
+    <div class="slt" style="margin-bottom:7px;font-size:7.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2)">Subject Breakdown</div>
+    <div class="msub-scores">
+      <div class="msub-item"><div class="msub-dot" style="background:var(--ds)"></div><span class="msub-n">Data Science</span><span class="msub-v" id="mDS">0/40</span></div>
+      <div class="msub-item"><div class="msub-dot" style="background:var(--os)"></div><span class="msub-n">OS</span><span class="msub-v" id="mOS">0/40</span></div>
+      <div class="msub-item"><div class="msub-dot" style="background:var(--js)"></div><span class="msub-n">JavaScript</span><span class="msub-v" id="mJS">0/40</span></div>
+      <div class="msub-item"><div class="msub-dot" style="background:var(--dsa)"></div><span class="msub-n">Data Structures</span><span class="msub-v" id="mDSA">0/40</span></div>
+      <div class="msub-item"><div class="msub-dot" style="background:var(--ml)"></div><span class="msub-n">ML &amp; Algo</span><span class="msub-v" id="mML">0/40</span></div>
+    </div>
+    <div class="mbtns"><button class="mc" onclick="cM()">Go Back</button><button class="mcf" onclick="cSub()">Submit All 200</button></div>
+  </div>
+</div>
+
+<div class="toast-c" id="toastC"></div>
+
+
+<!-- ════ FLOATING VIOLATION ALERT ════ -->
+<div class="viol-alert" id="violAlert">
+  <div class="va-icon" id="vaIcon">⚠</div>
+  <div class="va-body">
+    <div class="va-title" id="vaTitle">Violation Detected</div>
+    <div class="va-msg" id="vaMsg">Proctoring system detected an anomaly</div>
+  </div>
+  <div class="va-badge" id="vaBadge">#1</div>
+  <button class="va-close" onclick="closeViolAlert()">✕</button>
+</div>
+
+
+<script>
+
+// ─── Storage ───────────────────────────────────────────────────────────────
+// ─── In-memory user store (pre-seeded demo accounts) ──────────────────────
+const STORE=(()=>{
+  const _db=[
+    {roll:'2320520034',email:'ankith@college.edu',password:'ankith123',first:'Ankith',last:'Reddy',branch:'BCA',batch:'2023-2026',avatar:'AR'},
+    {roll:'2320520035',email:'priya@college.edu',password:'priya123',first:'Priya',last:'Sharma',branch:'BCA',batch:'2023-2026',avatar:'ST'},
+    {roll:'2320520036',email:'ravi@college.edu',password:'ravi123',first:'Ravi',last:'Kumar',branch:'BCA-DS',batch:'2023-2026',avatar:'DR'},
+    {roll:'2320520037',email:'sneha@college.edu',password:'sneha123',first:'Sneha',last:'Patel',branch:'BCA-AI',batch:'2023-2026',avatar:'EN'},
+    {roll:'admin',email:'admin@examflow.edu',password:'admin123',first:'Admin',last:'User',branch:'BCA',batch:'2023-2026',avatar:'FX'}
+  ];
+  return{
+    get users(){return _db},
+    save(u){
+      if(!_db.find(x=>x.roll===u.roll))_db.push(u);
+    },
+    find(id){return _db.find(u=>u.roll===id||u.email===id)}
+  };
+})();
+
+// ─── State ─────────────────────────────────────────────────────────────────
+let CU=null, termsOn=false, selAv='ST', violCount=0;
+let cQ=0, ans=new Array(200).fill(-1), flg=new Array(200).fill(false);
+let tL=7200; const TOT=7200, CIRC=2*Math.PI*37;
+let timerInterval=null;
+let camStream=null, camMuted=false, camOff=false, camSec=0, camInterval=null;
+let examStartTime=null, examEndTime=null;
+
+// ─── Subjects ──────────────────────────────────────────────────────────────
+const SUBS=[
+  {name:'Data Science',key:'ds',color:'var(--ds)',icon:'DS',desc:'Statistics · Pandas · NumPy · Visualization · Probability',range:'Q 1–40'},
+  {name:'Operating Systems',key:'os',color:'var(--os)',icon:'OS',desc:'Processes · Memory · Scheduling · File Systems · Concurrency',range:'Q 41–80'},
+  {name:'JavaScript',key:'js',color:'var(--js)',icon:'JS',desc:'ES6+ · DOM · Async · Closures · Prototypes · Event Loop',range:'Q 81–120'},
+  {name:'Data Structures',key:'dsa',color:'var(--dsa)',icon:'DSA',desc:'Arrays · Trees · Graphs · Hashing · Stacks · Queues · Heaps',range:'Q 121–160'},
+  {name:'ML & Algorithms',key:'ml',color:'var(--ml)',icon:'ML',desc:'Supervised · Unsupervised · Neural Networks · Sorting · DP',range:'Q 161–200'}
+];
+
+// ─── Questions (200 total: 40 per subject) ─────────────────────────────────
+const QS=[
+// ══ DATA SCIENCE (s:0, indices 0-39) ══
+{s:0,t:'What does a p-value less than 0.05 typically indicate?',sub:'Statistics',diff:'medium',o:['Accept null hypothesis','Reject null hypothesis','No conclusion possible','Data is invalid'],a:1},
+{s:0,t:'Which Pandas function reads a CSV file into a DataFrame?',sub:'Pandas',diff:'easy',o:['pd.load_csv()','pd.read_csv()','pd.import_csv()','pd.open_csv()'],a:1},
+{s:0,t:'What is the Interquartile Range (IQR)?',sub:'Statistics',diff:'easy',o:['Q3 - Q1','Q2 - Q1','Q4 - Q2','Mean - Median'],a:0},
+{s:0,t:'Which NumPy function creates an array filled with zeros?',sub:'NumPy',diff:'easy',o:['np.empty()','np.zeros()','np.null()','np.blank()'],a:1},
+{s:0,t:'What percentage of data falls within 2 standard deviations in a normal distribution?',sub:'Statistics',diff:'medium',o:['68%','95%','99.7%','90%'],a:1},
+{s:0,t:'What does Pandas groupby() do?',sub:'Pandas',diff:'easy',o:['Sorts data by index','Groups rows by column values for aggregation','Filters rows by condition','Merges two DataFrames'],a:1},
+{s:0,t:'Which measure of central tendency is most affected by outliers?',sub:'Statistics',diff:'easy',o:['Median','Mode','Mean','IQR'],a:2},
+{s:0,t:'What is the primary purpose of data normalization?',sub:'Preprocessing',diff:'medium',o:['Remove duplicate rows','Scale features to a standard range','Fill missing values','Encode categorical variables'],a:1},
+{s:0,t:'Which Python library is primarily used for data visualization?',sub:'Visualization',diff:'easy',o:['NumPy','SciPy','Matplotlib','Pandas'],a:2},
+{s:0,t:'What does df.describe() return in Pandas?',sub:'Pandas',diff:'easy',o:['Only column names','Only data types','Summary statistics of numeric columns','First 5 rows only'],a:2},
+{s:0,t:'P(A ∪ B) for mutually exclusive events A and B equals?',sub:'Probability',diff:'medium',o:['P(A) * P(B)','P(A) + P(B)','P(A) + P(B) - P(A∩B)','P(A) - P(B)'],a:1},
+{s:0,t:'Which Pandas method fills missing values with the column mean?',sub:'Preprocessing',diff:'medium',o:['df.dropna()','df.fillna(df.mean())','df.replace()','df.impute()'],a:1},
+{s:0,t:'A correlation coefficient of -1 indicates?',sub:'Statistics',diff:'medium',o:['No correlation','Perfect positive correlation','Perfect negative correlation','Weak negative correlation'],a:2},
+{s:0,t:'What is the shape of a DataFrame with 100 rows and 5 columns?',sub:'Pandas',diff:'easy',o:['(5, 100)','(100, 5)','[100, 5]','500'],a:1},
+{s:0,t:'Which NumPy function computes the dot product of two arrays?',sub:'NumPy',diff:'medium',o:['np.multiply()','np.cross()','np.dot()','np.sum()'],a:2},
+{s:0,t:'Bayes theorem is primarily used for?',sub:'Probability',diff:'hard',o:['Calculating mean values','Updating probability based on new evidence','Finding variance','Computing IQR'],a:1},
+{s:0,t:'Which type of plot best shows the distribution of a continuous variable?',sub:'Visualization',diff:'easy',o:['Bar chart','Pie chart','Histogram','Line chart'],a:2},
+{s:0,t:'One-hot encoding converts?',sub:'Preprocessing',diff:'medium',o:['Numerical data to binary','Categorical data to binary vectors','Missing values to zeros','Features to scaled form'],a:1},
+{s:0,t:'What does df.merge() do in Pandas?',sub:'Pandas',diff:'medium',o:['Splits one DataFrame into two','Combines DataFrames based on a key column','Sorts values in the DataFrame','Removes duplicate rows'],a:1},
+{s:0,t:'What is variance?',sub:'Statistics',diff:'medium',o:['Sum of all values','Average squared deviation from the mean','Median squared','Standard deviation cubed'],a:1},
+{s:0,t:'What does df.count() return in Pandas?',sub:'Pandas',diff:'easy',o:['Non-null count per column','Sum per column','Total row count only','Column names array'],a:0},
+{s:0,t:'What does a box plot primarily display?',sub:'Visualization',diff:'easy',o:['Correlation between variables','Time series trends','Distribution, median, and outliers','Category frequencies'],a:2},
+{s:0,t:'In NumPy, axis=0 refers to operations along?',sub:'NumPy',diff:'medium',o:['Column-wise (down rows)','Row-wise (across columns)','Element-wise only','The diagonal'],a:0},
+{s:0,t:'What is the mode of dataset [2, 3, 3, 5, 7, 3]?',sub:'Statistics',diff:'easy',o:['2','3','5','7'],a:1},
+{s:0,t:'Which statistical test compares means of exactly two groups?',sub:'Statistics',diff:'medium',o:['Chi-square test','ANOVA','t-test','F-test'],a:2},
+{s:0,t:'What does df.pivot_table() create?',sub:'Pandas',diff:'hard',o:['A chart or plot','A summarized table with aggregated data','Split DataFrames by category','A transposed DataFrame'],a:1},
+{s:0,t:'What are the mean and standard deviation of a standard normal distribution?',sub:'Statistics',diff:'medium',o:['Mean=1, SD=0','Mean=0, SD=1','Mean=0, SD=0','Mean=1, SD=1'],a:1},
+{s:0,t:'What does np.linspace(0, 10, 5) return?',sub:'NumPy',diff:'medium',o:['5 random numbers','5 evenly spaced numbers from 0 to 10','Integer array from 0 to 10','Array of 10 zeros'],a:1},
+{s:0,t:'What does a heatmap primarily show in data science?',sub:'Visualization',diff:'easy',o:['Time series trends','Correlation matrix with color encoding','Category comparisons','Individual distributions'],a:1},
+{s:0,t:'Label encoding assigns?',sub:'Preprocessing',diff:'medium',o:['Binary vectors to categories','Integer values to each unique category','Scaled decimal labels','Removes all labels'],a:1},
+{s:0,t:'What does df.duplicated() return in Pandas?',sub:'Pandas',diff:'easy',o:['Only unique rows','Boolean series marking duplicate rows','Count of duplicate values','List of duplicate column names'],a:1},
+{s:0,t:'Which probability distribution describes the number of successes in n independent Bernoulli trials?',sub:'Probability',diff:'medium',o:['Normal distribution','Poisson distribution','Binomial distribution','Uniform distribution'],a:2},
+{s:0,t:'Feature engineering in machine learning means?',sub:'Preprocessing',diff:'medium',o:['Removing irrelevant features','Creating new features from existing data to improve models','Performing model selection','Tuning hyperparameters'],a:1},
+{s:0,t:'A scatter plot primarily shows?',sub:'Visualization',diff:'easy',o:['Time series trends','Relationship or correlation between two variables','Category frequencies','Part-to-whole proportions'],a:1},
+{s:0,t:'Key difference between df.loc[] and df.iloc[]?',sub:'Pandas',diff:'medium',o:['No practical difference','loc uses labels; iloc uses integer positions','iloc uses labels; loc uses integers','Both always use integers'],a:1},
+{s:0,t:'What is covariance?',sub:'Statistics',diff:'medium',o:['Variance of a single variable','Joint variability of two variables','Ratio of standard deviations','Difference of two means'],a:1},
+{s:0,t:'What does df.apply() do in Pandas?',sub:'Pandas',diff:'medium',o:['Filters rows by condition','Applies a function along a specified axis','Creates a new column with a constant','Sorts DataFrame by values'],a:1},
+{s:0,t:'The Central Limit Theorem states that?',sub:'Statistics',diff:'hard',o:['Sample means approach normal distribution as sample size increases','All populations are normally distributed','The mean always equals the median','Variance is always equal to 1'],a:0},
+{s:0,t:'What does sns.heatmap() require as input?',sub:'Visualization',diff:'medium',o:['A 1D list of values','A 2D matrix or correlation matrix','A single Pandas Series','An existing matplotlib plot object'],a:1},
+{s:0,t:'What is the purpose of a train-test split in ML?',sub:'ML Basics',diff:'easy',o:['To clean and preprocess data','To evaluate model generalization on unseen data','To perform feature selection','To normalize feature values'],a:1},
+// ══ OPERATING SYSTEMS (s:1, indices 40-79) ══
+{s:1,t:'What is a process in an operating system?',sub:'Processes',diff:'easy',o:['A file stored on disk','A program in execution','An I/O device driver','A fixed memory location'],a:1},
+{s:1,t:'SJF (Shortest Job First) scheduling selects the process with?',sub:'Scheduling',diff:'medium',o:['Highest priority level','Longest CPU burst time','Shortest estimated CPU burst time','The earliest arrival time'],a:2},
+{s:1,t:'Deadlock is a situation where?',sub:'Concurrency',diff:'medium',o:['A process waits indefinitely for CPU time','Processes are in circular wait for resources','Physical memory overflows','A disk drive fails suddenly'],a:1},
+{s:1,t:'Virtual memory allows programs to?',sub:'Memory',diff:'medium',o:['Use faster RAM modules','Run processes larger than available physical RAM','Optimize CPU cache usage','Directly access CPU registers'],a:1},
+{s:1,t:'A semaphore in OS is used for?',sub:'Concurrency',diff:'medium',o:['File system management','Process synchronization and mutual exclusion','Disk scheduling algorithms','CPU scheduling policies'],a:1},
+{s:1,t:'FCFS (First Come First Served) scheduling serves which process first?',sub:'Scheduling',diff:'easy',o:['Process with highest priority','Process with shortest CPU burst','Process that arrived earliest in ready queue','Process with the smallest PID'],a:2},
+{s:1,t:'Paging divides memory into?',sub:'Memory',diff:'medium',o:['Variable-size segments','Fixed-size pages and frames','Compacted contiguous regions','Dynamically-sized allocation blocks'],a:1},
+{s:1,t:'The OS kernel primarily manages?',sub:'OS Basics',diff:'easy',o:['User application programs','Hardware resources and system calls','Graphical user interface rendering','External network connections'],a:1},
+{s:1,t:'A context switch involves?',sub:'Processes',diff:'medium',o:['Changing file permissions for a process','Saving and restoring CPU state when switching between processes','Switching between user accounts','Changing the CPU scheduling algorithm dynamically'],a:1},
+{s:1,t:'Which condition is NOT required for deadlock?',sub:'Concurrency',diff:'hard',o:['Mutual exclusion','Hold and wait','Preemption (allowed)','Circular wait'],a:2},
+{s:1,t:'The key difference between a process and a thread is?',sub:'Processes',diff:'medium',o:['No practical difference','Threads share the process address space; processes have separate memory spaces','Processes share memory while threads do not','Threads have their own separate address space'],a:1},
+{s:1,t:'Thrashing occurs when?',sub:'Memory',diff:'hard',o:['CPU utilization reaches 100%','Excessive paging/swapping severely degrades system performance','The hard disk becomes fragmented','The system enters a deadlock state'],a:1},
+{s:1,t:'A TLB (Translation Lookaside Buffer) speeds up?',sub:'Memory',diff:'hard',o:['Hard disk read operations','Virtual-to-physical address translation','Page table storage in RAM','CPU instruction caching'],a:1},
+{s:1,t:'Contiguous file allocation primarily suffers from?',sub:'File Systems',diff:'hard',o:['Internal fragmentation','Linked list pointer overhead','External fragmentation over time','Index block overhead'],a:2},
+{s:1,t:'RAID stands for?',sub:'Storage',diff:'easy',o:['Random Access Input Data','Redundant Array of Independent Disks','Rapid Allocation for I/O Devices','Reliable Array of Integrated Drives'],a:1},
+{s:1,t:'A race condition occurs when?',sub:'Concurrency',diff:'medium',o:['CPU clock speed mismatch occurs','Multiple processes access shared data with unpredictable results','A memory leak develops slowly','The call stack overflows'],a:1},
+{s:1,t:'LRU page replacement replaces the page that was?',sub:'Memory',diff:'medium',o:['Most recently accessed','Least recently used (accessed longest ago)','Loaded into memory first','Selected randomly'],a:1},
+{s:1,t:'In Unix, an inode stores?',sub:'File Systems',diff:'medium',o:['The human-readable file name','File metadata including size, permissions, and timestamps','The process ID of the owner','Memory page table entries'],a:1},
+{s:1,t:'The Banker’s Algorithm is used for?',sub:'Concurrency',diff:'hard',o:['CPU scheduling optimization','Deadlock avoidance by checking safe states','Dynamic memory allocation','Disk scheduling optimization'],a:1},
+{s:1,t:'In Round Robin scheduling, a time quantum is?',sub:'Scheduling',diff:'easy',o:['A process priority level','A fixed time slice allocated per process','The total CPU burst time','The total wait time'],a:1},
+{s:1,t:'Demand paging loads pages into memory?',sub:'Memory',diff:'medium',o:['All pages at program startup','Only when they are needed (triggered by page fault)','All pages to disk immediately','By pre-fetching all pages speculatively'],a:1},
+{s:1,t:'A critical section in an OS context is?',sub:'Concurrency',diff:'medium',o:['Code with highest OS priority','Code segment that accesses shared resources exclusively','Code that runs only in kernel mode','Code responsible for I/O handling'],a:1},
+{s:1,t:'The fork() system call in Unix?',sub:'Processes',diff:'medium',o:['Creates a new thread in the same process','Creates a new child process as a copy of the parent','Loads and executes a new program','Terminates the calling process'],a:1},
+{s:1,t:'A page table maps?',sub:'Memory',diff:'medium',o:['Physical addresses to virtual addresses','Virtual page numbers to physical frame numbers','CPU cache to RAM addresses','Disk sectors to RAM locations'],a:1},
+{s:1,t:'Multilevel Queue scheduling handles processes by?',sub:'Scheduling',diff:'medium',o:['Using a single FIFO queue only','Organizing into multiple queues with different priorities/algorithms','Using shortest job first only','Using round robin for all processes'],a:1},
+{s:1,t:'Internal fragmentation refers to?',sub:'Memory',diff:'medium',o:['Wasted space outside the allocated memory block','Wasted space inside an allocated memory block','Memory that was not properly freed','Overhead caused by swapping'],a:1},
+{s:1,t:'A zombie process is a process that has?',sub:'Processes',diff:'medium',o:['Consumed 100% CPU for too long','Terminated but still has an entry in the process table','Gone to sleep waiting for I/O','Been waiting for another resource'],a:1},
+{s:1,t:'The exec() family of system calls?',sub:'Processes',diff:'medium',o:['Creates a duplicate child process','Replaces the current process image with a new program','Terminates the calling process','Suspends the process until woken'],a:1},
+{s:1,t:'A mutex (mutual exclusion lock) ensures?',sub:'Concurrency',diff:'medium',o:['Process scheduling fairness','That only one thread accesses a shared resource at a time','Efficient memory management','Fast interrupt handling'],a:1},
+{s:1,t:'SSTF (Shortest Seek Time First) disk scheduling minimizes?',sub:'Storage',diff:'medium',o:['Rotational latency','Disk seek time','Data transfer time','Request queue length'],a:1},
+{s:1,t:'Swapping in OS moves?',sub:'Memory',diff:'medium',o:['Individual pages between RAM and disk','Entire processes between RAM and disk (swap space)','Memory blocks between NUMA nodes','Virtual pages to the TLB'],a:1},
+{s:1,t:'A file descriptor in Unix/Linux is?',sub:'File Systems',diff:'medium',o:['The human-readable file name','A small non-negative integer that refers to an open file','File access permission bits','An absolute directory path'],a:1},
+{s:1,t:'A hardware interrupt in OS?',sub:'OS Basics',diff:'medium',o:['Schedules the next process to run','Signals the CPU to handle an asynchronous hardware event','Manages virtual memory allocation','Controls I/O operations directly'],a:1},
+{s:1,t:'Spooling in OS is?',sub:'OS Basics',diff:'medium',o:['A CPU scheduling technique','Temporarily buffering I/O data for slow devices like printers','A memory paging optimization','A file system consistency check'],a:1},
+{s:1,t:'A monitor (in concurrency) is?',sub:'Concurrency',diff:'hard',o:['A physical display device','A high-level synchronization construct with mutual exclusion','A special OS kernel process','A protected memory region'],a:1},
+{s:1,t:'The boot loader’s primary role is to?',sub:'OS Basics',diff:'easy',o:['Manage the file system','Load the operating system kernel into memory at startup','Handle hardware interrupts','Create and manage user processes'],a:1},
+{s:1,t:'Aging in OS scheduling is used to prevent?',sub:'Scheduling',diff:'medium',o:['Excessive CPU usage by a process','Starvation by gradually increasing priority of waiting processes','Termination of old processes','Reduction of time quantum over time'],a:1},
+{s:1,t:'A system call is?',sub:'OS Basics',diff:'easy',o:['A function call within a user program','The interface through which user programs request kernel services','A hardware-generated interrupt','A type of memory reference instruction'],a:1},
+{s:1,t:'Copy-on-write (COW) optimization means?',sub:'Memory',diff:'hard',o:['Files are duplicated on every write operation','Memory pages are shared until one process modifies them (then copied)','All data is written twice for reliability','An automatic backup mechanism'],a:1},
+{s:1,t:'Preemptive scheduling differs from non-preemptive because?',sub:'Scheduling',diff:'medium',o:['There is no practical difference','Preemptive scheduling can interrupt and remove a running process from CPU','Non-preemptive scheduling is always faster','Preemptive scheduling only uses priority levels'],a:1},
+{s:1,t:'What is the purpose of the Page Replacement Algorithm?',sub:'Memory',diff:'medium',o:['To allocate new pages to processes','To decide which page to remove when a page fault occurs and memory is full','To schedule CPU time for processes','To manage file system storage'],a:1},
+// ══ JAVASCRIPT (s:2, indices 80-119) ══
+{s:2,t:'What does typeof null return in JavaScript?',sub:'Types',diff:'medium',o:['"null"','"undefined"','"object"','"boolean"'],a:2},
+{s:2,t:'A closure in JavaScript is?',sub:'Functions',diff:'medium',o:['A class definition syntax','A function that retains access to its outer scope variables after the outer function returns','A type of arrow function','A resolved Promise'],a:1},
+{s:2,t:'How does === differ from == in JavaScript?',sub:'Operators',diff:'easy',o:['No practical difference','=== checks both type and value (no type coercion)','=== compares only data types','=== is the assignment operator'],a:1},
+{s:2,t:'What does console.log(0.1 + 0.2 === 0.3) output?',sub:'Types',diff:'medium',o:['true','false','undefined','RangeError'],a:1},
+{s:2,t:'Event bubbling in the DOM means?',sub:'DOM',diff:'medium',o:['Creating new events programmatically','Events propagating from the target element up through ancestor elements','Loading DOM content lazily','Binding multiple listeners to one element'],a:1},
+{s:2,t:'Promise.all() resolves when?',sub:'Async',diff:'medium',o:['The first promise in the array resolves','All promises resolve successfully (or rejects if any rejects)','All promises reject','A configurable timeout is reached'],a:1},
+{s:2,t:'The key difference between var, let, and const is?',sub:'Variables',diff:'medium',o:['No practical difference','var is function-scoped; let and const are block-scoped','const is function-scoped like var','let is globally scoped always'],a:1},
+{s:2,t:'The spread operator (...) in JavaScript?',sub:'ES6+',diff:'easy',o:['Creates a rest parameter','Expands an iterable into individual elements','Deep copies an object','Merges two functions'],a:1},
+{s:2,t:'The JavaScript event loop handles?',sub:'Async',diff:'hard',o:['Standard for...of loops only','Asynchronous operations by coordinating the call stack, task queue, and microtask queue','DOM events exclusively','CSS animation timing'],a:1},
+{s:2,t:'Array.map() in JavaScript returns?',sub:'Arrays',diff:'easy',o:['The original array modified in place','A new array with each element transformed by the callback','undefined','A boolean indicating success'],a:1},
+{s:2,t:'Prototypal inheritance means?',sub:'OOP',diff:'hard',o:['Class-based inheritance as in Java','Objects inheriting properties directly from other objects via the prototype chain','Functional inheritance patterns only','The module pattern'],a:1},
+{s:2,t:'The async/await syntax in JavaScript is used to?',sub:'Async',diff:'medium',o:['Make all code run synchronously','Write asynchronous Promise-based code in a synchronous-looking style','Cancel pending Promise operations','Handle only DOM events'],a:1},
+{s:2,t:'Array.reduce() in JavaScript?',sub:'Arrays',diff:'medium',o:['Filters array elements by a condition','Creates a new array with transformed elements','Accumulates array elements into a single output value','Sorts array elements'],a:2},
+{s:2,t:'Hoisting in JavaScript means?',sub:'Variables',diff:'medium',o:['Moving code execution to a remote server','Variable and function declarations are moved to the top of their scope before execution','Performing late binding of variables','Enabling lazy evaluation of expressions'],a:1},
+{s:2,t:'A WeakMap in JavaScript?',sub:'Data Structures',diff:'hard',o:['A regular Map with stronger references','A Map where keys must be objects and are held by weak references (allowing GC)','An immutable frozen Map','A sorted Map structure'],a:1},
+{s:2,t:'JSON.stringify() converts?',sub:'JSON',diff:'easy',o:['A JSON string into a JavaScript object','A JavaScript object/value into a JSON string','Validates whether a value is valid JSON','Encrypts data as JSON'],a:1},
+{s:2,t:'Symbol() in JavaScript creates?',sub:'ES6+',diff:'hard',o:['A numeric constant','A unique, immutable primitive value used as an identifier','A string primitive','A plain object'],a:1},
+{s:2,t:'Array.flat() in JavaScript?',sub:'Arrays',diff:'medium',o:['Sorts the array in ascending order','Removes duplicate elements','Flattens nested arrays into a single-level array','Reverses the array elements'],a:2},
+{s:2,t:'The key difference between null and undefined in JavaScript?',sub:'Types',diff:'medium',o:['No practical difference','null is intentional absence of value; undefined means a variable was declared but not yet assigned','undefined represents intentional emptiness','Both have exactly the same type'],a:1},
+{s:2,t:'Object.freeze() in JavaScript?',sub:'Objects',diff:'medium',o:['Permanently deletes an object from memory','Makes an object immutable — no properties can be added, removed, or modified','Deep copies an object recursively','Only seals the prototype chain'],a:1},
+{s:2,t:'A generator function in JavaScript can?',sub:'ES6+',diff:'hard',o:['Generate cryptographically random numbers','Pause and resume execution using the yield keyword','Automatically run asynchronously','Construct class instances'],a:1},
+{s:2,t:'The new keyword in JavaScript?',sub:'OOP',diff:'medium',o:['Declares a new variable in block scope','Creates a new object instance using a constructor function or class','Imports a module into scope','Defines a class body'],a:1},
+{s:2,t:'What does this refer to inside an arrow function?',sub:'Functions',diff:'hard',o:['The arrow function itself','The enclosing lexical scope (arrow functions do not have their own this)','The global window object always','Always undefined in strict mode'],a:1},
+{s:2,t:'Array.filter() returns?',sub:'Arrays',diff:'easy',o:['The original array modified in place','A new array containing only elements that pass the test function','A boolean result','A single accumulated value'],a:1},
+{s:2,t:'The Module pattern using IIFE is used to?',sub:'Patterns',diff:'medium',o:['Implement ES6 import/export syntax','Create private encapsulated scope while exposing a public API','Define class-based inheritance','Manipulate the prototype chain directly'],a:1},
+{s:2,t:'localStorage.setItem() stores data?',sub:'Web APIs',diff:'easy',o:['In an HTTP cookie','In the browser’s local storage (persists across sessions)','Only for the current session (SessionStorage)','On the web server'],a:1},
+{s:2,t:'Debouncing a function means?',sub:'Performance',diff:'medium',o:['Removing all event listeners from an element','Delaying function execution until after a specified time has passed since the last call','Throttling the rate of API calls','Caching function return values'],a:1},
+{s:2,t:'Object.keys() returns?',sub:'Objects',diff:'easy',o:['An array of the object’s own values','An array of the object’s own enumerable property names','All properties including inherited ones','An array of [key, value] pairs'],a:1},
+{s:2,t:'The try...catch statement is used to?',sub:'Error Handling',diff:'easy',o:['Control loop execution flow','Handle runtime errors gracefully without crashing the program','Define asynchronous code blocks','Import external modules'],a:1},
+{s:2,t:'Currying a function transforms it into?',sub:'Functions',diff:'hard',o:['A deeply nested closure function','A sequence of single-argument functions from a multi-argument function','A memoized version of the function','Only a partially applied function'],a:1},
+{s:2,t:'setTimeout(fn, 0) schedules fn to run?',sub:'Async',diff:'hard',o:['Immediately in the current execution','After the current call stack is empty (next event loop tick)','After exactly 0 milliseconds with precision','The function is never actually called'],a:1},
+{s:2,t:'A JavaScript Proxy object?',sub:'ES6+',diff:'hard',o:['Intercepts and forwards HTTP requests','Intercepts and customizes fundamental object operations (get, set, delete)','Implements a common design pattern','Creates a chain of Promise handlers'],a:1},
+{s:2,t:'Array.from() creates an array from?',sub:'Arrays',diff:'medium',o:['Only from another Array (shallow copy)','Array-like objects or iterables (e.g. NodeList, Set, string)','Only creates copies of existing arrays','Validates and normalizes input data'],a:1},
+{s:2,t:'Memoization is an optimization technique that?',sub:'Performance',diff:'medium',o:['Stores objects in persistent memory','Caches function results to avoid recomputing for previously seen inputs','Triggers garbage collection proactively','Describes how memory leaks occur'],a:1},
+{s:2,t:'The Temporal Dead Zone (TDZ) refers to?',sub:'Variables',diff:'hard',o:['The period before the DOM is fully loaded','The period where let/const variables exist in scope but cannot be accessed before their declaration','The garbage collection window for unused variables','The time between event queue processing'],a:1},
+{s:2,t:'Promise.race() resolves or rejects with?',sub:'Async',diff:'medium',o:['All resolved values once all settle','The result of whichever promise settles first (resolves or rejects)','undefined if any promise rejects','An array of all individual results'],a:1},
+{s:2,t:'Object.assign() is used to?',sub:'Objects',diff:'medium',o:['Deep compare two objects for equality','Copy enumerable own properties from source object(s) to a target object','Create a linked prototype chain','Freeze an object making it immutable'],a:1},
+{s:2,t:'Array.every() returns true only if?',sub:'Arrays',diff:'easy',o:['At least one element passes the test','Every element passes the provided test function','No elements pass the test','The array is non-empty'],a:1},
+{s:2,t:'Tree shaking in JavaScript bundlers does?',sub:'Build Tools',diff:'hard',o:['Optimizes DOM tree rendering performance','Eliminates unused/dead code from the final production bundle','Implements a balanced tree sort algorithm','Optimizes memory layout for objects'],a:1},
+{s:2,t:'The difference between call() and apply() is?',sub:'Functions',diff:'medium',o:['No practical difference at runtime','call() passes arguments individually; apply() passes them as an array','apply() executes faster than call()','call() always returns the this context'],a:1},
+// ══ DATA STRUCTURES (s:3, indices 120-159) ══
+{s:3,t:'What is the time complexity of binary search?',sub:'Searching',diff:'easy',o:['O(n)','O(n²)','O(log n)','O(1)'],a:2},
+{s:3,t:'Which data structure follows LIFO (Last In First Out) order?',sub:'Stack',diff:'easy',o:['Queue','Stack','Singly Linked List','Binary Heap'],a:1},
+{s:3,t:'Average case time complexity of hash table insertion?',sub:'Hashing',diff:'medium',o:['O(n)','O(log n)','O(1)','O(n log n)'],a:2},
+{s:3,t:'In preorder tree traversal, the visiting order is?',sub:'Trees',diff:'easy',o:['Left, Root, Right (inorder)','Right, Root, Left','Root, Left, Right','Left, Right, Root (postorder)'],a:2},
+{s:3,t:'The height of a balanced BST with n nodes is?',sub:'Trees',diff:'medium',o:['O(n)','O(log n)','O(1)','O(n²)'],a:1},
+{s:3,t:'BFS (Breadth-First Search) uses which data structure?',sub:'Graphs',diff:'medium',o:['Stack','Queue','Binary Heap','Dynamic Array'],a:1},
+{s:3,t:'What is the worst-case time complexity of Quicksort?',sub:'Sorting',diff:'medium',o:['O(n log n)','O(n)','O(n²)','O(log n)'],a:2},
+{s:3,t:'A doubly linked list node differs from singly linked because it has?',sub:'Linked Lists',diff:'easy',o:['Two data values per node','Both a next and a previous pointer','Only forward links to next node','A circular self-referencing structure'],a:1},
+{s:3,t:'The time complexity of the heapify (sift-down) operation?',sub:'Heap',diff:'medium',o:['O(n)','O(log n)','O(n log n)','O(1)'],a:1},
+{s:3,t:'DFS (Depth-First Search) is implemented using?',sub:'Graphs',diff:'medium',o:['A Queue (FIFO)','A Priority Queue','A Stack or recursion','An unsorted dynamic array'],a:2},
+{s:3,t:'Which sorting algorithm is stable and has O(n log n) worst-case complexity?',sub:'Sorting',diff:'medium',o:['Quicksort','Heapsort','Merge sort','Selection sort'],a:2},
+{s:3,t:'An adjacency matrix representation of a graph uses?',sub:'Graphs',diff:'medium',o:['A list of all edges','A 2D matrix where cell[i][j]=1 if edge between i and j exists','A sorted array of node values','A hash map of edge lists'],a:1},
+{s:3,t:'A complete binary tree is defined as one where?',sub:'Trees',diff:'medium',o:['Every non-leaf node has exactly 2 children','All levels are filled except possibly the last, which is filled from left to right','There are no leaf nodes','The tree is self-balancing automatically'],a:1},
+{s:3,t:'The space complexity of merge sort is?',sub:'Sorting',diff:'medium',o:['O(1)','O(log n)','O(n)','O(n log n)'],a:2},
+{s:3,t:'In a min-heap, every parent node is?',sub:'Heap',diff:'medium',o:['Greater than or equal to all its children','Less than or equal to all its children','Equal to at least one child','Unrelated to children in terms of ordering'],a:1},
+{s:3,t:'The amortized time complexity of pushing to a dynamic array (ArrayList) is?',sub:'Arrays',diff:'hard',o:['O(n)','O(log n)','O(1) amortized','O(n²)'],a:2},
+{s:3,t:'Dijkstra’s algorithm is used to find?',sub:'Graphs',diff:'medium',o:['The minimum spanning tree of a graph','The shortest path from a source to all nodes in a non-negative weighted graph','A topological ordering of nodes','All cycles within a graph'],a:1},
+{s:3,t:'A Trie data structure is optimized for?',sub:'Trees',diff:'medium',o:['Sorting integers efficiently','String prefix searches and autocomplete operations','Graph traversal algorithms','Numeric value hashing'],a:1},
+{s:3,t:'Which data structure is used for function call management (recursion)?',sub:'Stack',diff:'easy',o:['Queue','Binary Heap','Stack (call stack)','Circular Buffer'],a:2},
+{s:3,t:'The time complexity of insertion in an AVL tree is?',sub:'Trees',diff:'hard',o:['O(n)','O(log n)','O(1)','O(n log n)'],a:1},
+{s:3,t:'A circular queue connects?',sub:'Queue',diff:'medium',o:['The head pointer back to another head','The rear pointer logically back to the front','Nodes in both forward and backward directions','To a priority queue for ordering'],a:1},
+{s:3,t:'Floyd-Warshall algorithm computes?',sub:'Graphs',diff:'hard',o:['Single-source shortest paths only','All-pairs shortest paths in a weighted graph','Minimum spanning tree using greedy method','Topological sort of a DAG'],a:1},
+{s:3,t:'What is a hash collision?',sub:'Hashing',diff:'medium',o:['When the hash table exceeds its load factor','When two different keys produce the same hash value','When a null key is inserted','When duplicate values exist in the table'],a:1},
+{s:3,t:'Kruskal’s algorithm builds a minimum spanning tree by?',sub:'Graphs',diff:'hard',o:['Starting from a source vertex and expanding','Sorting all edges by weight and adding non-cycle-forming edges','Using BFS from each vertex','Relaxing all edges V-1 times'],a:1},
+{s:3,t:'What is the worst-case time complexity of searching in a BST?',sub:'Trees',diff:'medium',o:['O(log n) always','O(n) in a degenerate (skewed) tree','O(1)','O(n log n)'],a:1},
+{s:3,t:'A deque (double-ended queue) supports?',sub:'Queue',diff:'medium',o:['Insertion only at the rear','Insertion and deletion at both front and rear ends','Priority-based ordering','Only LIFO access'],a:1},
+{s:3,t:'The time complexity of building a heap from an unsorted array is?',sub:'Heap',diff:'hard',o:['O(n log n)','O(n)','O(log n)','O(n²)'],a:1},
+{s:3,t:'In a graph, what does topological sort produce?',sub:'Graphs',diff:'hard',o:['The shortest path between all pairs','A linear ordering of vertices where each edge goes from earlier to later','The minimum spanning tree','All strongly connected components'],a:1},
+{s:3,t:'A skip list provides average time complexity of?',sub:'Searching',diff:'hard',o:['O(n)','O(log n)','O(1)','O(n²)'],a:1},
+{s:3,t:'The time complexity of Merge Sort is?',sub:'Sorting',diff:'easy',o:['O(n²)','O(n log n)','O(log n)','O(n)'],a:1},
+{s:3,t:'Which data structure is best for implementing a priority queue efficiently?',sub:'Heap',diff:'medium',o:['Sorted Array','Binary Search Tree','Binary Heap','Stack'],a:2},
+{s:3,t:'What is the space complexity of DFS on a graph with V vertices and E edges?',sub:'Graphs',diff:'hard',o:['O(V + E)','O(V)','O(E)','O(1)'],a:1},
+{s:3,t:'In a B-tree, all leaf nodes are?',sub:'Trees',diff:'hard',o:['At varying depths','At the same depth/level','Optional depending on implementation','Always the root’s direct children'],a:1},
+{s:3,t:'Counting sort has time complexity of?',sub:'Sorting',diff:'medium',o:['O(n log n)','O(n²)','O(n + k) where k is the range of input','O(log n)'],a:2},
+{s:3,t:'A Red-Black tree guarantees?',sub:'Trees',diff:'hard',o:['Perfect balance at all times','O(log n) height guaranteeing balanced operations','O(1) insertions always','Sorted order storage automatically'],a:1},
+{s:3,t:'The adjacency list representation of a sparse graph uses?',sub:'Graphs',diff:'medium',o:['O(V²) space','O(V + E) space','O(E²) space','O(1) space'],a:1},
+{s:3,t:'What does the union-find (disjoint set union) data structure efficiently support?',sub:'Graphs',diff:'hard',o:['Range queries on arrays','Merging sets and finding if two elements are in the same set','Shortest path computations','Sorting elements'],a:1},
+{s:3,t:'Insertion sort is efficient when?',sub:'Sorting',diff:'medium',o:['The array has many elements','The array is nearly sorted (few inversions)','Random data is present','Large datasets are involved'],a:1},
+{s:3,t:'A monotonic stack is used for problems involving?',sub:'Stack',diff:'hard',o:['Parsing arithmetic expressions','Finding the next greater/lesser element efficiently','Implementing recursive DFS','Building balanced BSTs'],a:1},
+{s:3,t:'The time complexity of Radix Sort is?',sub:'Sorting',diff:'hard',o:['O(n log n)','O(n²)','O(nk) where k is the number of digits','O(n)'],a:2},
+// ══ ML & ALGORITHMS (s:4, indices 160-199) ══
+{s:4,t:'In supervised learning, the training data consists of?',sub:'ML Basics',diff:'easy',o:['Unlabeled data only','Labeled input-output pairs','Random data samples','Only the output labels'],a:1},
+{s:4,t:'Which algorithm is used to train a standard neural network?',sub:'Neural Networks',diff:'medium',o:['K-means clustering','Backpropagation with gradient descent','Principal Component Analysis','Decision tree induction'],a:1},
+{s:4,t:'Overfitting in machine learning means?',sub:'ML Basics',diff:'medium',o:['Model performs equally on train and test data','Model memorizes training data but fails to generalize to new data','Model is too simple to learn patterns','Model converges too slowly during training'],a:1},
+{s:4,t:'What is the time complexity of the classic Bubble Sort?',sub:'Sorting',diff:'easy',o:['O(n log n)','O(n)','O(n²)','O(log n)'],a:2},
+{s:4,t:'Dynamic programming solves problems by?',sub:'DP',diff:'medium',o:['Always making a greedy local choice','Breaking into overlapping subproblems and storing results (memoization/tabulation)','Generating all possible random solutions','Using a divide-and-conquer with no overlap'],a:1},
+{s:4,t:'K-Means clustering is an example of?',sub:'Unsupervised',diff:'easy',o:['Supervised classification','Unsupervised clustering algorithm','Reinforcement learning','Semi-supervised learning'],a:1},
+{s:4,t:'The activation function ReLU is defined as?',sub:'Neural Networks',diff:'medium',o:['f(x) = sigmoid(x)','f(x) = max(0, x)','f(x) = tanh(x)','f(x) = x²'],a:1},
+{s:4,t:'Which algorithm uses a heuristic to find the shortest path efficiently?',sub:'Searching',diff:'medium',o:['Dijkstra’s algorithm','Bellman-Ford algorithm','A* search algorithm','Floyd-Warshall algorithm'],a:2},
+{s:4,t:'The bias-variance tradeoff describes?',sub:'ML Basics',diff:'hard',o:['The balance between training speed and accuracy','The tension between model underfitting (high bias) and overfitting (high variance)','The ratio of training to test set size','The balance between precision and recall'],a:1},
+{s:4,t:'Gradient descent is an optimization algorithm that?',sub:'Neural Networks',diff:'medium',o:['Finds the global maximum of a function','Iteratively updates parameters by moving in the direction of steepest descent','Uses a greedy approach without iterations','Generates random parameter updates'],a:1},
+{s:4,t:'What does the F1 score measure?',sub:'ML Metrics',diff:'medium',o:['Only accuracy on test set','Harmonic mean of precision and recall','The area under the ROC curve','Mean squared error of predictions'],a:1},
+{s:4,t:'Regularization in machine learning is used to?',sub:'ML Basics',diff:'medium',o:['Speed up training convergence','Prevent overfitting by adding a penalty for model complexity','Increase the model complexity','Normalize input features'],a:1},
+{s:4,t:'Which sorting algorithm is most efficient on average for large random datasets?',sub:'Sorting',diff:'medium',o:['Bubble Sort','Insertion Sort','Quick Sort','Selection Sort'],a:2},
+{s:4,t:'A confusion matrix in classification shows?',sub:'ML Metrics',diff:'medium',o:['Feature correlation matrix','The distribution of correct and incorrect predictions for each class','Training loss over epochs','The model’s architecture layers'],a:1},
+{s:4,t:'Principal Component Analysis (PCA) is used for?',sub:'Unsupervised',diff:'medium',o:['Classification of labeled data','Dimensionality reduction by finding orthogonal principal components','Clustering data into groups','Predicting continuous output values'],a:1},
+{s:4,t:'The kernel trick in Support Vector Machines?',sub:'ML Algorithms',diff:'hard',o:['Reduces training time to O(n)','Implicitly maps data to higher-dimensional space for non-linear separation','Initializes the support vectors randomly','Removes outliers from training data'],a:1},
+{s:4,t:'What is the time complexity of Bellman-Ford algorithm?',sub:'Graphs',diff:'medium',o:['O(V + E)','O(V * E)','O(V²)','O(E log V)'],a:1},
+{s:4,t:'Random Forest is an ensemble method that?',sub:'ML Algorithms',diff:'medium',o:['Trains a single powerful decision tree','Trains multiple decision trees on random subsets and aggregates predictions','Clusters data without labels','Uses gradient boosting sequentially'],a:1},
+{s:4,t:'The softmax function is used in neural networks to?',sub:'Neural Networks',diff:'medium',o:['Introduce non-linearity in hidden layers','Convert output scores into a probability distribution across classes','Normalize input features','Apply L2 regularization'],a:1},
+{s:4,t:'Which algorithm finds the minimum spanning tree using a greedy approach starting from a vertex?',sub:'Graphs',diff:'medium',o:['Kruskal’s algorithm','Dijkstra’s algorithm','Prim’s algorithm','Bellman-Ford algorithm'],a:2},
+{s:4,t:'Dropout in neural networks is used to?',sub:'Neural Networks',diff:'medium',o:['Speed up gradient computation','Randomly deactivate neurons during training to prevent overfitting','Add more layers to the network','Initialize weights to zero'],a:1},
+{s:4,t:'The Knapsack problem is a classic example of?',sub:'DP',diff:'medium',o:['Greedy algorithm application','Dynamic programming optimization problem','Graph traversal problem','Sorting and searching problem'],a:1},
+{s:4,t:'Cross-validation is used in ML to?',sub:'ML Basics',diff:'medium',o:['Speed up model training significantly','Assess how well a model generalizes using different train/test splits','Normalize input features before training','Balance class distribution in training data'],a:1},
+{s:4,t:'Which data structure is used in Prim’s MST algorithm for efficient implementation?',sub:'Graphs',diff:'hard',o:['Stack','Queue','Min Priority Queue (Min Heap)','Hash Table'],a:2},
+{s:4,t:'The vanishing gradient problem in deep neural networks refers to?',sub:'Neural Networks',diff:'hard',o:['Gradients growing too large during backpropagation','Gradients becoming extremely small, making training of early layers very slow','The loss function reaching a local maximum','Dropout removing too many neurons'],a:1},
+{s:4,t:'Greedy algorithms make?',sub:'Algorithms',diff:'medium',o:['The globally optimal choice at each step','The locally optimal choice at each step hoping for global optimum','Random choices at each step','Exhaustive search at every step'],a:1},
+{s:4,t:'The time complexity of the Longest Common Subsequence DP solution is?',sub:'DP',diff:'hard',o:['O(n)','O(n log n)','O(n²) (O(m*n) for strings of length m, n)','O(2^n)'],a:2},
+{s:4,t:'Batch normalization in neural networks?',sub:'Neural Networks',diff:'hard',o:['Randomly drops neurons for regularization','Normalizes layer inputs to stabilize and accelerate training','Reduces the number of network parameters','Applies L1 regularization to weights'],a:1},
+{s:4,t:'Which ML algorithm builds a tree by recursively splitting on the feature that best separates classes?',sub:'ML Algorithms',diff:'medium',o:['K-Nearest Neighbors','Naive Bayes','Decision Tree (e.g. ID3, C4.5)','Linear Regression'],a:2},
+{s:4,t:'Transfer learning in deep learning means?',sub:'Neural Networks',diff:'medium',o:['Transferring data between datasets','Using a pre-trained model as starting point and fine-tuning for a new task','Moving a model between hardware platforms','Compressing a model for deployment'],a:1},
+{s:4,t:'The Master Theorem is used to?',sub:'Algorithms',diff:'hard',o:['Prove algorithm correctness','Analyze time complexity of divide-and-conquer recurrences','Compute minimum spanning trees','Solve dynamic programming problems'],a:1},
+{s:4,t:'Naive Bayes classifier assumes?',sub:'ML Algorithms',diff:'medium',o:['Features are always linearly separable','Features are conditionally independent given the class label','All features have equal importance','Data is always normally distributed'],a:1},
+{s:4,t:'The ROC curve plots?',sub:'ML Metrics',diff:'medium',o:['Training loss versus validation loss','True positive rate vs false positive rate at various classification thresholds','Precision vs recall at different thresholds','Model complexity vs training accuracy'],a:1},
+{s:4,t:'Boosting in ensemble learning works by?',sub:'ML Algorithms',diff:'hard',o:['Training models in parallel on random subsets','Sequentially training models where each focuses on errors of previous ones','Averaging predictions from random subsets','Using only the single best model'],a:1},
+{s:4,t:'The time complexity of matrix multiplication using the standard algorithm is?',sub:'Algorithms',diff:'medium',o:['O(n²)','O(n² log n)','O(n³)','O(n log n)'],a:2},
+{s:4,t:'Word2Vec generates?',sub:'NLP',diff:'hard',o:['One-hot encoded word vectors','Dense continuous-valued vector embeddings for words capturing semantic relationships','Frequency-based TF-IDF word scores','Binary encoded character sequences'],a:1},
+{s:4,t:'The Fibonacci sequence computed with naive recursion has time complexity?',sub:'DP',diff:'medium',o:['O(n)','O(n log n)','O(2^n) exponential','O(n²)'],a:2},
+{s:4,t:'Precision in a classification model is?',sub:'ML Metrics',diff:'medium',o:['True Positives / (True Positives + False Negatives)','True Positives / (True Positives + False Positives)','True Negatives / Total Samples','Correct Predictions / Total Predictions'],a:1},
+{s:4,t:'Which problem is NP-Complete?',sub:'Algorithms',diff:'hard',o:['Finding shortest path in a weighted graph','Sorting an array of integers','Traveling Salesman Problem (decision version)','Binary search in a sorted array'],a:2},
+{s:4,t:'Attention mechanism in Transformers is used to?',sub:'Neural Networks',diff:'hard',o:['Reduce the number of parameters','Weigh the importance of different positions in a sequence when computing representations','Apply dropout regularization efficiently','Speed up matrix multiplications'],a:1},
+{s:4,t:'The Hamming distance between two strings is?',sub:'Algorithms',diff:'medium',o:['Number of insertions to transform one string to another','Number of positions where corresponding characters differ','Length difference between two strings','Minimum edit operations to transform strings'],a:1}
+];
+
+// ─── UI Helpers ────────────────────────────────────────────────────────────
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  scrollTo(0,0);
+}
+
+function pad(n){return n<10?'0'+n:String(n)}
+
+function toast(type,msg){
+  const c=document.getElementById('toastC');
+  const el=document.createElement('div');
+  el.className='toast '+type;
+  el.textContent=msg;
+  c.appendChild(el);
+  setTimeout(()=>el.remove(),3200);
+}
+
+function toggleChk(id){
+  const el=document.getElementById(id);
+  el.classList.toggle('on');
+  el.textContent=el.classList.contains('on')?'+':'';
+  if(id==='termsCk') termsOn=el.classList.contains('on');
+}
+
+function pickAv(el){
+  document.querySelectorAll('.av-opt').forEach(a=>a.classList.remove('sel'));
+  el.classList.add('sel');
+  selAv=el.dataset.av;
+}
+
+function chkStrength(p){
+  const f=document.getElementById('strF'),t=document.getElementById('strT');
+  if(!p){f.style.width='0';t.textContent='';return}
+  let s=0;
+  if(p.length>=8)s++;if(p.length>=12)s++;
+  if(/[A-Z]/.test(p))s++;if(/[0-9]/.test(p))s++;if(/[^A-Za-z0-9]/.test(p))s++;
+  const L=[['0%','var(--danger)',''],['20%','var(--danger)','Weak'],['40%','var(--warn)','Fair'],['60%','var(--warn)','Good'],['80%','var(--tl)','Strong'],['100%','var(--safe)','Very Strong']];
+  const l=L[Math.min(s,5)];
+  f.style.width=l[0];f.style.background=l[1];t.style.color=l[1];t.textContent=l[2];
+}
+
+function shErr(id,msg){
+  const e=document.getElementById(id);
+  if(!e)return;
+  e.textContent=msg;e.style.display='block';
+  if(e.previousElementSibling)e.previousElementSibling.classList.add('err');
+}
+
+function clErr(id){
+  const e=document.getElementById(id);
+  if(e){e.style.display='none';if(e.previousElementSibling)e.previousElementSibling.classList.remove('err')}
+}
+
+function set(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
+
+// ─── Auth ──────────────────────────────────────────────────────────────────
+// ─── Auth helpers ─────────────────────────────────────────────────────────
+function fillLogin(id,pw){
+  const idEl=document.getElementById('loginId');
+  const pwEl=document.getElementById('loginPwd');
+  if(!idEl||!pwEl)return;
+  idEl.value=id; pwEl.value=pw;
+  [idEl,pwEl].forEach(function(f){
+    f.style.borderColor='var(--a)';
+    f.style.boxShadow='0 0 0 3px rgba(79,126,248,.18)';
+    setTimeout(function(){f.style.borderColor='';f.style.boxShadow='';},800);
+  });
+}
+
+function doLogin(){
+  var id=(document.getElementById('loginId').value||'').trim();
+  var pw=document.getElementById('loginPwd').value||'';
+  clErr('loginIdErr'); clErr('loginPwdErr');
+  if(!id){shErr('loginIdErr','Please enter your roll number or email');return;}
+  if(!pw){shErr('loginPwdErr','Please enter your password');return;}
+  var u=STORE.find(id);
+  if(!u||u.password!==pw){
+    shErr('loginPwdErr','Wrong credentials. Use a demo tile above or try 2320520034 / ankith123');
+    return;
+  }
+  loginOk(u);
+}
+
+function quickLogin(){
+  var u=STORE.find('2320520034');
+  if(u) loginOk(u);
+}
+
+function loginOk(u){
+  CU=u;
+  fillDash(u);
+  toast('ok','Welcome, '+u.first+'! ('+u.roll+')');
+  showPage('dashPage');
+}
+
+function fillDash(u){
+  var av=u.avatar||((u.first[0])+(u.last?u.last[0]:'')).toUpperCase();
+  ['dashAv','pcAv','examNbAv','examScAv','modalAv','resAv'].forEach(function(id){
+    var e=document.getElementById(id); if(e) e.textContent=av;
+  });
+  set('dashName',u.first+' '+u.last); set('dashRoll',u.roll); set('welcomeName',u.first);
+  set('pcName',u.first+' '+u.last); set('pcRoll',u.roll);
+  set('pcBranch',u.branch||'BCA'); set('pcBatch',u.batch||'2023-2026');
+  set('pcEmail',u.email||'—');
+  set('examNbName',u.first); set('examNbRoll',u.roll);
+  set('examScName',u.first+' '+u.last); set('examScRoll',u.roll);
+  set('examScBatch',u.batch||'2023-2026');
+  set('examInfoName',u.first+' '+u.last); set('examInfoRoll',u.roll);
+  set('nbStudent',u.first+' '+u.last+' — '+u.roll);
+  set('modalName',u.first+' '+u.last);
+  set('modalRoll','Roll No. '+u.roll+' — '+(u.branch||'BCA')+' '+(u.batch||'2023-2026'));
+  set('camSname',u.first+' — '+u.roll);
+  set('resName',u.first+' '+u.last); set('resRoll',u.roll);
+}
+
+function doRegister(){
+  var first=(document.getElementById('regFirst').value||'').trim();
+  var last=(document.getElementById('regLast').value||'').trim();
+  var roll=(document.getElementById('regRoll').value||'').trim();
+  var email=(document.getElementById('regEmail').value||'').trim();
+  var branch=document.getElementById('regBranch').value;
+  var batch=document.getElementById('regBatch').value;
+  var pw=document.getElementById('regPwd').value||'';
+  var pw2=document.getElementById('regPwd2').value||'';
+  ['regRollErr','regEmailErr','regPwdErr','regPwd2Err'].forEach(clErr);
+  var ok=true;
+  if(!/^\d{10}$/.test(roll)){shErr('regRollErr','Roll number must be exactly 10 digits');ok=false;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){shErr('regEmailErr','Enter a valid email address');ok=false;}
+  if(pw.length<8){shErr('regPwdErr','Password must be at least 8 characters');ok=false;}
+  if(pw!==pw2){shErr('regPwd2Err','Passwords do not match');ok=false;}
+  if(!termsOn){toast('warn','Please accept the Terms & camera permission');ok=false;}
+  if(!ok)return;
+  if(STORE.find(roll)){shErr('regRollErr','Roll number already registered');return;}
+  var u={roll:roll,email:email,password:pw,first:first||'Student',last:last||'',
+         branch:branch||'BCA',batch:batch||'2023-2026',avatar:selAv};
+  STORE.save(u);
+  toast('ok','Account created! Welcome, '+(first||'Student')+'!');
+  loginOk(u);
+}
+
+function doLogout(){
+  CU=null;
+  clearTimer(); stopCam();
+  toast('info','Logged out. See you soon!');
+  setTimeout(function(){showPage('loginPage');},700);
+}
+
+// ─── Wire all login-page buttons via JS (avoids inline handler issues) ──────
+function initLoginPage(){
+  // Demo tiles
+  var DEMOS=[
+    {id:'2320520034',pw:'ankith123',name:'Ankith Reddy',av:'AR',color:'#4f7ef8'},
+    {id:'2320520035',pw:'priya123', name:'Priya Sharma', av:'ST',color:'#0fb8a4'},
+    {id:'2320520036',pw:'ravi123',  name:'Ravi Kumar',   av:'DR',color:'#a855f7'},
+    {id:'2320520037',pw:'sneha123', name:'Sneha Patel',  av:'EN',color:'#f97316'},
+  ];
+  var tilesEl=document.getElementById('demoTiles');
+  if(tilesEl){
+    tilesEl.innerHTML='';
+    DEMOS.forEach(function(d){
+      var tile=document.createElement('div');
+      tile.style.cssText='background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:10px 12px;cursor:pointer;transition:background .15s,border-color .15s';
+      tile.innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+        +'<div style="width:24px;height:24px;border-radius:6px;background:'+d.color+';display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">'+d.av+'</div>'
+        +'<span style="font-size:11.5px;font-weight:600;color:#d8e4f8">'+d.name+'</span>'
+        +'</div>'
+        +'<div style="font-size:8px;color:'+d.color+';font-family:monospace;letter-spacing:.04em">'+d.id+' / '+d.pw+'</div>';
+      tile.addEventListener('mouseenter',function(){
+        this.style.background='rgba(255,255,255,.09)';
+        this.style.borderColor='rgba(255,255,255,.22)';
+      });
+      tile.addEventListener('mouseleave',function(){
+        this.style.background='rgba(255,255,255,.04)';
+        this.style.borderColor='rgba(255,255,255,.1)';
+      });
+      (function(did,dpw){
+        tile.addEventListener('click',function(){
+          fillLogin(did,dpw);
+          setTimeout(doLogin,120);
+        });
+      })(d.id,d.pw);
+      tilesEl.appendChild(tile);
+    });
+  }
+
+  // Sign In button
+  var signInBtn=document.getElementById('signInBtn');
+  if(signInBtn) signInBtn.addEventListener('click',doLogin);
+
+  // Enter key on password
+  var pwEl=document.getElementById('loginPwd');
+  if(pwEl) pwEl.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+
+  // Demo button
+  var demoBtn=document.getElementById('demoBtn');
+  if(demoBtn) demoBtn.addEventListener('click',quickLogin);
+
+  // Create account link
+  var createLink=document.getElementById('createAccLink');
+  if(createLink) createLink.addEventListener('click',function(){showPage('registerPage');});
+
+  // Forgot password
+  var forgotLink=document.getElementById('forgotLink');
+  if(forgotLink) forgotLink.addEventListener('click',function(){
+    toast('info','Use any demo tile above, or try 2320520034 / ankith123');
+  });
+
+  // Remember me checkbox
+  var remWrap=document.getElementById('remWrap');
+  if(remWrap) remWrap.addEventListener('click',function(){toggleChk('remCk');});
+}
+
+// ─── Camera ────────────────────────────────────────────────────────────────
+let demoCanvasInterval=null;
+
+async function startCam(){
+  // Show connecting state via placeholder IDs
+  const ph=document.getElementById('camPh');
+  const phTxt=document.getElementById('camPhTxt');
+  const phWarn=document.getElementById('camPhWarn');
+  const phIco=document.getElementById('camPhIco');
+  if(phTxt) phTxt.textContent='Requesting access...';
+  if(phWarn) phWarn.textContent='Please click Allow in your browser';
+  if(phIco){ phIco.textContent='⟳'; phIco.style.animation='spin 1s linear infinite'; }
+
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    activateDemoCam('API unavailable (needs HTTPS or localhost)');
+    return;
+  }
+
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({
+      video:{width:{ideal:320},height:{ideal:240},facingMode:'user'},
+      audio:true
+    });
+    const v=document.getElementById('camVid');
+    v.srcObject=camStream;
+    v.style.display='block';
+    if(ph) ph.style.display='none';
+    activateCamUI();
+    toast('ok','Camera connected! Live proctoring is now active.');
+  }catch(e){
+    let reason='';
+    if(e.name==='NotAllowedError'||e.name==='PermissionDeniedError') reason='Permission denied';
+    else if(e.name==='NotFoundError'||e.name==='DevicesNotFoundError') reason='No camera found';
+    else if(e.name==='NotReadableError'||e.name==='TrackStartError') reason='Camera in use by another app';
+    else if(location.protocol==='file:') reason='File:// needs HTTPS';
+    else reason=e.name||'Unknown error';
+    activateDemoCam(reason);
+  }
+}
+
+function activateCamUI(){
+  document.getElementById('recW').style.display='flex';
+  document.getElementById('liveB').style.display='';
+  document.getElementById('faceBox').style.display='block';
+  document.getElementById('camElapsed').style.display='';
+  document.getElementById('camStatus').textContent='Live';
+  document.getElementById('camStatus').className='cam-status ok';
+  camSec=0;
+  if(camInterval)clearInterval(camInterval);
+  camInterval=setInterval(()=>{
+    camSec++;
+    const m=Math.floor(camSec/60),s=camSec%60;
+    set('camElapsed',pad(m)+':'+pad(s));
+  },1000);
+  setTimeout(()=>startDetection(),1200);
+}
+
+function activateDemoCam(reason){
+  // Build demo canvas camera simulation
+  const ph=document.getElementById('camPh');
+  ph.style.display='none';
+
+  // Create a canvas-based simulated cam feed
+  const camArea=document.querySelector('.cam-area');
+  let canvas=document.getElementById('demoCamCanvas');
+  if(!canvas){
+    canvas=document.createElement('canvas');
+    canvas.id='demoCamCanvas';
+    canvas.width=320;canvas.height=240;
+    canvas.style.cssText='width:100%;height:100%;object-fit:cover;display:block;position:absolute;top:0;left:0;z-index:1';
+    camArea.insertBefore(canvas,camArea.firstChild);
+  }
+  const ctx=canvas.getContext('2d');
+  let frame=0;
+
+  if(demoCanvasInterval)clearInterval(demoCanvasInterval);
+  demoCanvasInterval=setInterval(()=>{
+    frame++;
+    // Dark background
+    ctx.fillStyle='#080e1a';
+    ctx.fillRect(0,0,320,240);
+
+    // Animated scan line
+    const scanY=(frame*2)%260;
+    const grad=ctx.createLinearGradient(0,scanY-20,0,scanY+4);
+    grad.addColorStop(0,'rgba(15,184,164,0)');
+    grad.addColorStop(1,'rgba(15,184,164,0.18)');
+    ctx.fillStyle=grad;
+    ctx.fillRect(0,scanY-20,320,24);
+
+    // Face outline silhouette
+    const cx=160,cy=105;
+    ctx.save();
+    ctx.strokeStyle='rgba(15,184,164,0.55)';
+    ctx.lineWidth=1.5;
+    // Head oval
+    ctx.beginPath();
+    ctx.ellipse(cx,cy,42,52,0,0,Math.PI*2);
+    ctx.stroke();
+    // Shoulders
+    ctx.beginPath();
+    ctx.moveTo(cx-70,200);
+    ctx.quadraticCurveTo(cx-50,155,cx-30,148);
+    ctx.quadraticCurveTo(cx,144,cx+30,148);
+    ctx.quadraticCurveTo(cx+50,155,cx+70,200);
+    ctx.stroke();
+    // Eyes
+    const blink=Math.sin(frame*0.08)>0.97;
+    if(!blink){
+      ctx.beginPath();ctx.ellipse(cx-15,cy-5,7,5,0,0,Math.PI*2);ctx.stroke();
+      ctx.beginPath();ctx.ellipse(cx+15,cy-5,7,5,0,0,Math.PI*2);ctx.stroke();
+      // Pupils
+      ctx.fillStyle='rgba(15,184,164,0.7)';
+      ctx.beginPath();ctx.arc(cx-15,cy-5,3,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(cx+15,cy-5,3,0,Math.PI*2);ctx.fill();
+    }else{
+      ctx.beginPath();ctx.moveTo(cx-22,cy-5);ctx.lineTo(cx-8,cy-5);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx+8,cy-5);ctx.lineTo(cx+22,cy-5);ctx.stroke();
+    }
+    // Nose
+    ctx.beginPath();ctx.moveTo(cx,cy+2);ctx.lineTo(cx-5,cy+14);ctx.lineTo(cx+5,cy+14);ctx.stroke();
+    // Mouth
+    ctx.beginPath();
+    ctx.arc(cx,cy+26,10,0.15,Math.PI-0.15);
+    ctx.stroke();
+    ctx.restore();
+
+    // Corner brackets
+    ctx.strokeStyle='rgba(15,184,164,0.6)';ctx.lineWidth=2;
+    [[6,6],[302,6],[6,228],[302,228]].forEach(([x,y],idx)=>{
+      const sx=idx%2===0?1:-1,sy=idx<2?1:-1;
+      ctx.beginPath();ctx.moveTo(x,y+sy*14);ctx.lineTo(x,y);ctx.lineTo(x+sx*14,y);ctx.stroke();
+    });
+
+    // Detection label
+    ctx.fillStyle='rgba(15,184,164,0.9)';
+    ctx.font='bold 9px monospace';
+    ctx.fillText('FACE DETECTED',72,22);
+
+    // Demo watermark
+    ctx.fillStyle='rgba(255,255,255,0.12)';
+    ctx.font='8px monospace';
+    ctx.fillText('DEMO MODE — '+reason,8,232);
+
+    // Pulsing REC dot simulation
+    if(Math.floor(frame/15)%2===0){
+      ctx.fillStyle='rgba(232,64,74,0.9)';
+      ctx.beginPath();ctx.arc(304,12,4,0,Math.PI*2);ctx.fill();
+    }
+
+    // Noise overlay
+    for(let i=0;i<40;i++){
+      const nx=Math.random()*320,ny=Math.random()*240;
+      ctx.fillStyle='rgba(255,255,255,'+Math.random()*0.03+')';
+      ctx.fillRect(nx,ny,1,1);
+    }
+  },50);
+
+  // Activate camera UI elements (same as real camera)
+  document.getElementById('recW').style.display='flex';
+  document.getElementById('liveB').style.display='';
+  document.getElementById('camElapsed').style.display='';
+  document.getElementById('camStatus').textContent='Demo Mode';
+  document.getElementById('camStatus').className='cam-status ok';
+  camSec=0;
+  if(camInterval)clearInterval(camInterval);
+  camInterval=setInterval(()=>{
+    camSec++;
+    const m=Math.floor(camSec/60),s=camSec%60;
+    set('camElapsed',pad(m)+':'+pad(s));
+  },1000);
+
+  toast('warn','Demo camera active ('+reason+'). Real camera needs HTTPS or browser permission.');
+  setTimeout(()=>startDetection(),1200);
+}
+
+// Inject spin keyframe if needed
+if(!document.getElementById('spinStyle')){
+  const st=document.createElement('style');
+  st.id='spinStyle';
+  st.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
+  document.head.appendChild(st);
+}
+
+function stopCam(){
+  stopDetection();
+  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}
+  if(camInterval){clearInterval(camInterval);camInterval=null}
+  if(demoCanvasInterval){clearInterval(demoCanvasInterval);demoCanvasInterval=null}
+  const c=document.getElementById('demoCamCanvas');if(c)c.remove();
+  updateMotionBadge('clear','CLEAR');
+}
+
+function retryCam(){
+  stopCam();
+  // Reset placeholder
+  const ph=document.getElementById('camPh');
+  const v=document.getElementById('camVid');
+  if(ph){ph.style.display='flex';}
+  if(v){v.style.display='none';v.srcObject=null;}
+  document.getElementById('recW').style.display='none';
+  document.getElementById('liveB').style.display='none';
+  document.getElementById('faceBox').style.display='none';
+  document.getElementById('camElapsed').style.display='none';
+  document.getElementById('camStatus').textContent='Connecting...';
+  document.getElementById('camStatus').className='cam-status off2';
+  setTimeout(()=>startCam(),200);
+}
+
+function toggleMute(){
+  camMuted=!camMuted;
+  if(camStream)camStream.getAudioTracks().forEach(t=>t.enabled=!camMuted);
+  const b=document.getElementById('muteBtn');
+  b.textContent=camMuted?'OFF':'MIC';b.className='cam-btn'+(camMuted?' off':'');
+  if(camMuted)logViol('Microphone was muted during exam','mic');
+}
+
+function toggleCam(){
+  camOff=!camOff;
+  if(camStream)camStream.getVideoTracks().forEach(t=>t.enabled=!camOff);
+  const realVid=document.getElementById('camVid');
+  const demoC=document.getElementById('demoCamCanvas');
+  if(realVid)realVid.style.display=camOff?'none':'block';
+  if(demoC)demoC.style.display=camOff?'none':'block';
+  document.getElementById('faceBox').style.display=camOff?'none':'block';
+  const b=document.getElementById('camBtn');
+  b.textContent=camOff?'OFF':'CAM';b.className='cam-btn'+(camOff?' off':'');
+  if(camOff){document.getElementById('camStatus').textContent='Camera Off';document.getElementById('camStatus').className='cam-status off2';logViol('Camera was turned off during exam','cam_off');}
+  else{document.getElementById('camStatus').textContent='Live';document.getElementById('camStatus').className='cam-status ok';}
+}
+
+// ─── Violation types ──────────────────────────────────────────────────────
+const VIOL_META={
+  'motion':     {icon:'🏃',sev:'med', title:'Excessive Movement',   color:'var(--warn)'},
+  'no_face':    {icon:'👤',sev:'high',title:'Face Not Detected',    color:'var(--danger)'},
+  'multi_face': {icon:'👥',sev:'high',title:'Multiple Faces',       color:'var(--danger)'},
+  'object':     {icon:'📱',sev:'high',title:'Foreign Object',       color:'var(--danger)'},
+  'tab':        {icon:'🔀',sev:'high',title:'Tab Switch',           color:'var(--danger)'},
+  'mic':        {icon:'🎤',sev:'med', title:'Microphone Muted',     color:'var(--warn)'},
+  'cam_off':    {icon:'📷',sev:'high',title:'Camera Disabled',      color:'var(--danger)'},
+  'gaze':       {icon:'👁',sev:'med', title:'Looking Away',         color:'var(--warn)'},
+  'generic':    {icon:'⚠',sev:'med', title:'Proctoring Alert',     color:'var(--warn)'},
+};
+
+let violAlertTimeout=null;
+
+function logViol(msg, type='generic'){
+  violCount++;
+  const meta=VIOL_META[type]||VIOL_META.generic;
+  const timeStr=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+  // ── Floating alert ──
+  const alert=document.getElementById('violAlert');
+  const vaIcon=document.getElementById('vaIcon');
+  const vaTitle=document.getElementById('vaTitle');
+  const vaMsg=document.getElementById('vaMsg');
+  const vaBadge=document.getElementById('vaBadge');
+  vaIcon.textContent=meta.icon;
+  vaIcon.style.background='rgba(232,64,74,.18)';
+  vaTitle.textContent=meta.title;
+  vaMsg.textContent=msg;
+  vaBadge.textContent='#'+violCount;
+  alert.style.borderColor=meta.sev==='high'?'var(--danger)':'var(--warn)';
+  alert.classList.add('show');
+  if(violAlertTimeout)clearTimeout(violAlertTimeout);
+  violAlertTimeout=setTimeout(()=>alert.classList.remove('show'),4500);
+
+  // ── Sidebar log ──
+  const items=document.getElementById('vlItems');
+  const empty=items.querySelector('.vl-empty');
+  if(empty)empty.remove();
+  const item=document.createElement('div');
+  item.className='vl-item';
+  item.innerHTML=`<div class="vl-dot ${meta.sev}"></div><div class="vl-text"><strong>${meta.title}</strong>${msg}</div><div class="vl-time">${timeStr}</div>`;
+  items.insertBefore(item,items.firstChild);
+  // Keep max 8 items
+  while(items.children.length>8)items.removeChild(items.lastChild);
+  set('vlCount',violCount+' violation'+(violCount===1?'':'s'));
+
+  toast('warn',meta.icon+' '+meta.title+': '+msg);
+}
+
+function closeViolAlert(){
+  document.getElementById('violAlert').classList.remove('show');
+  if(violAlertTimeout)clearTimeout(violAlertTimeout);
+}
+
+// ─── Motion & Object Detection Engine ─────────────────────────────────────
+let prevFrameData=null, motionFrames=0, noFaceFrames=0, detectionInterval=null;
+let lastMotionViol=0, lastFaceViol=0, lastGazeViol=0;
+const MOTION_THRESH=28, MOTION_PIXEL_PCT=0.04, NO_FACE_FRAMES=45, GAZE_FRAMES=60;
+
+function startDetection(){
+  if(detectionInterval)clearInterval(detectionInterval);
+  detectionInterval=setInterval(runDetection, 800);
+}
+
+function stopDetection(){
+  if(detectionInterval){clearInterval(detectionInterval);detectionInterval=null}
+  prevFrameData=null; motionFrames=0; noFaceFrames=0;
+}
+
+function runDetection(){
+  const video=document.getElementById('camVid');
+  const demoC=document.getElementById('demoCamCanvas');
+  const dc=document.getElementById('detectCanvas');
+  if(!dc)return;
+
+  // Determine source
+  let src=null;
+  if(video&&video.srcObject&&video.readyState>=2){src=video}
+  else if(demoC&&demoC.style.display!=='none'){src=demoC}
+  if(!src)return;
+
+  const W=src.videoWidth||src.width||320;
+  const H=src.videoHeight||src.height||240;
+  dc.width=W; dc.height=H;
+  const ctx=dc.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  // Draw source frame to offscreen canvas for pixel analysis
+  const off=document.createElement('canvas');
+  off.width=W; off.height=H;
+  const octx=off.getContext('2d');
+  octx.drawImage(src,0,0,W,H);
+  const frame=octx.getImageData(0,0,W,H);
+  const data=frame.data;
+  const now=Date.now();
+
+  // ── Motion detection (pixel diff) ──
+  if(prevFrameData&&prevFrameData.length===data.length){
+    let diffPx=0, totalPx=data.length/4;
+    for(let i=0;i<data.length;i+=4){
+      const dr=Math.abs(data[i]-prevFrameData[i]);
+      const dg=Math.abs(data[i+1]-prevFrameData[i+1]);
+      const db=Math.abs(data[i+2]-prevFrameData[i+2]);
+      if((dr+dg+db)/3>MOTION_THRESH)diffPx++;
+    }
+    const motionPct=diffPx/totalPx;
+
+    if(motionPct>MOTION_PIXEL_PCT*3){
+      motionFrames++;
+      updateMotionBadge('alert','MOTION DETECTED');
+      // Draw red motion overlay
+      ctx.fillStyle='rgba(232,64,74,0.08)';
+      ctx.fillRect(0,0,W,H);
+      ctx.strokeStyle='rgba(232,64,74,0.5)';ctx.lineWidth=2;
+      ctx.strokeRect(2,2,W-4,H-4);
+      if(motionFrames>3&&now-lastMotionViol>8000){
+        logViol('Unusual movement detected in frame','motion');
+        lastMotionViol=now; motionFrames=0;
+      }
+    } else if(motionPct>MOTION_PIXEL_PCT){
+      motionFrames=Math.max(0,motionFrames-1);
+      updateMotionBadge('motion','MOVEMENT');
+    } else {
+      motionFrames=Math.max(0,motionFrames-1);
+      updateMotionBadge('clear','CLEAR');
+    }
+  }
+  prevFrameData=new Uint8ClampedArray(data);
+
+  // ── Face region analysis (skin tone heuristic in center zone) ──
+  // Check the center region where a face should be
+  const cx=Math.floor(W*0.25), cy=Math.floor(H*0.12);
+  const fw=Math.floor(W*0.5), fh=Math.floor(H*0.7);
+  let skinPx=0, faceTotal=0;
+  for(let y=cy;y<cy+fh;y+=4){
+    for(let x=cx;x<cx+fw;x+=4){
+      const idx=(y*W+x)*4;
+      const r=data[idx],g=data[idx+1],b=data[idx+2];
+      // Skin tone heuristic
+      if(r>60&&g>40&&b>20&&r>g&&r>b&&(r-g)>10&&r<240){skinPx++;}
+      faceTotal++;
+    }
+  }
+  const skinRatio=faceTotal>0?skinPx/faceTotal:0;
+
+  // Check for multiple bright regions (multiple faces)
+  const regions=countBrightRegions(data,W,H);
+
+  if(skinRatio<0.04&&faceTotal>0){
+    // Demo canvas will always have "face", so only flag for real video
+    if(video&&video.srcObject){
+      noFaceFrames++;
+      // Draw face-not-detected indicator
+      ctx.strokeStyle='rgba(232,64,74,0.7)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+      ctx.strokeRect(cx,cy,fw,fh);
+      ctx.fillStyle='rgba(232,64,74,0.7)';ctx.font='bold 10px monospace';
+      ctx.fillText('FACE NOT DETECTED',cx+4,cy+14);
+      ctx.setLineDash([]);
+      if(noFaceFrames>NO_FACE_FRAMES&&now-lastFaceViol>12000){
+        logViol('Student face not visible in camera','no_face');
+        lastFaceViol=now; noFaceFrames=0;
+      }
+    }
+  } else {
+    noFaceFrames=Math.max(0,noFaceFrames-1);
+    // Draw face detected box (green)
+    ctx.strokeStyle='rgba(15,184,164,0.5)';ctx.lineWidth=1.5;
+    ctx.strokeRect(cx,cy,fw,fh);
+    ctx.fillStyle='rgba(15,184,164,0.7)';ctx.font='bold 8px monospace';
+    ctx.fillText('FACE DETECTED',cx+4,cy-3);
+  }
+
+  if(regions>1.8&&skinRatio>0.12){
+    ctx.strokeStyle='rgba(232,64,74,0.8)';ctx.lineWidth=2;
+    ctx.font='bold 9px monospace';ctx.fillStyle='rgba(232,64,74,0.9)';
+    ctx.fillText('MULTIPLE PERSONS?',4,H-8);
+    if(now-lastFaceViol>15000){
+      logViol('Multiple faces detected in frame','multi_face');
+      lastFaceViol=now;
+    }
+  }
+
+  // ── Gaze direction heuristic (check if center region is very dark = looking away) ──
+  const centerRegion=getCenterBrightness(data,W,H);
+  if(centerRegion<18&&video&&video.srcObject){
+    if(now-lastGazeViol>15000){
+      logViol('Student appears to be looking away','gaze');
+      lastGazeViol=now;
+    }
+  }
+}
+
+function countBrightRegions(data,W,H){
+  // Simplified: count horizontal band brightness variance to estimate person count
+  let bands=[0,0,0];
+  const bH=Math.floor(H/3);
+  for(let b=0;b<3;b++){
+    let sum=0,count=0;
+    for(let y=b*bH;y<(b+1)*bH;y+=6){
+      for(let x=0;x<W;x+=6){
+        const idx=(y*W+x)*4;
+        sum+=data[idx]*0.3+data[idx+1]*0.59+data[idx+2]*0.11;
+        count++;
+      }
+    }
+    bands[b]=count>0?sum/count:0;
+  }
+  const avg=(bands[0]+bands[1]+bands[2])/3;
+  let variance=bands.reduce((s,v)=>s+Math.pow(v-avg,2),0)/3;
+  return variance>400?2:1;
+}
+
+function getCenterBrightness(data,W,H){
+  const cx=Math.floor(W*0.35),cy=Math.floor(H*0.3);
+  const fw=Math.floor(W*0.3),fh=Math.floor(H*0.3);
+  let sum=0,count=0;
+  for(let y=cy;y<cy+fh;y+=4){
+    for(let x=cx;x<cx+fw;x+=4){
+      const idx=(y*W+x)*4;
+      sum+=data[idx]*0.3+data[idx+1]*0.59+data[idx+2]*0.11;
+      count++;
+    }
+  }
+  return count>0?sum/count:100;
+}
+
+function updateMotionBadge(state,label){
+  const b=document.getElementById('motionBadge');
+  if(b){b.className='motion-badge '+state;b.textContent=label}
+}
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden&&document.getElementById('examPage').classList.contains('active'))logViol('Browser tab was switched during exam','tab');
+});
+
+// ─── Exam Start ────────────────────────────────────────────────────────────
+function startExam(){
+  ans=new Array(200).fill(-1);
+  flg=new Array(200).fill(false);
+  cQ=0;violCount=0;tL=7200;
+  examStartTime=Date.now();
+  buildGrid();renderQ();updateSidebar();startTimer();
+  showPage('examPage');
+  toast('info','Exam started! 200 questions · 120 minutes. Good luck!');
+  setTimeout(()=>startCam(),500);
+}
+
+// ─── Question Grid ─────────────────────────────────────────────────────────
+const subKeys=['ds','os','js','dsa','ml'];
+const subBorderColors=['rgba(79,126,248,.4)','rgba(15,184,164,.4)','rgba(232,200,72,.4)','rgba(168,85,247,.4)','rgba(249,115,22,.4)'];
+
+function buildGrid(){
+  const g=document.getElementById('qG');
+  g.innerHTML='';
+  for(let i=0;i<200;i++){
+    const b=document.createElement('div');
+    b.className='qb';
+    b.textContent=i+1;
+    b.onclick=()=>jumpQ(i);
+    g.appendChild(b);
+  }
+  refreshGrid();
+}
+
+function refreshGrid(){
+  const btns=document.getElementById('qG').children;
+  for(let i=0;i<200;i++){
+    const b=btns[i];
+    const si=QS[i].s;
+    b.className='qb'+(flg[i]?' flg':ans[i]!==-1?' ans '+subKeys[si]:i===cQ?' cur':'');
+    if(i===cQ)b.className='qb cur';
+    else if(flg[i])b.className='qb flg';
+    else if(ans[i]!==-1)b.className='qb ans '+subKeys[si];
+  }
+}
+
+// ─── Render Question ───────────────────────────────────────────────────────
+const SBORDERS=['rgba(79,126,248,.3)','rgba(15,184,164,.3)','rgba(232,200,72,.3)','rgba(168,85,247,.3)','rgba(249,115,22,.3)'];
+
+function renderQ(){
+  const q=QS[cQ];
+  const s=SUBS[q.s];
+  // Update subject header
+  const si=document.getElementById('subIcon');
+  si.textContent=s.icon;
+  si.style.background='rgba('+['79,126,248','15,184,164','232,200,72','168,85,247','249,115,22'][q.s]+',.15)';
+  si.style.color=s.color;
+  document.getElementById('subNameMain').textContent=s.name;
+  document.getElementById('subNameMain').style.color=s.color;
+  document.getElementById('subDesc').textContent=s.desc;
+  document.getElementById('subBadge').textContent=s.range;
+  document.getElementById('subBadge').style.color=s.color;
+  document.getElementById('subBadge').style.borderColor=SBORDERS[q.s];
+  // Question card
+  const qbadge=document.getElementById('qBadge');
+  qbadge.textContent='Q'+(cQ+1);
+  qbadge.style.color=s.color;qbadge.style.borderColor=SBORDERS[q.s];
+  document.getElementById('qDiff').textContent=q.diff.charAt(0).toUpperCase()+q.diff.slice(1);
+  document.getElementById('qDiff').className='qtag '+q.diff;
+  document.getElementById('qTopic').textContent=q.sub;
+  document.getElementById('qT').textContent=q.t;
+  // Options
+  const oList=document.getElementById('oList');
+  oList.innerHTML='';
+  const labels=['A','B','C','D'];
+  q.o.forEach((opt,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(ans[cQ]===i?' sel':'');
+    d.innerHTML=`<div class="ol">${labels[i]}</div><div class="ot">${opt}</div>`;
+    d.onclick=()=>selAns(i);
+    oList.appendChild(d);
+  });
+  // Flag button
+  const fb=document.getElementById('fBtn');
+  fb.className='fb'+(flg[cQ]?' on':'');
+  fb.textContent=flg[cQ]?'Flagged ✓':'Flag';
+  // Nav buttons
+  document.getElementById('pBtn').disabled=cQ===0;
+  document.getElementById('nBtn').textContent=cQ===199?'Finish':'Next';
+  // Navbar
+  set('nCQ',cQ+1);
+  document.getElementById('examNb').style.setProperty('--pg',((cQ+1)/200*100)+'%');
+  // Sub tabs active
+  for(let i=0;i<5;i++){
+    document.getElementById('tab'+i).classList.toggle('active',i===q.s);
+  }
+  refreshGrid();
+}
+
+function selAns(i){
+  ans[cQ]=i;
+  renderQ();updateSidebar();
+}
+
+function prevQ(){
+  if(isMockExam){if(cQ>0){cQ--;renderMockQ();}}
+  else{if(cQ>0){cQ--;renderQ();}}
+}
+function nextQ(){
+  if(isMockExam){if(cQ<99){cQ++;renderMockQ();}else oMock();}
+  else{if(cQ<199){cQ++;renderQ();}else oM();}
+}
+function jumpQ(i){
+  if(isMockExam){cQ=i;renderMockQ();}
+  else{cQ=i;renderQ();}
+}
+
+function goSub(si){if(isMockExam){cQ=si*20;renderMockQ();}else{cQ=si*40;renderQ();}}
+function goQ(){
+  const v=parseInt(document.getElementById('qnI').value);
+  if(v>=1&&v<=200){jumpQ(v-1);document.getElementById('qnI').value=''}
+}
+function tFlag(){flg[cQ]=!flg[cQ];renderQ();updateSidebar()}
+function cAns(){ans[cQ]=-1;renderQ();updateSidebar()}
+
+// ─── Sidebar Updates ───────────────────────────────────────────────────────
+function updateSidebar(){
+  const totalAns=ans.filter(a=>a!==-1).length;
+  const totalFlg=flg.filter(f=>f).length;
+  const totalRem=200-totalAns;
+  set('stA',totalAns);set('stF',totalFlg);set('stR',totalRem);
+  set('nAns',totalAns);
+  // Progress bar
+  const pct=totalAns/200*100;
+  document.getElementById('nP').style.width=pct+'%';
+  set('nPL',totalAns+'/200');
+  // Subject progress
+  const sKeys=[['spDS','sfDS'],['spOS','sfOS'],['spJS','sfJS'],['spDSA','sfDSA'],['spML','sfML']];
+  const ssKeys=['ssDS','ssOS','ssJS','ssDSA','ssML'];
+  const tcKeys=['tc0','tc1','tc2','tc3','tc4'];
+  for(let s=0;s<5;s++){
+    const sAns=ans.slice(s*40,(s+1)*40).filter(a=>a!==-1).length;
+    set(sKeys[s][0],sAns+'/40');
+    document.getElementById(sKeys[s][1]).style.width=(sAns/40*100)+'%';
+    set(ssKeys[s],sAns+'/40');
+    set(tcKeys[s],sAns+'/40');
+  }
+  set('liveScore',totalAns);
+  set('livePct',Math.round(totalAns/200*100)+'% Complete');
+}
+
+// ─── Timer ────────────────────────────────────────────────────────────────
+const RING_CIRC=2*Math.PI*37; // 232.48
+
+function startTimer(){
+  clearTimer();
+  timerInterval=setInterval(()=>{
+    tL--;
+    const m=Math.floor(tL/60),s=tL%60;
+    set('tM',pad(m));set('tS',pad(s));
+    set('nTD',pad(m)+':'+pad(s));
+    // Ring
+    const frac=tL/TOT;
+    const offset=RING_CIRC*(1-frac);
+    const rp=document.getElementById('rP');
+    rp.style.strokeDashoffset=offset;
+    // Colors
+    let col,cls,chipCls;
+    if(tL>1800){col='#1db854';cls='safe';chipCls='safe'}
+    else if(tL>600){col='var(--warn)';cls='warning';chipCls='warning'}
+    else{col='var(--danger)';cls='critical';chipCls='critical'}
+    rp.style.stroke=col;
+    document.getElementById('tDig').style.color=col;
+    const tmc=document.getElementById('tC');
+    tmc.className='tmc '+cls;
+    document.getElementById('tB').className='tb '+cls;
+    document.getElementById('tB').textContent=tL<=600?'Critical!':tL<=1800?'Hurry!':'In Progress';
+    const nc=document.getElementById('nChip');
+    nc.className='tc '+chipCls;
+    if(tL<=0){clearTimer();cSub()}
+  },1000);
+}
+
+function clearTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}}
+
+// ─── Modal ─────────────────────────────────────────────────────────────────
+function oM(){
+  if(isMockExam){oMock();return;}
+  const totalAns=ans.filter(a=>a!==-1).length;
+  const totalFlg=flg.filter(f=>f).length;
+  const totalUna=200-totalAns;
+  const m=Math.floor(tL/60),s=tL%60;
+  set('msA',totalAns);set('msF',totalFlg);set('msU',totalUna);set('msT',pad(m)+':'+pad(s));
+  for(let i=0;i<5;i++){
+    const sAns=ans.slice(i*40,(i+1)*40).filter(a=>a!==-1).length;
+    set(['mDS','mOS','mJS','mDSA','mML'][i],sAns+'/40');
+  }
+  const vc=document.getElementById('violCountTxt');
+  if(violCount>0){vc.style.display='block';vc.textContent='⚠ '+violCount+' proctoring violation(s) recorded'}
+  else vc.style.display='none';
+  document.getElementById('modal').classList.add('open');
+}
+
+function cM(){document.getElementById('modal').classList.remove('open')}
+
+function cSub(){
+  document.getElementById('modal').classList.remove('open');
+  clearTimer();stopCam();
+  examEndTime=Date.now();
+  if(isMockExam){showMockResults();}else{showResults();}
+}
+
+// ─── Results ───────────────────────────────────────────────────────────────
+function showResults(){
+  let correct=0;
+  const subCorrect=[0,0,0,0,0];
+  QS.forEach((q,i)=>{
+    if(ans[i]===q.a){correct++;subCorrect[q.s]++}
+  });
+  const skipped=ans.filter(a=>a===-1).length;
+  const wrong=200-correct-skipped;
+  const pct=Math.round(correct/200*100);
+  const timeUsed=examEndTime-examStartTime;
+  const minUsed=Math.floor(timeUsed/60000);
+  const secUsed=Math.floor((timeUsed%60000)/1000);
+  // Grade
+  const grade=pct>=90?'A+':pct>=80?'A':pct>=70?'B+':pct>=60?'B':pct>=50?'C':'F';
+  const gradeColor=pct>=50?'var(--safe)':'var(--danger)';
+  const emoji=pct>=80?'🎉':pct>=60?'👍':pct>=50?'📝':'📚';
+  const title=pct>=80?'Excellent Work!':pct>=60?'Good Performance!':pct>=50?'Exam Complete':'Keep Practicing!';
+  set('resEmoji',emoji);set('resTitle',title);
+  set('resPctNum',pct+'%');
+  set('rcCorrect',correct);set('rcWrong',wrong);set('rcSkipped',skipped);
+  set('rcTime',minUsed+'m '+secUsed+'s');
+  const gb=document.getElementById('resGradeBadge');
+  gb.textContent='Grade '+grade;gb.style.color=gradeColor;gb.style.borderColor=gradeColor;
+  // Ring animation
+  setTimeout(()=>{
+    const fill=document.getElementById('resRingFill');
+    const offset=376.99*(1-pct/100);
+    fill.style.strokeDashoffset=offset;
+    fill.style.stroke=gradeColor;
+  },300);
+  // Subject cards
+  const subNames=['Data Sci','Op. Sys','JavaScript','Data Struct','ML & Algo'];
+  const subColors=['var(--ds)','var(--os)','var(--js)','var(--dsa)','var(--ml)'];
+  document.getElementById('resSubCards').innerHTML=subNames.map((n,i)=>`
+    <div class="rsub">
+      <div class="rsub-val" style="color:${subColors[i]}">${subCorrect[i]}/40</div>
+      <div class="rsub-name">${n}</div>
+    </div>`).join('');
+  // Detail rows
+  const timeStr=pad(Math.floor(tL/60))+':'+pad(tL%60)+' remaining';
+  const rows=[
+    ['Student',CU?CU.first+' '+CU.last:'—'],
+    ['Roll No.',CU?CU.roll:'—'],
+    ['Programme',CU?CU.branch:'BCA'],
+    ['Total Score',correct+' / 200'],
+    ['Percentage',pct+'%'],
+    ['Grade',grade],
+    ['Correct',correct],['Wrong',wrong],['Skipped',skipped],
+    ['Time Used',pad(minUsed)+':'+pad(secUsed)],
+    ['Violations',violCount+' recorded'],
+    ['Passed',pct>=50?'YES — Congratulations!':'NO — Minimum 100/200 required']
+  ];
+  document.getElementById('resDetailRows').innerHTML=rows.map(([k,v])=>`
+    <div class="rd-row"><span class="rd-k">${k}</span><span class="rd-v">${v}</span></div>`).join('');
+  showPage('resultPage');
+  toast('ok','Exam submitted! Score: '+correct+'/200 ('+pct+'%)');
+}
+
+function goToDash(){
+  clearTimer();stopCam();
+  showPage('dashPage');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MOCK TEST SERIES — SESSION 2  (100 Qs, 60 min, 20 per subject)
+// ═══════════════════════════════════════════════════════════════════════════
+const MOCK_QS=[
+// ── Data Science Mock (s:0, 0-19) ──
+{s:0,t:'Which Python library provides the DataFrame data structure?',sub:'Pandas',diff:'easy',o:['NumPy','Matplotlib','Pandas','SciPy'],a:2},
+{s:0,t:'What does df.shape return?',sub:'Pandas',diff:'easy',o:['Column names','Number of nulls','(rows, columns) tuple','Data types'],a:2},
+{s:0,t:'Standard deviation is the square root of?',sub:'Statistics',diff:'easy',o:['Mean','Median','Variance','Range'],a:2},
+{s:0,t:'Which chart type is best for showing part-to-whole relationships?',sub:'Visualization',diff:'easy',o:['Line chart','Histogram','Bar chart','Pie chart'],a:3},
+{s:0,t:'np.arange(0,10,2) produces?',sub:'NumPy',diff:'medium',o:['[0,2,4,6,8]','[0,2,4,6,8,10]','[2,4,6,8,10]','[0,1,2,3,4]'],a:0},
+{s:0,t:'What does df.isna().sum() compute?',sub:'Pandas',diff:'easy',o:['Row totals','Count of missing values per column','Total rows','Column averages'],a:1},
+{s:0,t:'In a right-skewed distribution, which is largest?',sub:'Statistics',diff:'medium',o:['Mean','Median','Mode','All equal'],a:0},
+{s:0,t:'Which seaborn function plots a distribution with a KDE curve?',sub:'Visualization',diff:'medium',o:['sns.boxplot()','sns.barplot()','sns.histplot()','sns.lineplot()'],a:2},
+{s:0,t:'What does np.reshape() do?',sub:'NumPy',diff:'easy',o:['Sorts array','Changes array dimensions','Flattens array','Transposes matrix'],a:1},
+{s:0,t:'Feature scaling using (x-min)/(max-min) is called?',sub:'Preprocessing',diff:'medium',o:['Standardization','Min-Max Normalization','Log Transform','One-Hot Encoding'],a:1},
+{s:0,t:'Which measure represents the middle value in a sorted dataset?',sub:'Statistics',diff:'easy',o:['Mean','Mode','Median','Variance'],a:2},
+{s:0,t:'df.sort_values("col") sorts the DataFrame by?',sub:'Pandas',diff:'easy',o:['Index','Row count','Values in the specified column','Column names alphabetically'],a:2},
+{s:0,t:'Pearson correlation ranges from?',sub:'Statistics',diff:'easy',o:['0 to 1','-1 to 0','-1 to 1','0 to 100'],a:2},
+{s:0,t:'Which plot shows the relationship between two continuous variables?',sub:'Visualization',diff:'easy',o:['Bar chart','Pie chart','Scatter plot','Area chart'],a:2},
+{s:0,t:'np.mean(arr, axis=1) computes mean along?',sub:'NumPy',diff:'medium',o:['Columns','Rows','Diagonal','All elements'],a:1},
+{s:0,t:'StandardScaler transforms data to have mean=0 and?',sub:'Preprocessing',diff:'medium',o:['Max=1','Variance=100','Standard deviation=1','Min=0'],a:2},
+{s:0,t:'Which Pandas method removes duplicate rows?',sub:'Pandas',diff:'easy',o:['df.unique()','df.drop_duplicates()','df.remove()','df.dedupe()'],a:1},
+{s:0,t:'P(A|B) represents?',sub:'Probability',diff:'medium',o:['P(A) times P(B)','Probability of A given B has occurred','P(A) plus P(B)','P(B) minus P(A)'],a:1},
+{s:0,t:'A violin plot combines a box plot with?',sub:'Visualization',diff:'medium',o:['Scatter plot','Bar chart','KDE (kernel density) plot','Line chart'],a:2},
+{s:0,t:'Which function concatenates DataFrames vertically?',sub:'Pandas',diff:'medium',o:['df.merge()','pd.concat([df1,df2])','df.join()','df.append_all()'],a:1},
+// ── OS Mock (s:1, 20-39) ──
+{s:1,t:'Which scheduling algorithm can cause starvation?',sub:'Scheduling',diff:'medium',o:['Round Robin','FCFS','Priority Scheduling','SRTF'],a:2},
+{s:1,t:'A thread is sometimes called a?',sub:'Processes',diff:'easy',o:['Heavy process','Light-weight process','Kernel module','Device driver'],a:1},
+{s:1,t:'What is the purpose of the OS scheduler?',sub:'Scheduling',diff:'easy',o:['Manage files','Decide which process runs next on CPU','Handle network packets','Allocate disk space'],a:1},
+{s:1,t:'Which memory allocation strategy avoids external fragmentation?',sub:'Memory',diff:'hard',o:['First Fit','Best Fit','Worst Fit','Paging'],a:3},
+{s:1,t:'What does a page fault indicate?',sub:'Memory',diff:'medium',o:['Memory corruption','Required page is not in physical memory','CPU error','Stack overflow'],a:1},
+{s:1,t:'Which is NOT a valid process state?',sub:'Processes',diff:'medium',o:['Running','Waiting','Blocked','Compiling'],a:3},
+{s:1,t:'The producer-consumer problem is a classic example of?',sub:'Concurrency',diff:'medium',o:['CPU scheduling','Process synchronization','Memory management','File system design'],a:1},
+{s:1,t:'Which disk scheduling algorithm scans like an elevator?',sub:'Storage',diff:'medium',o:['FCFS','SSTF','SCAN','LOOK'],a:2},
+{s:1,t:'In Unix, the init process has PID?',sub:'Processes',diff:'easy',o:['0','1','2','255'],a:1},
+{s:1,t:'What is the purpose of a page table?',sub:'Memory',diff:'medium',o:['Store file paths','Map virtual to physical addresses','Schedule processes','Manage I/O devices'],a:1},
+{s:1,t:'Which type of kernel runs most OS services in kernel space?',sub:'OS Basics',diff:'medium',o:['Microkernel','Monolithic kernel','Hybrid kernel','Exokernel'],a:1},
+{s:1,t:'Mutual exclusion ensures that?',sub:'Concurrency',diff:'easy',o:['Processes run faster','Only one process uses a resource at a time','All processes get equal CPU time','Memory is shared freely'],a:1},
+{s:1,t:'The wait() system call is used by a parent to?',sub:'Processes',diff:'medium',o:['Create child processes','Wait for child process to terminate','Block itself indefinitely','Allocate shared memory'],a:1},
+{s:1,t:'Which file allocation method allows easy random access?',sub:'File Systems',diff:'medium',o:['Linked allocation','Contiguous allocation','Indexed allocation','FAT allocation'],a:2},
+{s:1,t:'Thrashing is caused by?',sub:'Memory',diff:'medium',o:['Too many CPUs','Insufficient RAM causing constant page faults','Disk failure','Too many file handles'],a:1},
+{s:1,t:'A semaphore with value 1 is called a?',sub:'Concurrency',diff:'easy',o:['Counting semaphore','Binary semaphore (mutex)','Spinlock','Monitor'],a:1},
+{s:1,t:'The open() system call returns a?',sub:'File Systems',diff:'easy',o:['File path string','File descriptor integer','Boolean success flag','File size in bytes'],a:1},
+{s:1,t:'Which scheduling policy is best for interactive systems?',sub:'Scheduling',diff:'medium',o:['FCFS','SJF','Round Robin','LIFO'],a:2},
+{s:1,t:'What happens when a process calls exit()?',sub:'Processes',diff:'easy',o:['Suspends the process','Terminates the process and releases resources','Pauses execution','Forks a child'],a:1},
+{s:1,t:'Demand paging reduces?',sub:'Memory',diff:'medium',o:['CPU usage','Initial load time by loading only needed pages','Disk space','Number of processes'],a:1},
+// ── JavaScript Mock (s:2, 40-59) ──
+{s:2,t:'What does NaN stand for in JavaScript?',sub:'Types',diff:'easy',o:['Null and Nothing','Not a Number','Negative and Null','Numeric and Null'],a:1},
+{s:2,t:'Which method removes the last element from an array?',sub:'Arrays',diff:'easy',o:['shift()','unshift()','pop()','splice()'],a:2},
+{s:2,t:'What does the typeof operator return for a function?',sub:'Types',diff:'easy',o:['"object"','"method"','"function"','"callable"'],a:2},
+{s:2,t:'Which loop is guaranteed to execute at least once?',sub:'Control Flow',diff:'easy',o:['for','while','for...of','do...while'],a:3},
+{s:2,t:'What does Array.indexOf() return if element is not found?',sub:'Arrays',diff:'easy',o:['0','null','undefined','-1'],a:3},
+{s:2,t:'Which ES6 feature allows importing/exporting code between files?',sub:'ES6+',diff:'easy',o:['Promises','Modules (import/export)','Arrow functions','Template literals'],a:1},
+{s:2,t:'What is the output of Boolean("") in JavaScript?',sub:'Types',diff:'medium',o:['true','false','null','undefined'],a:1},
+{s:2,t:'Which method executes a function for each array element?',sub:'Arrays',diff:'easy',o:['map()','filter()','forEach()','reduce()'],a:2},
+{s:2,t:'Which delimiter does a JavaScript template literal use?',sub:'ES6+',diff:'easy',o:['Single quote marks','Double quote marks','Backtick characters','Square brackets'],a:2},
+{s:2,t:'What does the delete operator do in JavaScript?',sub:'Objects',diff:'medium',o:['Destroys a variable from memory','Removes a property from an object','Clears an array','Deletes a function'],a:1},
+{s:2,t:'Which method converts a string to an integer?',sub:'Types',diff:'easy',o:['Number()','toInt()','parseInt()','castInt()'],a:2},
+{s:2,t:'What is the result of 3 + "3" in JavaScript?',sub:'Types',diff:'medium',o:['6','33','"33"','NaN'],a:2},
+{s:2,t:'Which built-in object provides mathematical operations?',sub:'Built-ins',diff:'easy',o:['Number','Calc','Math','Arithmetic'],a:2},
+{s:2,t:'What does the in operator check?',sub:'Objects',diff:'medium',o:['If value exists in array','If property exists in object or its prototype chain','If module is imported','If string contains substring'],a:1},
+{s:2,t:'Which method joins all array elements into a string?',sub:'Arrays',diff:'easy',o:['concat()','toString()','join()','stringify()'],a:2},
+{s:2,t:'What does document.querySelector() return?',sub:'DOM',diff:'easy',o:['All matching elements','The first matching element','A boolean','An array of elements'],a:1},
+{s:2,t:'Which keyword prevents variable re-declaration and reassignment?',sub:'Variables',diff:'easy',o:['var','let','const','static'],a:2},
+{s:2,t:'What does JSON.parse() do?',sub:'JSON',diff:'easy',o:['Converts object to JSON string','Converts JSON string to JavaScript object','Validates JSON format','Compresses JSON data'],a:1},
+{s:2,t:'Which event fires when the DOM is fully loaded?',sub:'DOM',diff:'medium',o:['window.onload','document.ready','DOMContentLoaded','pageload'],a:2},
+{s:2,t:'What is the purpose of the finally block in try...catch?',sub:'Error Handling',diff:'medium',o:['Runs only on error','Runs only on success','Always runs regardless of outcome','Retries the try block'],a:2},
+// ── Data Structures Mock (s:3, 60-79) ──
+{s:3,t:'Which data structure is used for implementing undo functionality?',sub:'Stack',diff:'easy',o:['Queue','Stack','Heap','Graph'],a:1},
+{s:3,t:'What is the time complexity of accessing an element by index in an array?',sub:'Arrays',diff:'easy',o:['O(n)','O(log n)','O(1)','O(n²)'],a:2},
+{s:3,t:'An inorder traversal of a BST gives elements in?',sub:'Trees',diff:'easy',o:['Reverse order','Random order','Sorted ascending order','Level order'],a:2},
+{s:3,t:'Which operation in a queue is called dequeue?',sub:'Queue',diff:'easy',o:['Adding to rear','Removing from front','Accessing rear','Accessing front'],a:1},
+{s:3,t:'What is the maximum number of nodes at depth d in a binary tree?',sub:'Trees',diff:'medium',o:['d','2d','2^d','d²'],a:2},
+{s:3,t:'Which traversal visits all nodes at current depth before going deeper?',sub:'Graphs',diff:'easy',o:['DFS','BFS','Inorder','Postorder'],a:1},
+{s:3,t:'What is the worst-case time complexity of Selection Sort?',sub:'Sorting',diff:'easy',o:['O(n log n)','O(n)','O(n²)','O(log n)'],a:2},
+{s:3,t:'A graph with no cycles is called?',sub:'Graphs',diff:'easy',o:['Complete graph','Bipartite graph','Acyclic graph (DAG)','Dense graph'],a:2},
+{s:3,t:'In a max-heap, the maximum element is always at?',sub:'Heap',diff:'easy',o:['Leaf node','Random position','Root node','Last position'],a:2},
+{s:3,t:'Which collision resolution technique uses a linked list at each bucket?',sub:'Hashing',diff:'medium',o:['Open addressing','Linear probing','Separate chaining','Double hashing'],a:2},
+{s:3,t:'What is the time complexity of linear search in an unsorted array?',sub:'Searching',diff:'easy',o:['O(1)','O(log n)','O(n)','O(n²)'],a:2},
+{s:3,t:'A full binary tree has every node with?',sub:'Trees',diff:'easy',o:['Exactly 2 children','0 or 2 children','At most 1 child','Exactly 1 child'],a:1},
+{s:3,t:'Which sorting algorithm is best suited for nearly-sorted data?',sub:'Sorting',diff:'medium',o:['Merge Sort','Quicksort','Insertion Sort','Heap Sort'],a:2},
+{s:3,t:'The enqueue operation adds elements to which end of a queue?',sub:'Queue',diff:'easy',o:['Front','Rear','Middle','Random'],a:1},
+{s:3,t:'What is the height of a tree with only the root node?',sub:'Trees',diff:'easy',o:['0','1','2','-1'],a:0},
+{s:3,t:'Which algorithm is used to detect a cycle in a directed graph?',sub:'Graphs',diff:'medium',o:['Dijkstra','Prim','DFS with visited tracking','BFS'],a:2},
+{s:3,t:'Heap Sort uses which data structure internally?',sub:'Heap',diff:'easy',o:['Stack','Queue','Binary Heap','BST'],a:2},
+{s:3,t:'What is the load factor of a hash table?',sub:'Hashing',diff:'medium',o:['Number of buckets','Keys inserted / Total buckets','Keys deleted / Keys inserted','Max chain length'],a:1},
+{s:3,t:'A degenerate BST with n nodes has O(?) search time?',sub:'Trees',diff:'medium',o:['O(1)','O(log n)','O(n)','O(n log n)'],a:2},
+{s:3,t:'Which property does a min-heap NOT necessarily satisfy?',sub:'Heap',diff:'medium',o:['Parent ≤ left child','Parent ≤ right child','Left child ≤ right child','Root is minimum'],a:2},
+// ── ML & Algorithms Mock (s:4, 80-99) ──
+{s:4,t:'K-Nearest Neighbors (KNN) classification uses?',sub:'ML Algorithms',diff:'easy',o:['Decision trees','Distance between data points','Gradient descent','Probability distributions'],a:1},
+{s:4,t:'Which metric is used to evaluate regression models?',sub:'ML Metrics',diff:'easy',o:['Accuracy','F1 Score','Mean Squared Error (MSE)','Precision'],a:2},
+{s:4,t:'What is the time complexity of linear search?',sub:'Searching',diff:'easy',o:['O(1)','O(log n)','O(n)','O(n²)'],a:2},
+{s:4,t:'In decision trees, entropy measures?',sub:'ML Algorithms',diff:'medium',o:['Tree depth','Impurity or disorder in a node','Number of features','Training accuracy'],a:1},
+{s:4,t:'Which algorithm is NOT a supervised learning algorithm?',sub:'ML Basics',diff:'easy',o:['Linear Regression','SVM','K-Means Clustering','Random Forest'],a:2},
+{s:4,t:'Bubble sort compares?',sub:'Sorting',diff:'easy',o:['Every element with the first','Adjacent elements and swaps if out of order','Elements with their index value','Random pairs'],a:1},
+{s:4,t:'What does "learning rate" control in gradient descent?',sub:'Neural Networks',diff:'medium',o:['Number of training epochs','Size of parameter update steps','Batch size','Network depth'],a:1},
+{s:4,t:'Which measure is used for classification accuracy?',sub:'ML Metrics',diff:'easy',o:['MSE','RMSE','Accuracy = Correct/Total','AUC'],a:2},
+{s:4,t:'What is memoization in dynamic programming?',sub:'DP',diff:'easy',o:['Random sampling','Storing computed results to avoid recomputation','Greedy selection','Sorting inputs first'],a:1},
+{s:4,t:'Linear regression finds the best-fit line by minimizing?',sub:'ML Algorithms',diff:'medium',o:['Absolute error','Sum of squared residuals (least squares)','Cross-entropy loss','Hinge loss'],a:1},
+{s:4,t:'Which sorting algorithm divides array into two halves recursively?',sub:'Sorting',diff:'easy',o:['Bubble Sort','Selection Sort','Merge Sort','Counting Sort'],a:2},
+{s:4,t:'Underfitting occurs when?',sub:'ML Basics',diff:'easy',o:['Model is too complex','Model is too simple and fails to learn patterns','Dataset is too large','Learning rate is too small'],a:1},
+{s:4,t:'What does the sigmoid function output range?',sub:'Neural Networks',diff:'easy',o:['[-1, 1]','[0, ∞)','[0, 1]','(-∞, ∞)'],a:2},
+{s:4,t:'Which DP problem finds the longest increasing subsequence?',sub:'DP',diff:'medium',o:['Knapsack','Edit Distance','LIS (Longest Increasing Subsequence)','Matrix Chain'],a:2},
+{s:4,t:'What is the purpose of a validation set?',sub:'ML Basics',diff:'medium',o:['Train the model','Test final performance','Tune hyperparameters during training','Augment training data'],a:2},
+{s:4,t:'Which algorithm guarantees the minimum spanning tree?',sub:'Graphs',diff:'medium',o:['Dijkstra','BFS','Kruskal','DFS'],a:2},
+{s:4,t:'An epoch in neural network training refers to?',sub:'Neural Networks',diff:'easy',o:['One forward pass','One complete pass through training data','One weight update','One batch'],a:1},
+{s:4,t:'What does the confusion matrix diagonal represent?',sub:'ML Metrics',diff:'easy',o:['False positives','False negatives','Correctly classified instances','Total predictions'],a:2},
+{s:4,t:'Which technique splits data into k equal parts for evaluation?',sub:'ML Basics',diff:'medium',o:['Bootstrap sampling','Train-test split','k-Fold Cross Validation','LOOCV'],a:2},
+{s:4,t:'The edit distance algorithm computes minimum operations to transform?',sub:'DP',diff:'medium',o:['One number to another','One string to another using insert/delete/replace','One array to another','One graph to another'],a:1},
+];
+
+// ─── Mock Exam State ───────────────────────────────────────────────────────
+let isMockExam=false;
+let mockAns=new Array(100).fill(-1);
+let mockFlg=new Array(100).fill(false);
+let mockTL=3600; // 60 min
+const MOCK_TOT=3600;
+
+const MOCK_SUBS=[
+  {name:'Data Science',key:'ds',color:'var(--ds)',icon:'DS',desc:'Pandas · Statistics · NumPy · Visualization',range:'Q 1–20'},
+  {name:'Operating Systems',key:'os',color:'var(--os)',icon:'OS',desc:'Processes · Memory · Scheduling · File Systems',range:'Q 21–40'},
+  {name:'JavaScript',key:'js',color:'var(--js)',icon:'JS',desc:'Types · Arrays · DOM · ES6+ · Control Flow',range:'Q 41–60'},
+  {name:'Data Structures',key:'dsa',color:'var(--dsa)',icon:'DSA',desc:'Arrays · Trees · Graphs · Sorting · Hashing',range:'Q 61–80'},
+  {name:'ML & Algorithms',key:'ml',color:'var(--ml)',icon:'ML',desc:'Supervised · Unsupervised · DP · Sorting · Metrics',range:'Q 81–100'}
+];
+
+function startMock(){
+  isMockExam=true;
+  mockAns=new Array(100).fill(-1);
+  mockFlg=new Array(100).fill(false);
+  ans=mockAns; flg=mockFlg;
+  cQ=0; violCount=0; tL=MOCK_TOT;
+  examStartTime=Date.now();
+
+  // Patch navbar for mock mode
+  document.getElementById('nb-title-text') && (document.getElementById('nb-title-text').textContent='Mock Test Series — Session 2');
+  const nbTitle=document.querySelector('.nb-title');
+  if(nbTitle) nbTitle.textContent='Mock Test Series — Session 2 · 100 Questions';
+  const nbMeta=document.getElementById('nAns');
+  document.querySelectorAll('.nb-meta span').forEach((s,i)=>{
+    if(i===0) s.innerHTML='Q <span id="nCQ">1</span><span class="s">/</span>100';
+  });
+  document.getElementById('nPL').textContent='0/100';
+
+  // Patch subject tabs for mock (20 per subject)
+  ['tab0','tab1','tab2','tab3','tab4'].forEach((id,i)=>{
+    const tab=document.getElementById(id);
+    if(tab){ const cnt=tab.querySelector('.cnt'); if(cnt) cnt.textContent='0/20'; }
+  });
+
+  // Patch submit button total
+  document.querySelector('.submit-nb').onclick=()=>oMock();
+
+  // Patch sidebar
+  document.getElementById('examScBatch') && (document.getElementById('examScBatch').textContent='Mock Session 2');
+  document.querySelectorAll('.sc-row2').forEach(r=>{
+    if(r.querySelector('.sc-v2')&&r.querySelector('.sc-k')&&r.querySelector('.sc-k').textContent==='Total Q')
+      r.querySelector('.sc-v2').textContent='100 MCQ';
+  });
+  document.getElementById('examInfoRoll') && set('examInfoRoll', CU?CU.roll:'—');
+  // Patch exam detail sidebar
+  document.querySelectorAll('.ir').forEach(r=>{
+    const k=r.querySelector('.ik'); const v=r.querySelector('.iv');
+    if(!k||!v)return;
+    if(k.textContent==='Total Q') v.textContent='100';
+    if(k.textContent==='Duration') v.textContent='60 min';
+    if(k.textContent==='Passing') v.textContent='50/100 (50%)';
+  });
+
+  buildMockGrid();
+  renderMockQ();
+  updateMockSidebar();
+  startMockTimer();
+  showPage('examPage');
+  toast('info','Mock Test started! 100 questions · 60 minutes. Good luck!');
+  setTimeout(()=>startCam(),500);
+}
+
+function buildMockGrid(){
+  const g=document.getElementById('qG');
+  g.innerHTML='';
+  for(let i=0;i<100;i++){
+    const b=document.createElement('div');
+    b.className='qb';
+    b.textContent=i+1;
+    b.onclick=(()=>{const idx=i;return()=>jumpMockQ(idx)})();
+    g.appendChild(b);
+  }
+  refreshMockGrid();
+}
+
+function refreshMockGrid(){
+  const btns=document.getElementById('qG').children;
+  for(let i=0;i<100;i++){
+    const b=btns[i];
+    const si=MOCK_QS[i].s;
+    if(i===cQ) b.className='qb cur';
+    else if(mockFlg[i]) b.className='qb flg';
+    else if(mockAns[i]!==-1) b.className='qb ans '+subKeys[si];
+    else b.className='qb';
+  }
+}
+
+function renderMockQ(){
+  const q=MOCK_QS[cQ];
+  const s=MOCK_SUBS[q.s];
+  const si=document.getElementById('subIcon');
+  si.textContent=s.icon;
+  si.style.background='rgba('+['79,126,248','15,184,164','232,200,72','168,85,247','249,115,22'][q.s]+',.15)';
+  si.style.color=s.color;
+  document.getElementById('subNameMain').textContent=s.name;
+  document.getElementById('subNameMain').style.color=s.color;
+  document.getElementById('subDesc').textContent=s.desc;
+  document.getElementById('subBadge').textContent=s.range;
+  document.getElementById('subBadge').style.color=s.color;
+  document.getElementById('subBadge').style.borderColor=SBORDERS[q.s];
+  const qbadge=document.getElementById('qBadge');
+  qbadge.textContent='Q'+(cQ+1);
+  qbadge.style.color=s.color; qbadge.style.borderColor=SBORDERS[q.s];
+  document.getElementById('qDiff').textContent=q.diff.charAt(0).toUpperCase()+q.diff.slice(1);
+  document.getElementById('qDiff').className='qtag '+q.diff;
+  document.getElementById('qTopic').textContent=q.sub;
+  document.getElementById('qT').textContent=q.t;
+  const oList=document.getElementById('oList');
+  oList.innerHTML='';
+  const labels=['A','B','C','D'];
+  q.o.forEach((opt,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(mockAns[cQ]===i?' sel':'');
+    d.innerHTML=`<div class="ol">${labels[i]}</div><div class="ot">${opt}</div>`;
+    d.onclick=(()=>{const idx=i;return()=>selMockAns(idx)})();
+    oList.appendChild(d);
+  });
+  const fb=document.getElementById('fBtn');
+  fb.className='fb'+(mockFlg[cQ]?' on':'');
+  fb.textContent=mockFlg[cQ]?'Flagged ✓':'Flag';
+  document.getElementById('pBtn').disabled=cQ===0;
+  document.getElementById('nBtn').textContent=cQ===99?'Finish':'Next';
+  set('nCQ',cQ+1);
+  document.getElementById('examNb').style.setProperty('--pg',((cQ+1)/100*100)+'%');
+  for(let i=0;i<5;i++){
+    document.getElementById('tab'+i).classList.toggle('active',i===q.s);
+  }
+  refreshMockGrid();
+}
+
+function selMockAns(i){ mockAns[cQ]=i; ans=mockAns; renderMockQ(); updateMockSidebar(); }
+function jumpMockQ(i){ cQ=i; renderMockQ(); }
+function prevQ(){ if(!isMockExam){if(cQ>0){cQ--;renderQ()}}else{if(cQ>0){cQ--;renderMockQ()}} }
+function nextQ(){
+  if(!isMockExam){if(cQ<199){cQ++;renderQ()}else oM();}
+  else{if(cQ<99){cQ++;renderMockQ()}else oMock();}
+}
+
+// Override tFlag and cAns for mock
+function tFlag(){
+  if(isMockExam){mockFlg[cQ]=!mockFlg[cQ];renderMockQ();updateMockSidebar();}
+  else{flg[cQ]=!flg[cQ];renderQ();updateSidebar();}
+}
+function cAns(){
+  if(isMockExam){mockAns[cQ]=-1;ans=mockAns;renderMockQ();updateMockSidebar();}
+  else{ans[cQ]=-1;renderQ();updateSidebar();}
+}
+
+function updateMockSidebar(){
+  const totalAns=mockAns.filter(a=>a!==-1).length;
+  const totalFlg=mockFlg.filter(f=>f).length;
+  const totalRem=100-totalAns;
+  set('stA',totalAns); set('stF',totalFlg); set('stR',totalRem);
+  set('nAns',totalAns);
+  document.getElementById('nP').style.width=(totalAns/100*100)+'%';
+  set('nPL',totalAns+'/100');
+  const sCounts=[0,0,0,0,0];
+  mockAns.forEach((a,i)=>{if(a!==-1)sCounts[MOCK_QS[i].s]++});
+  const sKeys=[['spDS','sfDS'],['spOS','sfOS'],['spJS','sfJS'],['spDSA','sfDSA'],['spML','sfML']];
+  const ssKeys=['ssDS','ssOS','ssJS','ssDSA','ssML'];
+  const tcKeys=['tc0','tc1','tc2','tc3','tc4'];
+  for(let i=0;i<5;i++){
+    set(sKeys[i][0],sCounts[i]+'/20');
+    document.getElementById(sKeys[i][1]).style.width=(sCounts[i]/20*100)+'%';
+    set(ssKeys[i],sCounts[i]+'/20');
+    set(tcKeys[i],sCounts[i]+'/20');
+  }
+  set('liveScore',totalAns);
+  set('livePct',Math.round(totalAns/100*100)+'% Complete');
+}
+
+function startMockTimer(){
+  clearTimer();
+  timerInterval=setInterval(()=>{
+    tL--;
+    const m=Math.floor(tL/60),s=tL%60;
+    set('tM',pad(m)); set('tS',pad(s)); set('nTD',pad(m)+':'+pad(s));
+    const frac=tL/MOCK_TOT;
+    const offset=RING_CIRC*(1-frac);
+    const rp=document.getElementById('rP');
+    if(rp) rp.style.strokeDashoffset=offset;
+    let col,cls;
+    if(tL>900){col='#1db854';cls='safe';}
+    else if(tL>300){col='var(--warn)';cls='warning';}
+    else{col='var(--danger)';cls='critical';}
+    if(rp) rp.style.stroke=col;
+    const td=document.getElementById('tDig');
+    if(td) td.style.color=col;
+    const tmc=document.getElementById('tC');
+    if(tmc) tmc.className='tmc '+cls;
+    const tb=document.getElementById('tB');
+    if(tb){tb.className='tb '+cls; tb.textContent=tL<=300?'Critical!':tL<=900?'Hurry!':'In Progress';}
+    const nc=document.getElementById('nChip');
+    if(nc) nc.className='tc '+cls;
+    if(tL<=0){clearTimer();submitMock();}
+  },1000);
+}
+
+function oMock(){
+  const totalAns=mockAns.filter(a=>a!==-1).length;
+  const totalFlg=mockFlg.filter(f=>f).length;
+  const m=Math.floor(tL/60),s=tL%60;
+  set('msA',totalAns); set('msF',totalFlg); set('msU',100-totalAns); set('msT',pad(m)+':'+pad(s));
+  for(let i=0;i<5;i++){
+    const sc=mockAns.slice(i*20,(i+1)*20).filter(a=>a!==-1).length;
+    set(['mDS','mOS','mJS','mDSA','mML'][i],sc+'/20');
+  }
+  document.querySelector('.mt').textContent='Submit Mock Test?';
+  document.querySelector('.ms').textContent='You are about to submit 100 answers. This cannot be undone.';
+  document.querySelector('.mcf').textContent='Submit All 100';
+  document.querySelector('.mcf').onclick=submitMock;
+  const vc=document.getElementById('violCountTxt');
+  if(violCount>0){vc.style.display='block';vc.textContent='⚠ '+violCount+' proctoring violation(s) recorded';}
+  else vc.style.display='none';
+  document.getElementById('modal').classList.add('open');
+}
+
+function submitMock(){
+  document.getElementById('modal').classList.remove('open');
+  clearTimer(); stopCam(); examEndTime=Date.now();
+  showMockResults();
+}
+
+function showMockResults(){
+  let correct=0;
+  const subCorrect=[0,0,0,0,0];
+  MOCK_QS.forEach((q,i)=>{ if(mockAns[i]===q.a){correct++;subCorrect[q.s]++;} });
+  const skipped=mockAns.filter(a=>a===-1).length;
+  const wrong=100-correct-skipped;
+  const pct=Math.round(correct/100*100);
+  const timeUsed=examEndTime-examStartTime;
+  const minUsed=Math.floor(timeUsed/60000);
+  const secUsed=Math.floor((timeUsed%60000)/1000);
+  const grade=pct>=90?'A+':pct>=80?'A':pct>=70?'B+':pct>=60?'B':pct>=50?'C':'F';
+  const gradeColor=pct>=50?'var(--safe)':'var(--danger)';
+  const emoji=pct>=80?'🎉':pct>=60?'👍':pct>=50?'📝':'📚';
+  set('resEmoji',emoji);
+  set('resTitle',pct>=80?'Excellent Mock!':pct>=60?'Good Mock Performance!':pct>=50?'Mock Complete':'Keep Practicing!');
+  set('resPctNum',pct+'%');
+  set('rcCorrect',correct); set('rcWrong',wrong); set('rcSkipped',skipped);
+  set('rcTime',pad(minUsed)+':'+pad(secUsed));
+  const gb=document.getElementById('resGradeBadge');
+  gb.textContent='Grade '+grade; gb.style.color=gradeColor; gb.style.borderColor=gradeColor;
+  setTimeout(()=>{
+    const fill=document.getElementById('resRingFill');
+    if(fill){fill.style.strokeDashoffset=376.99*(1-pct/100);fill.style.stroke=gradeColor;}
+  },300);
+  const subNames=['Data Sci','Op. Sys','JavaScript','Data Struct','ML & Algo'];
+  const subColors=['var(--ds)','var(--os)','var(--js)','var(--dsa)','var(--ml)'];
+  document.getElementById('resSubCards').innerHTML=subNames.map((n,i)=>`
+    <div class="rsub"><div class="rsub-val" style="color:${subColors[i]}">${subCorrect[i]}/20</div><div class="rsub-name">${n}</div></div>`).join('');
+  const rows=[
+    ['Exam','Mock Test — Session 2'],['Student',CU?CU.first+' '+CU.last:'—'],
+    ['Roll No.',CU?CU.roll:'—'],['Total Score',correct+' / 100'],
+    ['Percentage',pct+'%'],['Grade',grade],
+    ['Correct',correct],['Wrong',wrong],['Skipped',skipped],
+    ['Time Used',pad(minUsed)+':'+pad(secUsed)],
+    ['Violations',violCount+' recorded'],
+    ['Passed',pct>=50?'YES':'NO — Minimum 50/100 required']
+  ];
+  document.getElementById('resDetailRows').innerHTML=rows.map(([k,v])=>`
+    <div class="rd-row"><span class="rd-k">${k}</span><span class="rd-v">${v}</span></div>`).join('');
+  // Reset isMockExam after showing results
+  isMockExam=false;
+  showPage('resultPage');
+  toast('ok','Mock submitted! Score: '+correct+'/100 ('+pct+'%)');
+}
+
+function goToDash(){
+  clearTimer(); stopCam(); isMockExam=false;
+  // Reset modal button text back to main exam defaults
+  document.querySelector('.mt').textContent='Submit Examination?';
+  document.querySelector('.ms').textContent='You are about to submit all 200 answers. This action cannot be undone.';
+  document.querySelector('.mcf').textContent='Submit All 200';
+  document.querySelector('.mcf').onclick=cSub;
+  showPage('dashPage');
+}
+
+// ─── Boot ───────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function(){
+  initLoginPage();
+});
+// Also run immediately in case DOMContentLoaded already fired
+if(document.readyState === 'interactive' || document.readyState === 'complete'){
+  initLoginPage();
+}
+
+</script>
+</body>
+</html>

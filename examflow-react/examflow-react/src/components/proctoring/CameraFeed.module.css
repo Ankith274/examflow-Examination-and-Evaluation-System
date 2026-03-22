@@ -1,0 +1,35 @@
+.camCard   { background: var(--sf); border: 1px solid var(--bd); border-radius: var(--r); overflow: hidden; }
+.camHdr    { display: flex; align-items: center; justify-content: space-between; padding: 7px 11px; background: var(--sf2); border-bottom: 1px solid var(--bd); }
+.camHdrL   { display: flex; align-items: center; gap: 6px; }
+.recDot    { width: 6px; height: 6px; border-radius: 50%; background: var(--danger); animation: recBlink 1s step-start infinite; }
+.recLabel  { font-family: var(--mn); font-size: 8px; color: var(--danger); letter-spacing: .12em; }
+.liveBadge { font-size: 8px; font-weight: 700; padding: 2px 7px; border-radius: 100px; border: 1px solid rgba(29,184,84,.4); color: var(--safe); background: rgba(29,184,84,.1); animation: liveGlow 2s ease-in-out infinite; }
+.camSname  { font-family: var(--mn); font-size: 8px; color: var(--tx2); }
+
+.camArea   { position: relative; background: #000; aspect-ratio: 4/3; overflow: hidden; }
+.video, .canvas { width: 100%; height: 100%; object-fit: cover; display: block; transform: scaleX(-1); position: absolute; top: 0; left: 0; }
+.scanLines { position: absolute; inset: 0; pointer-events: none; z-index: 2; background: repeating-linear-gradient(to bottom, transparent 0, transparent 3px, rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px); }
+.corners   { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.co        { position: absolute; width: 11px; height: 11px; border-color: rgba(15,184,164,.55); border-style: solid; }
+.coTL { top:6px;  left:6px;  border-width: 2px 0 0 2px; }
+.coTR { top:6px;  right:6px; border-width: 2px 2px 0 0; }
+.coBL { bottom:6px; left:6px;  border-width: 0 0 2px 2px; }
+.coBR { bottom:6px; right:6px; border-width: 0 2px 2px 0; }
+
+.faceBox   { position: absolute; top:14%; left:22%; width:56%; height:66%; border:1.5px solid rgba(15,184,164,.55); border-radius:4px; z-index:4; pointer-events:none; }
+.faceLbl   { position: absolute; top: -13px; left: 0; font-family: var(--mn); font-size: 7px; color: rgba(15,184,164,.9); text-transform: uppercase; letter-spacing: .08em; }
+
+.placeholder { position:absolute; inset:0; background:rgba(4,7,14,.92); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; z-index:5; }
+.phIco { font-size: 22px; opacity: .5; }
+.phTxt { font-size: 10px; color: var(--tx2); text-align: center; padding: 0 12px; }
+
+.camCtrls  { display: flex; align-items: center; gap: 5px; padding: 6px 11px; background: var(--sf2); border-top: 1px solid var(--bd); }
+.camBtn    { width:26px; height:26px; border-radius:6px; background:rgba(255,255,255,.05); border:1px solid var(--bd); display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:600; cursor:pointer; color:var(--tx2); transition:background .18s; }
+.camBtn:hover { background: rgba(255,255,255,.1); }
+.btnOff    { background: rgba(232,64,74,.12) !important; border-color: rgba(232,64,74,.3) !important; color: var(--danger) !important; }
+
+.camStatus { font-family: var(--mn); font-size: 8px; padding: 2px 9px; border-radius: 100px; border: 1px solid currentColor; }
+.statusLive { color: var(--safe); background: rgba(29,184,84,.1);  border-color: rgba(29,184,84,.3);  }
+.statusWarn { color: var(--warn); background: rgba(240,165,0,.1);  border-color: rgba(240,165,0,.3);  }
+.statusOff  { color: var(--tx2);  background: rgba(255,255,255,.04); border-color: var(--bd); }
+.camElapsed { font-family: var(--mn); font-size: 8px; color: var(--tx2); margin-left: auto; }

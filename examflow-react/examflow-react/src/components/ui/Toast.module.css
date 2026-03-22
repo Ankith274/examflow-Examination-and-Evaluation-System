@@ -1,0 +1,16 @@
+.toast {
+  position: fixed; top: 20px; right: 20px; z-index: 9999;
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 16px; border-radius: 10px;
+  border: 1px solid currentColor;
+  backdrop-filter: blur(20px);
+  font-size: 12px; font-weight: 600;
+  animation: toastIn .3s ease;
+  max-width: 340px;
+  pointer-events: none;
+}
+.icon { font-size: 13px; }
+.success { color:var(--safe);   background:rgba(29,184,84,.15);  border-color:rgba(29,184,84,.35); }
+.error   { color:var(--danger); background:rgba(232,64,74,.18);  border-color:rgba(232,64,74,.35); }
+.warning { color:var(--warn);   background:rgba(240,165,0,.18);  border-color:rgba(240,165,0,.35); }
+.info    { color:var(--a2);     background:rgba(79,126,248,.18); border-color:rgba(79,126,248,.35); }

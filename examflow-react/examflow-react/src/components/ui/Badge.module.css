@@ -1,0 +1,9 @@
+.badge { display:inline-block; font-weight:700; border-radius:100px; border:1px solid currentColor; font-family:var(--dp); letter-spacing:.04em; text-transform:uppercase; }
+.sm  { font-size:8.5px; padding:2px 8px; }
+.md  { font-size:10px;  padding:3px 10px; }
+.default { color:var(--tx2); border-color:var(--bd2); }
+.success { color:var(--safe);   background:rgba(29,184,84,.1);   border-color:rgba(29,184,84,.3); }
+.warning { color:var(--warn);   background:rgba(240,165,0,.1);   border-color:rgba(240,165,0,.3); }
+.danger  { color:var(--danger); background:rgba(232,64,74,.1);   border-color:rgba(232,64,74,.3); }
+.info    { color:var(--a2);     background:rgba(79,126,248,.1);  border-color:rgba(79,126,248,.3); }
+.teal    { color:var(--tl);     background:rgba(15,184,164,.1);  border-color:rgba(15,184,164,.3); }

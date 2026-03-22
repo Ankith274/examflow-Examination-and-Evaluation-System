@@ -1,0 +1,10 @@
+.grid  { display: grid; grid-template-columns: repeat(5,1fr); gap: 3px; }
+.qb    { aspect-ratio:1; border-radius:5px; font-family:var(--mn); font-size:8.5px; font-weight:500; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.05); border:1px solid var(--bd); color:var(--tx2); cursor:pointer; transition:all .18s; position:relative; }
+.qb:hover { background: rgba(255,255,255,.09); }
+.cur     { background:rgba(15,184,164,.32)  !important; border-color:var(--tl)    !important; color:#fff !important; box-shadow:0 0 7px rgba(15,184,164,.4); }
+.flagged { background:rgba(240,165,0,.18)   !important; border-color:rgba(240,165,0,.4) !important; color:var(--warn) !important; }
+.ans0    { background:rgba(79,126,248,.22); border-color:rgba(79,126,248,.4); color:var(--a2); }
+.ans1    { background:rgba(15,184,164,.22); border-color:rgba(15,184,164,.4); color:var(--tl); }
+.ans2    { background:rgba(232,200,72,.18); border-color:rgba(232,200,72,.4); color:#e8c848; }
+.ans3    { background:rgba(168,85,247,.2);  border-color:rgba(168,85,247,.4); color:var(--dsa); }
+.ans4    { background:rgba(249,115,22,.2);  border-color:rgba(249,115,22,.4); color:var(--ml); }

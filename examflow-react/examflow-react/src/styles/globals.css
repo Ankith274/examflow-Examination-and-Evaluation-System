@@ -1,0 +1,75 @@
+/* ── ExamFlow Global Styles ─────────────────────────────────────────────── */
+:root {
+  --bg:       #04070e;
+  --bg2:      #070c16;
+  --sf:       #0b1221;
+  --sf2:      #0f1a2e;
+  --bd:       rgba(255,255,255,0.06);
+  --bd2:      rgba(255,255,255,0.12);
+  --tx:       #d8e4f8;
+  --tx2:      #6b7f9a;
+  --mu:       #2e3d52;
+  --a:        #4f7ef8;
+  --a2:       #7aa2fb;
+  --tl:       #0fb8a4;
+  --safe:     #1db854;
+  --warn:     #f0a500;
+  --danger:   #e8404a;
+  --ds:       #4f7ef8;
+  --os:       #0fb8a4;
+  --js:       #e8c848;
+  --dsa:      #a855f7;
+  --ml:       #f97316;
+  --r:        12px;
+  --fn:       'Karla', sans-serif;
+  --dp:       'Syne', sans-serif;
+  --mn:       'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 14px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--fn);
+  background: var(--bg);
+  color: var(--tx);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 40% at 20% 10%, rgba(79,126,248,0.07), transparent),
+    radial-gradient(ellipse 50% 30% at 80% 80%, rgba(15,184,164,0.05), transparent);
+}
+
+#root { position: relative; z-index: 1; }
+
+button { font-family: var(--fn); cursor: pointer; border: none; outline: none; }
+input, select, textarea { font-family: var(--fn); }
+a { text-decoration: none; color: inherit; }
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+@keyframes fadeIn    { from { opacity:0; transform:translateY(8px); }  to { opacity:1; transform:none; } }
+@keyframes slideIn   { from { opacity:0; transform:translateX(-12px); } to { opacity:1; transform:none; } }
+@keyframes scaleIn   { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:scale(1); } }
+@keyframes pulse     { 0%,100% { opacity:.4; } 50% { opacity:1; } }
+@keyframes spin      { to { transform:rotate(360deg); } }
+@keyframes shake     { 0%,100%{transform:none} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+@keyframes glow      { 0%,100%{box-shadow:0 0 0 0 rgba(79,126,248,.3)} 50%{box-shadow:0 0 0 6px rgba(79,126,248,0)} }
+@keyframes recBlink  { 50% { opacity:0; } }
+@keyframes liveGlow  { 0%,100%{box-shadow:0 0 0 0 rgba(29,184,84,.3)} 50%{box-shadow:0 0 0 3px rgba(29,184,84,0)} }
+@keyframes timerCrit { from{box-shadow:none} to{box-shadow:0 0 18px rgba(232,64,74,.25)} }
+@keyframes toastIn   { from{opacity:0;transform:translateX(14px)} to{opacity:1;transform:none} }
+@keyframes badgeIn   { from{opacity:0;transform:scale(.5)} to{opacity:1;transform:scale(1)} }

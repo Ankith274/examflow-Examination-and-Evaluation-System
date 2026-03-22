@@ -1,0 +1,46 @@
+.form { display: flex; flex-direction: column; }
+.formTitle { font-family: var(--dp); font-size: 22px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 5px; }
+.formSub   { font-size: 12px; color: var(--tx2); margin-bottom: 20px; line-height: 1.6; }
+
+.demoSection { margin-bottom: 18px; }
+.demoLabel   { font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--tx2); margin-bottom: 9px; }
+.demoGrid    { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.demoTile    {
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 9px; padding: 10px 12px; cursor: pointer; text-align: left;
+  display: flex; align-items: center; gap: 9px;
+  transition: background .15s, border-color .15s;
+}
+.demoTile:hover { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.22); }
+.demoAv    { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.demoName  { font-size: 11.5px; font-weight: 600; color: var(--tx); }
+.demoCreds { font-size: 8px; font-family: var(--mn); margin-top: 2px; }
+
+.divider   { display: flex; align-items: center; gap: 12px; margin: 14px 0; }
+.divLine   { flex: 1; height: 1px; background: var(--bd); }
+.divTxt    { font-size: 10px; color: var(--tx2); }
+
+.errorMsg  { font-size: 10.5px; color: var(--danger); margin-top: 8px; }
+.switchRow { text-align: center; font-size: 12px; color: var(--tx2); margin-top: 16px; }
+.switchLink { color: var(--a2); font-weight: 700; cursor: pointer; background: none; border: none; font-size: 12px; font-family: var(--fn); text-decoration: underline; text-underline-offset: 3px; }
+
+.row       { display: flex; gap: 12px; }
+.selectWrap { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.selectLabel { font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--tx2); }
+.select    { background: rgba(255,255,255,.04); border: 1px solid var(--bd); border-radius: 9px; color: var(--tx); font-size: 13px; padding: 10px 13px; outline: none; width: 100%; appearance: none; cursor: pointer; font-family: var(--fn); }
+.select:focus { border-color: var(--a); }
+.select option { background: #0b1221; }
+
+.avatarGrid { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 6px; }
+.avatarOpt  { width: 36px; height: 36px; border-radius: 9px; border: 2px solid var(--bd); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; cursor: pointer; background: rgba(255,255,255,.03); color: var(--tx); transition: all .18s; }
+.avatarOpt:hover { border-color: var(--a2); }
+.avatarSel  { border-color: var(--a) !important; background: rgba(79,126,248,.18) !important; color: var(--a2) !important; }
+
+.strengthBar  { height: 3px; background: rgba(255,255,255,.07); border-radius: 3px; overflow: hidden; margin-top: 5px; }
+.strengthFill { height: 100%; border-radius: 3px; transition: width .3s, background .3s; }
+.strengthTxt  { font-size: 10px; margin-top: 3px; }
+
+.termsRow { display: flex; align-items: center; gap: 9px; cursor: pointer; margin-top: 14px; font-size: 11px; color: var(--tx2); }
+.checkbox  { width: 17px; height: 17px; min-width: 17px; border-radius: 4px; border: 1px solid var(--bd2); background: rgba(255,255,255,.04); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; transition: all .18s; }
+.checked   { background: var(--a); border-color: var(--a); }
+.termLink  { color: var(--a2); }

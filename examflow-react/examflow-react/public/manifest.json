@@ -1,0 +1,8 @@
+{
+  "short_name": "ExamFlow",
+  "name": "ExamFlow BCA 2023-2026",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#04070e",
+  "background_color": "#04070e"
+}
